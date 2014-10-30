@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Cs6310p3 : GA Tech CS6310 Fall 14 Project 3, Team 22">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Cs6310p3</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/gooftroop/CS6310P3">View on GitHub</a>
+
+          <h1 id="project_title">Cs6310p3</h1>
+          <h2 id="project_tagline">GA Tech CS6310 Fall 14 Project 3, Team 22</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/gooftroop/CS6310P3/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/gooftroop/CS6310P3/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="cs6310p3" class="anchor" href="#cs6310p3"><span class="octicon octicon-link"></span></a>CS6310P3</h1>
+
+<h1></h1>
+
+<h2>
+<a name="ga-tech-cs6310-fall-14-project-3-team-22" class="anchor" href="#ga-tech-cs6310-fall-14-project-3-team-22"><span class="octicon octicon-link"></span></a>GA Tech CS6310 Fall 14 Project 3, Team 22</h2>
+
+<h2>
+<a name="cs6310-project-3-heated-planet" class="anchor" href="#cs6310-project-3-heated-planet"><span class="octicon octicon-link"></span></a>CS6310 Project 3: Heated Planet</h2>
+
+<h3>
+<a name="background" class="anchor" href="#background"><span class="octicon octicon-link"></span></a>Background</h3>
+
+<p>This project uses the same application domain as the Heated Plate and Heated Earth projects but adds new functional and non-functional features. It asks you to prepare a simulation of the temperature of an arbitrary planet that includes a tilted axis and an elliptical orbit around its Sun. In addition, it includes the ability to persist simulation data. You will turn in your source code, a report describing its design and a separate report describing a design study of your program.</p>
+
+<h3>
+<a name="persistence" class="anchor" href="#persistence"><span class="octicon octicon-link"></span></a>Persistence</h3>
+
+<p>Simulation can be computationally costly. If a scientist needs to know a specific fact, such as the expected average temperature at the South Pole in the next century, and another scientist has already conducted a simulation study that answers the question, then it makes sense to use the existing result rather than to rerun the simulation. However, it must be the case that the existing simulation data satisfy all required scientific conditions.</p>
+
+<p>Persistence is a property of an application in which some of its data outlive the execution of the program that computed them. Persistence is often achieved by storing the data in some form of repository such as a database management system (DBMS), formatted documents (XML), or so-called flat files. Clients of this data can be the original application, other similar applications, a query interface provided by the DBMS or a newly written query interface program. In each case, input requests are analyzed to determine whether the required data are available for retrieval or if a simulation must be run.</p>
+
+<p>Simulators can run for long periods of time and generate large amounts of data. One of the design decisions that must be made in situations like this is how much data to save. In the case of the Heated Planet simulation, at one extreme is the saving of the temperature at every grid cell for every time period for all previously run simulations. At the other extreme is saving nothing and forcing a rerun for each request. The interesting situations are in between. That is, some values are saved, some are recomputed and others are computed by interpolating from saved values. For example, a geographically distributed sample of grid points might persist for all time periods, and requests for non-existent data could be satisfied by geographic interpolation. Alternatively, all grid points could be saved, but only for a sample of time periods. In this case, requests for missing data could be satisfied by temporal interpolation.</p>
+
+<p>Using interpolation reduces output quality; that is, interpolated values may not provide as faithful a picture of the situation as would be obtained by redoing the simulation. Hence, one trade-off is between the amount of external storage used and the quality of the results obtained. Another trade-off is the classic time–space trade-off inherent when any data is stored rather than being recomputed.</p>
+
+<h3>
+<a name="transparency" class="anchor" href="#transparency"><span class="octicon octicon-link"></span></a>Transparency</h3>
+
+<p>A primary goal of the simulation system is, to the extent possible, to hide from the user whether requested data is being computed or retrieved. That is, the user interface should be constructed in such a way that the user requests certain data and the system determines whether it needs to perform a computation or can retrieve previously computed data. This kind of abstraction could be called data-source transparency. That is, the system should be transparent to the user with respect to the source of the data it returns.</p>
+
+<p>When the system is given a request, several issues arise. First, the simulation's Physical Factors (described below) may match those for a previously executed simulation. On the other hand, other details about the requested data (Simulation Settings, also described below) can be considered as approximations, allowing the system to interpolate from existing data. Another implication of data-source transparency is that the animated presentation of the data should work regardless of whether the data is computed or comes from stored data.</p>
+
+<p>More details will be provided in the Graphical User Interface section below.</p>
+
+<h3>
+<a name="simulating-a-heated-planet" class="anchor" href="#simulating-a-heated-planet"><span class="octicon octicon-link"></span></a>Simulating a Heated Planet</h3>
+
+<p>The Heated Planet simulation adds the following functional requirements to those used in Project 2.</p>
+
+<p>Orbit: In Project 2, it was assumed that the Earth was always the same distance from the Sun; that is, that it traversed a circular orbit. Actually the orbit of our planet is not quite circular; it is an ellipse with two axes of nearly equal lengths. Other planets have more eccentric orbits. If the lengths of the two axes of an ellipse are 2a and 2b, then the eccentricity of an ellipse is a non-negative number equal to sqrt(abs(difference(square(a),
+    square(b))))/max(a, b). This will be a number greater than or equal to zero and strictly less than one. Your simulation for Project 3 should allow the eccentricity to be set by the user, with a default value of .0167, which is our Earth's eccentricity. Note that one implication of an eccentric orbit is that the amount of heat arriving at the planet from its Sun depends on the distance between them according to the inverse-squares law. Another is that the planet travels at different speeds during different parts of its orbit, thereby altering the number of daylight and nighttime hours.
+Tilt: In Project 2, the axis of rotation of the Earth was perpendicular to its orbital plane. For the Earth, of course, the axis of rotation is tilted with respect to its orbit around the Sun. This is what causes the seasons. For example, on March 21st, the tilt or obliquity is perpendicular to the line between the center of the Earth and the Sun (i. e. the Sun is directly overhead at noon on the Equator). During the next three months, it gradually moves so that on June 21st, the Northern Hemisphere is pointed toward the Sun at an angle of 23.44°. This orbital motion has the effect of adjusting the vertical angle of incidence of each cell. For example, for a point on the Equator at noon on June 21st, the sunlight received is reduced to the cosine of 23.44° or 91% of its nominal value. Your simulation for Project 3 should allow the user to set the tilt to any value between ±180°, inclusive. The default should be +23.44°.
+Assumptions</p>
+
+<p><strong>The adjusted assumptions from Project 2 are listed here.</strong></p>
+
+<ul>
+<li>The Sun is a point source with constant radiation output per unit of time.</li>
+<li>The relative masses of the Sun and the planet are such that the elliptical orbit's focus, around which the planet's revolution takes place, can be approximated as the center of Sun.</li>
+<li>There are no perturbations to the planet's orbit arising from other planets in the Solar System or from any moons.</li>
+<li>At any given time, each point on the surface of the planet is the same distance from its Sun.</li>
+<li>The orbital direction around the Sun is such that with the default values of tilt and eccentricity, summer will occur in the Northern Hemisphere between June 21st and September 21st.</li>
+<li>Cooling of the planet is such that it exactly balances Solar heating for each time step.</li>
+<li>The planet is spherical; there is no flattening at the Equator.</li>
+<li>The axis of the planet does not wobble.</li>
+<li>The planet's atmosphere plays no role, either in attenuating solar radiation or insulating against cooling loss. In general, there is no convective heating, only radiant (from the Sun) and conductive (from neighboring cells).
+None of the radiation the planet receives from the Sun is reflected. Moreover, the heating effect of Solar radiation on the planet's surface is uniform. For example, there is no difference in the heating effect over desert, ice cap or water.
+The size of a grid cell is small enough that it is uniformly heated by the Sun. That is, all points in a cell can be treated as being the same distance from the Sun and receiving radiation at the same angle.
+Cartesian geometric computation are sufficiently accurate for this project. That is, you do not have to worry about spherical coordinates. In particular, each grid cell can be considered to be planar.
+Grid spacing in degrees is the same for both latitude and longitude. Longitude lines are parallel with the axis of rotation. Latitude lines are perpendicular to longitude lines. Consequently, each grid cell is a (possibly degenerate) trapezoid. Moreover, the angular spacing of grid cells divides evenly into 180°.
+All grid cells cool in proportion to their current temperature and area, irrespective of their latitude.
+Initial Conditions</li>
+</ul>
+
+<p>The start date of each simulation is January 4th with the planet at its closest point of approach (perihelion) to the Sun.
+On each December 21st, the South Pole of the planet's axis is tilted toward the Sun.
+The planet's rotation is such that the Sun is directly overhead (noon) at the Prime Meridian (longitude 0°). That will make the time midnight, January 4th at any position on the International Date Line (longitude 180°).
+The temperature of all grid cells is 288° </p>
+
+<p>You are to submit three deliverables—a software simulation system, a description of its design and a report of your design study.Kelvin.
+Deliverables</p>
+
+<h2>
+<a name="program" class="anchor" href="#program"><span class="octicon octicon-link"></span></a>Program</h2>
+
+<h3>
+<a name="simulation-software" class="anchor" href="#simulation-software"><span class="octicon octicon-link"></span></a>Simulation Software</h3>
+
+<p>You should prepare software that provides the following features. (Note: please include with you source code a README.txt file containing the exact instructions for installing and running your program.)</p>
+
+<p>Computation of the temperatures at locations on the surface of a planet as it rotates about its axis and orbits the Sun
+Graphical user interface for controlling the simulation and enabling the setting of initial conditions
+False-color animation of the temperatures displayed on the planet's surface as it rotates and orbits
+Query interface for retrieving computed values
+Computation</p>
+
+<p>Your system should be able to simulate the temperature of the planet as it rotates about its axis and orbits the Sun. The following Physical Factors affecting the computation should be included in the simulation model.</p>
+
+<ul>
+<li>Axial tilt: integer degrees between ±180°; default is +23.44° (toward the Sun) in the Northern Hemisphere at the summer solstice.</li>
+<li>Orbital eccentricity: non-negative real number less than one; default is .0167.</li>
+<li><p>In addition to the above, the simulation to be performed depends on the following Simulation Settings.</p></li>
+<li><p>Name: unique text string denoting the simulation.</p></li>
+<li>Grid spacing: non-negative integer angle between 1° and 180°; default is 15° (one time zone). Only values that evenly divide 180° need to be accepted.</li>
+<li>Simulation time step: non-negative integer minutes between 1 and 525,960 (1 Solar year), logarithmically graduated; default once per Solar day (1440 minutes). This value is not the length of the simulation nor is it the rate of presentation refresh; rather it controls the mapping from simulation steps to physical time units; that is, how much simulated time passes between temperature recalculations.</li>
+<li>Simulation length: non-negative integer (Solar) months between 1 and 1200; default 12 (one Solar year).
+Graphical User Interface</li>
+</ul>
+
+<p>The user should be able to interactively run the simulation using the following Controls.</p>
+
+<p><strong>Set the Physical Factors.</strong></p>
+
+<ul>
+<li>Adjust the Simulation Settings.</li>
+<li>Control the rate at which the presentation is displayed (which is different from the Simulation Time Step described above). This rate can be understand by using an analogy with time-lapse photography (TLP). In TLP pictures of a flower are taken every five minutes and shown one per second. The first number (five minutes) corresponds to the simulation time step; the second (one per second) corresponds to the presentation display rate.</li>
+<li>Start the simulation running.</li>
+<li>Pause the simulation.</li>
+<li>Resume a paused simulation.</li>
+<li>Stop the simulation or retrieval.</li>
+<li>Determine whether the animation is displayed.</li>
+<li>False-Color Animation</li>
+</ul>
+
+<p>When requested, the system should provide a graphical animation that includes the following aspects.</p>
+
+<p>False-color representation of the temperature in each grid cell (of the whole planet, not just the side facing the Sun)
+Point on the planet's surface where the Sun is directly overhead (noon). Note that it is no longer sufficient to assume that this point is on the Equator
+Grid lines
+I can think of several ways in which #1 can be satisfied: a rotating sphere with a movable viewpoint, two circular hemispherical projections, an unrolled cylindrical projection, or a straightforward unprojected (rectangular) whole-world view. You can choose any of these or come up with your own. See the map projection website for a nice set of pages on map projections. Here is some Java code and documentation from a previous student that may help you.</p>
+
+<p>In addition to the three aspects listed above, you should also dynamically update, either graphically or textually, the following information.</p>
+
+<ul>
+<li>Simulated date and time</li>
+<li>Orbital position</li>
+<li>Rotational position</li>
+<li>Also, the Physical Factors, Simulation Settings, Invocation Parameters (described below) and Controls should be visible for review.</li>
+</ul>
+
+<h3>
+<a name="query-interface" class="anchor" href="#query-interface"><span class="octicon octicon-link"></span></a>Query Interface</h3>
+
+<p>A user may interact with the system by making a query asking for the temperatures at certain specified locations (which might be the entire planet) during specified time periods. If the data is available to the system, that is, if it has been previously computed, it should be retrieved. If not, a simulation should be conducted to produce it.</p>
+
+<p>A user query may include the following information; the syntax of a query and how the user enters it, is up to the designer, as is the formatting of the results.</p>
+
+<ul>
+<li>Name of the simulation (possibly selecting from those available).</li>
+<li>A specification of the Physical Factors used to compute the data. When searching for existing data, these factors must match exactly.</li>
+<li>Dates and times to be reported on, expressed as a contiguous range. That is, the user can specify a single starting date and time and a single stopping date and time. If a query matches the Physical Factors and locations but describe a time range that extends later than the saved data, there is no requirement to extrapolate from the saved data. Instead a simulation should be run just as if no saved data existed. Otherwise, the system must interpolate temperature values for all times not stored from a previous simulation.</li>
+<li><p>Locations to be reported on, in terms of contiguous latitude and longitude ranges. That is, the user can specify a single region bounded by two latitude lines and two longitude lines. (Note, that on a sphere, such a quadruple of inputs specifies two, complementary, regions. You should disambiguate the intent by considering the four values to be ordered. That is, the region to be reported on proceeds from the first line to the second in both dimensions.) If the stored data does not exactly match the query, the system must perform an interpolation. (Note that because the planet is spherical, the value of temperature at any point can always be interpolated.) The default geographical range is the whole planet.
+<strong>Note</strong> that there may be more than one saved simulation that matches the specified Physical Factors. In this case, the system should select the best available. (See Design Rational subsection below.)
+In addition to specifying these inputs, the user can request any combination of the following outputs.</p></li>
+<li><p>Minimum temperature in the region, when and where it occurred</p></li>
+<li>Maximum temperature in the region, when and where it occurred</li>
+<li>Mean temperature over the region for the requested times</li>
+<li>Mean temperature over the times for the requested region</li>
+<li>Actual values, whether recorded or interpolated, for the requested cells at the requested times. In this case, temperature values for all grid cells in the region should be reported. Moreover, values for all computed time steps should be reported.
+Format of the resultant values is up to the designer, but should include qualifications concerning its accuracy, both geographic and temporal.</li>
+</ul>
+
+<h3>
+<a name="invocation" class="anchor" href="#invocation"><span class="octicon octicon-link"></span></a>Invocation</h3>
+
+<p>The Heated Planet simulation program should be invoked as follows:</p>
+
+<p><code>java PlanetSim.Demo [-p #] [-g #] [-t #]</code>
+PlanetSim.Demo should be invoked with the following Invocation Parameters to allow the designer to control the persisted results.</p>
+
+<p>-p #: The precision of the data to be stored, in decimal digits after the decimal point. The default is to use the number of digits storable in a normalized float variable. The maximum is the number of digits storable in a normalized double variable. The minimum is zero.
+-g #: The geographic accuracy (sampling rate) of the temperature data to be stored, as an integer percentage of the number of grid cells saved versus the number simulated. The default is 100%; that is, a value is stored for each grid cell.
+-t #: The temporal accuracy of the temperature data to be stored, as an integer percentage of the number of time periods saved versus the number computed. The default is 100%; that is, all computed values should be stored.
+Persistence</p>
+
+<p>Results from all simulations should be persistently stored. In addition to the Physical Factors, Simulation Settings, and Invocation Parameters saved for each simulation, the following data should be stored for each grid cell:</p>
+
+<ul>
+<li>Latitude: degrees North or South of the Equator</li>
+<li>Longitude: degrees East or West of the Prime Meridian</li>
+<li>Temperature: degrees Kelvin</li>
+<li>Reading date: simulated date at which the temperature reading was taken in terms of years and days since the start of the simulation</li>
+<li>Reading time: hours and minutes since the start of the Reading Date</li>
+</ul>
+
+<p>The storage media you use, that is, whether the data is stored in a database, formated document or flat files, is up to you. So also is the data format (XML, text, binary, NetCDF) in which the data is stored.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Cs6310p3 maintained by <a href="https://github.com/gooftroop">gooftroop</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
