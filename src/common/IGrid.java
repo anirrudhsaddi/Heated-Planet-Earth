@@ -6,7 +6,16 @@ public interface IGrid {
 	
 	public float getTemperature(int x, int y);
 	
-	public int getSunPosition();
+	public float getSunPositionDeg();
+	
+	public void setSunLatitudeDeg(float lat);
+	
+	public float getSunLatitudeDeg();
+	
+	public void setPlanetX(float x);
+	public void setPlanetY(float y);
+	public float getPlanetX();
+	public float getPlanetY();	
 	
 	public int getCurrentTime();
 	

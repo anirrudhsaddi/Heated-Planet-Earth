@@ -6,6 +6,13 @@ import common.State;
 import javax.swing.SwingUtilities;
 
 public class Demo {
+	
+	private boolean ownSimThread = false, ownPresThread = false;
+
+	private State initiative = State.MASTER;
+	private boolean rset = false, tset = false;
+
+	private long bufferSize = 1;
 
 	public static void main(String[] args) {
 		Demo demo = new Demo();
@@ -13,16 +20,9 @@ public class Demo {
 		demo.run();
 	}
 
-	public Demo() {
+	private Demo() {
 		// empty
 	}
-
-	private boolean ownSimThread = false, ownPresThread = false;
-
-	private State initiative = State.MASTER;
-	private boolean rset = false, tset = false;
-
-	private long bufferSize = 1;
 
 	// Note: processArgs ignore args that are not s,p,r,t or b as long as you
 	// provide a max of 5 input values.
@@ -58,8 +58,11 @@ public class Demo {
 				
 				try {
 					bufferSize = Integer.parseInt(bufSizeString);
+					if(bufferSize <= 0) {
+						throw new NumberFormatException();
+					}
 				} catch (NumberFormatException nfe) {
-					System.out.println("Error reading -b value as an integer. Please retry.");
+					System.out.println("Error reading -b value as a positive integer. Please retry.");
 					usage();
 				}
 				
@@ -92,7 +95,7 @@ public class Demo {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				GUI ui = new GUI(ownSimThread, ownPresThread, initiative, bufferSize);
+				ControllerGUI ui = new ControllerGUI(ownSimThread, ownPresThread, initiative, bufferSize);
 				ui.setVisible(true);
 			}
 		});

@@ -11,7 +11,6 @@ import view.util.ThermalVisualizer;
 import view.widgets.EarthImage;
 import view.widgets.GridDisplay;
 import view.widgets.SimulationStatus;
-
 import common.IGrid;
 
 public class EarthDisplay extends JFrame {
@@ -35,7 +34,7 @@ public class EarthDisplay extends JFrame {
 	private static final int EARTH = 0;
 	private static final int GRID = 1;
 	
-	private int gs = 0, timeStep = 0;
+	private int gs = 0, timeStep = 0, simulationLength=0;
 	
 	public EarthDisplay() {
 		
@@ -61,30 +60,35 @@ public class EarthDisplay extends JFrame {
 		
 		int w = earthImage.getImageWidth();
 		int h = earthImage.getImageHeight();
-		
+
 		// Add grid
 		gridDisplay = new GridDisplay(new ThermalVisualizer(COLORMAP, Earth.MIN_TEMP, Earth.MAX_TEMP, OPACITY), w, h);
 		display.add(gridDisplay, new Integer(GRID));
 		
-		this.setPreferredSize(new Dimension(w, h + 100));
+		this.setPreferredSize(new Dimension(w, h + 130));
 
 	}
 	
-	public void display(int gs, int timeStep) {
+	public void display(int gs, int timeStep, int simulationLength) {
 		
 		this.gs = gs;
 		this.timeStep = timeStep;
+		this.simulationLength = simulationLength;
 		
 		this.pack();
 		this.setVisible(true);
 		this.validate();
 	}
+
+	public void close() {
+		this.dispose();
+	}
 	
 	public void update(IGrid grid) {
 		if (grid != null)
-			simStatus.update(grid.getSunPosition(), grid.getCurrentTime(), this.gs, this.timeStep);
+			simStatus.update(grid.getSunPositionDeg(), grid.getCurrentTime(), this.gs, this.timeStep , this.simulationLength);
 		else
-			simStatus.update(0, 0, this.gs, this.timeStep);
+			simStatus.update(0, 0, this.gs, this.timeStep, this.simulationLength);
 		gridDisplay.update(grid);
 	}
 }

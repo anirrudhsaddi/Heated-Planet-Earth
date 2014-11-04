@@ -16,10 +16,10 @@ public class SimulationStatus extends JPanel {
 	 */
 	private static final long serialVersionUID = 4874764682275993951L;
 	
-	private JTextField sunPosStats, currTimeStatus, gsStatus, timeStepStatus;
-	private JLabel lblSunPos, lblCurrTime, lblGs, lblTimeStep;
+	private JTextField sunPosStats, currTimeStatus, gsStatus, timeStepStatus, simulationLength;
+	private JLabel lblSunPos, lblCurrTime, lblGs, lblTimeStep, lblSimLength;
 	
-	private static final int HEIGHT = 4;
+	private static final int HEIGHT = 5;
 	private static final int WIDTH = 2;
 	private static final int HGAP = 1;
 	private static final int VGAP = 1;
@@ -35,11 +35,13 @@ public class SimulationStatus extends JPanel {
 		currTimeStatus 	= new JTextField("0");
 		gsStatus 		= new JTextField("0");
 		timeStepStatus 	= new JTextField("0");
+		simulationLength 	= new JTextField("0");
 		
 		lblSunPos 	= new JLabel("Rotational Position:");
 		lblCurrTime = new JLabel("Time:");
 		lblGs 		= new JLabel("Grid Spacing:");
 		lblTimeStep = new JLabel("Simulation Time Step:");
+		lblSimLength = new JLabel("Simulation Length:");
 		
 		sunPosStats.setPreferredSize(new Dimension(10, 10));
 		sunPosStats.setMaximumSize(new Dimension(10, 10));
@@ -61,10 +63,16 @@ public class SimulationStatus extends JPanel {
 		timeStepStatus.getFont().deriveFont(Font.PLAIN, 10);
 		timeStepStatus.setEditable(false);
 		
+		simulationLength.setPreferredSize(new Dimension(10, 10));
+		simulationLength.setMaximumSize(new Dimension(10, 10));
+		simulationLength.getFont().deriveFont(Font.PLAIN, 10);
+		simulationLength.setEditable(false);
+		
 		lblSunPos.getFont().deriveFont(Font.PLAIN, 8);
 		lblCurrTime.getFont().deriveFont(Font.PLAIN, 8);
 		lblGs.getFont().deriveFont(Font.PLAIN, 8);
 		lblTimeStep.getFont().deriveFont(Font.PLAIN, 8);
+		lblSimLength.getFont().deriveFont(Font.PLAIN, 8);
 		
 		this.add(lblSunPos);
 		this.add(sunPosStats);
@@ -77,6 +85,9 @@ public class SimulationStatus extends JPanel {
 		
 		this.add(lblTimeStep);
 		this.add(timeStepStatus);
+		
+		this.add(lblSimLength);
+		this.add(simulationLength);
 	}
 	
 	public void init() {
@@ -84,14 +95,16 @@ public class SimulationStatus extends JPanel {
 		this.currTimeStatus.setText("0");
 		this.gsStatus.setText("0");
 		this.timeStepStatus.setText("0");
+		this.simulationLength.setText("0");
 	}
 	
-	public void update(int sunPosition, int currentTime, int gs, int timeStep) {
+	public void update(float sunPosition, int currentTime, int gs, int timeStep, int simulationLength) {
 		
-		this.sunPosStats.setText(Integer.toString(sunPosition));
+		this.sunPosStats.setText(String.format("%.1f", sunPosition));
 		this.currTimeStatus.setText(Integer.toString(currentTime));
 		this.gsStatus.setText(Integer.toString(gs));
 		this.timeStepStatus.setText(Integer.toString(timeStep));
+		this.simulationLength.setText(Integer.toString(simulationLength));
 		
 		this.validate();
 	}

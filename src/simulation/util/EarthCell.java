@@ -2,7 +2,7 @@ package simulation.util;
 
 public interface EarthCell<T> extends Cell<T> {
 	
-	public void setLatitude(int lat);
+public void setLatitude(int lat);
 	
 	public int getLatitude();
 	

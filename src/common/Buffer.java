@@ -40,8 +40,8 @@ public class Buffer implements IBuffer {
 	}
 
 	@Override
-	public IGrid get() {
-		return buffer.poll();
+	public IGrid get() throws InterruptedException {
+		return buffer.poll(10, TimeUnit.MILLISECONDS);
 	}
 	
 	@Override
