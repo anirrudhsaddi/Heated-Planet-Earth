@@ -1,0 +1,13 @@
+java -cp bin EarthSim.Demo
+java -cp bin EarthSim.Demo -s
+java -cp bin EarthSim.Demo -p
+java -cp bin EarthSim.Demo -s -p -r
+java -cp bin EarthSim.Demo -s -p -t
+java -cp bin EarthSim.Demo -s -p -t -r
+java -cp bin EarthSim.Demo -s -p -r -b
+java -cp bin EarthSim.Demo -s -p -r -b ab
+java -cp bin EarthSim.Demo -s -p -r -b 1
+java -cp bin EarthSim.Demo -s -p -r -b 12345
+java -cp bin EarthSim.Demo -s -p -r -b 12345e
+java -cp bin EarthSim.Demo -s -p -r x
+java -cp bin EarthSim.Demo abc
