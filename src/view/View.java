@@ -32,7 +32,7 @@ public class View extends ComponentBase {
 		
 	// Steady state assumed when when average equator temperature stabilizes
 	float lastEquatorAverage = 0.0f;
-	float presentationInterval;
+	float presentationInterval, axisTilt, eccentricity;
 	int timeStep;
 	int simulationLength;
 	
@@ -44,13 +44,15 @@ public class View extends ComponentBase {
 	long startCpuTime;
 	long presentationCnt = 1;
 
-	public View(int gs, int timeStep, float presentationInterval, int simulationLength) {
+	public View(int gs, int timeStep, float presentationInterval, int simulationLength, float axisTilt, float eccentricity) {
 		
 		this.timeStep = timeStep;
 		this.presentationInterval = presentationInterval;
 		this.simulationLength = simulationLength;
+		this.axisTilt= axisTilt;
+		this.eccentricity= eccentricity;
 		this.display = new EarthDisplay();
-		display.display(gs, timeStep, simulationLength);
+		display.display(gs, timeStep, simulationLength,axisTilt, eccentricity);
 		display.update((IGrid) null);
 	}
 

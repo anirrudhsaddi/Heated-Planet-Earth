@@ -17,6 +17,8 @@ public class Controller extends ComponentBase {
 	public static final int DEFAULT_TIME_STEP = 1;
 	public static final int DEFAULT_SIMULATION_LENGTH = 12;
 	public static final float DEFAULT_PRESENTATION_RATE = 0.01f;
+	public static final float DEFAULT_AXIS_TILT = 22.34f;
+	public static final float DEFAULT_ORBITAL_ECCENTRICITY = 0.0167f;
 	
 	private boolean debugMode = false;
 	private Boolean simThreaded;
@@ -48,13 +50,13 @@ public class Controller extends ComponentBase {
 	}
 	
 	public void start() {
-		start(DEFAULT_GRID_SPACING, DEFAULT_TIME_STEP, DEFAULT_PRESENTATION_RATE, DEFAULT_SIMULATION_LENGTH);
+		start(DEFAULT_GRID_SPACING, DEFAULT_TIME_STEP, DEFAULT_PRESENTATION_RATE, DEFAULT_SIMULATION_LENGTH, DEFAULT_AXIS_TILT, DEFAULT_ORBITAL_ECCENTRICITY);
 		
 
 		
 	}
 	
-	public void start(int gs, int timeStep, float presentationInterval , int simulationLength) {
+	public void start(int gs, int timeStep, float presentationInterval , int simulationLength, float axisTilt, float eccentricity) {
 		
 		if (gs < 1 || gs > Integer.MAX_VALUE)
 			throw new IllegalArgumentException("Invalid grid spacing");
@@ -72,7 +74,7 @@ public class Controller extends ComponentBase {
 		
 		// Instance model/view
 		model = new Model(gs, timeStep, simulationLength);
-		view = new View(gs, timeStep, presentationInterval, simulationLength);
+		view = new View(gs, timeStep, presentationInterval, simulationLength, axisTilt, eccentricity);
 		
 		// setup message subscriptions per initiative settings
 		switch (initiative) {

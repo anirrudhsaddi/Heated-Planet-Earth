@@ -65,7 +65,7 @@ public class ControllerGUI extends JFrame implements ActionListener {
 		// setup overall app ui
 		setTitle("Heated Earth Diffusion Simulation");
 		
-		setSize(300, 200);
+		setSize(300, 300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setLayout(new BorderLayout());
@@ -107,6 +107,8 @@ public class ControllerGUI extends JFrame implements ActionListener {
 		settingsPanel.add(inputField("Simulation Time Step",Integer.toString(Controller.DEFAULT_TIME_STEP)));
 		settingsPanel.add(inputField("Presentation Rate",Float.toString(Controller.DEFAULT_PRESENTATION_RATE)));
 		settingsPanel.add(inputField("Simulation Length", Integer.toString(Controller.DEFAULT_SIMULATION_LENGTH)));
+		settingsPanel.add(inputField("Axis Tilt", Float.toString (Controller.DEFAULT_AXIS_TILT)));
+		settingsPanel.add(inputField("Orbital Eccentricity", Float.toString (Controller.DEFAULT_ORBITAL_ECCENTRICITY)));
 		
 		return settingsPanel;
 	}
@@ -206,8 +208,10 @@ public class ControllerGUI extends JFrame implements ActionListener {
 			final int timeStep = Integer.parseInt(inputs.get("Simulation Time Step").getText());
 			final float presentationRate = Float.parseFloat(inputs.get("Presentation Rate").getText());
 			final int simulationLength = Integer.parseInt(inputs.get("Simulation Length").getText());
+			final float axisTilt = Float.parseFloat(inputs.get("Axis Tilt").getText());
+			final float eccentricity = Float.parseFloat(inputs.get("Orbital Eccentricity").getText());
 			
-			controller.start(gs, timeStep, presentationRate, simulationLength);
+			controller.start(gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity);
 			
 			return true;
 
