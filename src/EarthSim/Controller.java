@@ -67,13 +67,19 @@ public class Controller extends ComponentBase {
 		if (simulationLength < 12 || simulationLength >1200)
 			throw new IllegalArgumentException("Invalid simulation length");
 		
+		if (axisTilt < -180 || axisTilt >180)
+			throw new IllegalArgumentException("Invalid axis tilt");
+		
+		if (eccentricity < 0 || eccentricity >1)
+			throw new IllegalArgumentException("Invalid orbital eccentricity");
+		
 		if (presentationInterval < 0)
 			throw new IllegalArgumentException("Invalid presentation interval");
 		
 		Buffer.getBuffer().create(this.bufferSize);
 		
 		// Instance model/view
-		model = new Model(gs, timeStep, simulationLength);
+		model = new Model(gs, timeStep, simulationLength, axisTilt, eccentricity);
 		view = new View(gs, timeStep, presentationInterval, simulationLength, axisTilt, eccentricity);
 		
 		// setup message subscriptions per initiative settings

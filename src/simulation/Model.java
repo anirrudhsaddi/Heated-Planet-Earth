@@ -12,9 +12,9 @@ public class Model extends ComponentBase {
 	private Publisher pub = Publisher.getInstance();
 	Earth model;
 	
-	public Model(int gs, int timeStep, int simulationLength) {
+	public Model(int gs, int timeStep, int simulationLength, float axisTilt, float eccentricity) {
 		model = new Earth();
-		model.configure(gs, timeStep, simulationLength);
+		model.configure(gs, timeStep, simulationLength, axisTilt, eccentricity);
 		model.start();
 	}
 	

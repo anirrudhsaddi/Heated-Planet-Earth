@@ -66,7 +66,7 @@ public final class Earth {
 		return prime;
 	}
 
-	public void configure(int gs, int timeStep, int simulationLength) {
+	public void configure(int gs, int timeStep, int simulationLength, float axisTilt, float eccentricity) {
 
 		if (gs <= 0 || gs > MAX_DEGREES)
 			throw new IllegalArgumentException("Invalid grid spacing");
