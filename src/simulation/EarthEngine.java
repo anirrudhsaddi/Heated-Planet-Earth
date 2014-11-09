@@ -1,47 +1,36 @@
 package simulation;
 
-import common.ComponentBase;
 import messaging.Message;
 import messaging.Publisher;
-import messaging.events.NeedDisplayDataMessage;
-import messaging.events.ProduceContinuousMessage;
 import messaging.events.ProduceMessage;
+import messaging.events.StartMessage;
+import common.ComponentBase;
 
 public class EarthEngine extends ComponentBase {
 	
 	Earth model;
 	
-	public EarthEngine(int gs, int timeStep, int simulationLength) {
+	public EarthEngine() {
+		
 		model = new Earth();
-		model.configure(gs, timeStep, simulationLength);
-		model.start();
+		
+		Publisher.getInstance().subscribe(ProduceMessage.class, this);
 	}
 	
 	@Override
-	public void dispatchMessage(Message msg) {
-		if (msg instanceof ProduceContinuousMessage) {
-			process((ProduceContinuousMessage) msg);
+	public void performAction(Message msg) {
+		
+		if (msg instanceof StartMessage) {
+			
+			StartMessage start = (StartMessage) msg;
+			start(start.gs(), start.timeStep(), start.simulationLength());
+
 		} else if (msg instanceof ProduceMessage) {
-			process((ProduceMessage) msg);
-		} else if (msg instanceof NeedDisplayDataMessage) {
-			process((NeedDisplayDataMessage) msg);
+			generateData();
 		} else {
 			System.err.printf("WARNING: No processor specified in class %s for message %s\n",
 					this.getClass().getName(), msg.getClass().getName());
 		}
-	}
-
-	private void process(ProduceContinuousMessage msg) {
-		generateData();
-		Publisher.getInstance().send(msg); // resend message to self (since continuous)
-	}
-
-	private void process(ProduceMessage msg) {
-		generateData();
-	}
-
-	private void process(NeedDisplayDataMessage msg) {
-		generateData();
 	}
 
 	public void close() {
@@ -52,12 +41,22 @@ public class EarthEngine extends ComponentBase {
 		try {
 			model.generate();
 		} catch (InterruptedException e) {
-			stopThread = true;
+			this.stop();
 		}
 	}
 
-	@Override
-	public void runAutomaticActions() throws Exception {
-		// Do nothing
+	private void start(int gs, int timeStep, int simulationLength) {
+		
+		if (gs < 0 || gs > Integer.MAX_VALUE)
+			throw new IllegalArgumentException("Invalid gs value");
+		
+		if (timeStep < 0 || timeStep > Integer.MAX_VALUE)
+			throw new IllegalArgumentException("Invalid timeStep value");
+
+		if (simulationLength < 0 || simulationLength > Integer.MAX_VALUE)
+			throw new IllegalArgumentException("Invalid simulationLength value");
+		
+		model.configure(gs, timeStep, simulationLength);
+		model.start();
 	}
 }

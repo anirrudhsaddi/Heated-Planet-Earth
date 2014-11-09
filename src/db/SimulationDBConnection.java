@@ -29,7 +29,7 @@ public final class SimulationDBConnection {
 	private static Connection db = null;
 	
 	// Prepared Statement repository
-	private static final ConcurrentHashMap<String, PreparedStatement> repo = new ConcurrentHashMap<String, PreparedStatement>();
+	private static final ConcurrentHashMap<String, PreparedStatement> SAVED_QUERIES = new ConcurrentHashMap<String, PreparedStatement>();
 	
 	static {
 		
@@ -82,9 +82,9 @@ public final class SimulationDBConnection {
 	
 	public static PreparedStatement getPreparedStatement(String queryName) {
 		
-		if (!repo.containsKey(queryName)) throw new IllegalArgumentException("Invalid Query name key");
+		if (!SAVED_QUERIES.containsKey(queryName)) throw new IllegalArgumentException("Invalid Query name key");
 		
-		return repo.get(queryName);
+		return SAVED_QUERIES.get(queryName);
 	}
 	
 	public void close() {
@@ -95,6 +95,7 @@ public final class SimulationDBConnection {
 		}
 	}
 	
+	// TODO return future
 	public void query(String queryName, String... args) {
 		
 		if (queryName == null) throw new IllegalArgumentException("PreparedStatement must not be null");

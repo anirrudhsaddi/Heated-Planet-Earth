@@ -19,6 +19,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import simulation.EarthEngine;
+import view.EarthDisplayEngine;
+import messaging.Publisher;
+import messaging.events.PauseMessage;
+import messaging.events.ResumeMessage;
+import messaging.events.StartMessage;
+import messaging.events.StopMessage;
+
 
 public class ControlGUI extends JFrame implements ActionListener {
 
@@ -27,15 +35,15 @@ public class ControlGUI extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 6146431536208036768L;
 	
-	private ControlEngine controller;
+	private static final int 	DEFAULT_GRID_SPACING 		= 15;
+	private static final int 	DEFAULT_TIME_STEP 			= 1;
+	private static final int 	DEFAULT_SIMULATION_LENGTH 	= 12;
+	private static final float 	DEFAULT_PRESENTATION_RATE 	= 0.01f;
 	
 	private HashMap<String, JTextField> inputs = new HashMap<String, JTextField>();
 	private HashMap<String, JButton> buttons = new HashMap<String, JButton>();
 
 	public ControlGUI() {
-		
-		// don't need this. make messages here
-		controller = new ControlEngine();
 
 		// make widgets
 		setupWindow();
@@ -85,10 +93,10 @@ public class ControlGUI extends JFrame implements ActionListener {
 		settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.PAGE_AXIS));
 		settingsPanel.setAlignmentY(Component.TOP_ALIGNMENT);
 		
-		settingsPanel.add(inputField("Grid Spacing", Integer.toString(ControlEngine.DEFAULT_GRID_SPACING)));
-		settingsPanel.add(inputField("Simulation Time Step",Integer.toString(ControlEngine.DEFAULT_TIME_STEP)));
-		settingsPanel.add(inputField("Presentation Rate",Float.toString(ControlEngine.DEFAULT_PRESENTATION_RATE)));
-		settingsPanel.add(inputField("Simulation Length", Integer.toString(ControlEngine.DEFAULT_SIMULATION_LENGTH)));
+		settingsPanel.add(inputField("Grid Spacing", Integer.toString(DEFAULT_GRID_SPACING)));
+		settingsPanel.add(inputField("Simulation Time Step",Integer.toString(DEFAULT_TIME_STEP)));
+		settingsPanel.add(inputField("Presentation Rate",Float.toString(DEFAULT_PRESENTATION_RATE)));
+		settingsPanel.add(inputField("Simulation Length", Integer.toString(DEFAULT_SIMULATION_LENGTH)));
 		
 		return settingsPanel;
 	}
@@ -144,63 +152,54 @@ public class ControlGUI extends JFrame implements ActionListener {
 		
 		String cmd = e.getActionCommand();
 		
-		// to message
+		// TODO open new tab
 		if ("Start".equals(cmd)) {
-			if (configureEngine()) {
+			try {
+				
+				final int gs = Integer.parseInt(inputs.get("Grid Spacing").getText());
+				final int timeStep = Integer.parseInt(inputs.get("Simulation Time Step").getText());
+				final float presentationRate = Float.parseFloat(inputs.get("Presentation Rate").getText());
+				final int simulationLength = Integer.parseInt(inputs.get("Simulation Length").getText());
+				
+				new ControlEngine();
+				new EarthEngine();
+				new EarthDisplayEngine();
+				
+				Publisher.getInstance().send(new StartMessage(gs, timeStep, presentationRate, simulationLength));
+				
 				//do gui stuff to indicate start has occurred.
 				buttons.get("Start").setEnabled(false);
 				buttons.get("Pause").setEnabled(true);
 				buttons.get("Resume").setEnabled(false);
 				buttons.get("Stop").setEnabled(true);
+				
+			} catch (NumberFormatException nfe) {
+				JOptionPane.showMessageDialog(null,
+						"Please correct input. All fields need numbers");
+			} catch (IllegalArgumentException ex) {
+				JOptionPane.showMessageDialog(null, "Please correct input. All fields need numbers");
 			}
-		}
-		
-		else if ("Pause".equals(cmd)) {
-			controller.pause(); // to message
+		} else if ("Pause".equals(cmd)) {
+			
+			Publisher.getInstance().send(new PauseMessage());
+			
 			buttons.get("Pause").setEnabled(false);
 			buttons.get("Resume").setEnabled(true);
-		}
-		
-		else if ("Resume".equals(cmd)) {
-			controller.resume(); // to message
+		} else if ("Resume".equals(cmd)) {
+			
+			Publisher.getInstance().send(new ResumeMessage());
+			
 			buttons.get("Pause").setEnabled(true);
 			buttons.get("Resume").setEnabled(false);
 			
-		}
-		
-		else if ("Stop".equals(cmd)) {
-			try {
-				controller.stop(); // to message
-			} catch (InterruptedException e1) {
-			}
+		} else if ("Stop".equals(cmd)) {
+			
+			Publisher.getInstance().send(new StopMessage());
 			
 			buttons.get("Start").setEnabled(true);
 			buttons.get("Pause").setEnabled(false);
 			buttons.get("Resume").setEnabled(false);
 			buttons.get("Stop").setEnabled(false);
 		}
-	}
-
-	private boolean configureEngine() {
-		
-		try {
-			
-			final int gs = Integer.parseInt(inputs.get("Grid Spacing").getText());
-			final int timeStep = Integer.parseInt(inputs.get("Simulation Time Step").getText());
-			final float presentationRate = Float.parseFloat(inputs.get("Presentation Rate").getText());
-			final int simulationLength = Integer.parseInt(inputs.get("Simulation Length").getText());
-			
-			controller.start(gs, timeStep, presentationRate, simulationLength);
-			
-			return true;
-
-		} catch (NumberFormatException nfe) {
-			JOptionPane.showMessageDialog(null,
-					"Please correct input. All fields need numbers");
-		} catch (IllegalArgumentException ex) {
-			JOptionPane.showMessageDialog(null, "Please correct input. All fields need numbers");
-		}
-				
-		return false;
 	}
 }

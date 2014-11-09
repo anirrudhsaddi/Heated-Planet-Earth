@@ -7,127 +7,150 @@ import common.IGrid;
 import messaging.Message;
 import messaging.Publisher;
 import messaging.events.DisplayMessage;
-import messaging.events.NeedDisplayDataMessage;
+import messaging.events.ConsumeMessage;
+import messaging.events.StartMessage;
 
 public class EarthDisplayEngine extends ComponentBase {
 
-	// 1e-12f;
-	private final float STABLE_THRESHOLD = 0f;
-	
-	// set true to instrument stats (NOTE: some of these will change execution timing)
-	private final boolean STATISTIC_MODE = false; 
-	
-	private Publisher pub = Publisher.getInstance();
-	
-	EarthDisplay display = null;
+	private final EarthDisplay display;
 
-	// flag used to keep us from requesting more than once before getting response
-	boolean displayRequestPending = false; 
+	// Current IGrid this display is updating with
+	private IGrid grid;
+
+	// Statistical data - TODO move to different module
 
 	// set to true when initial conditions are overcome
-	boolean steadyState = false; 
-	
-	// Profiling fields
-	float statInterval = 1.0f;
-		
+	boolean steadyState = false;
+
+	// 1e-12f;
+	private final float STABLE_THRESHOLD = 0f;
+
+	// set true to instrument stats (NOTE: some of these will change execution
+	// timing)
+	private final boolean STATISTIC_MODE = false;
+
 	// Steady state assumed when when average equator temperature stabilizes
-	float lastEquatorAverage = 0.0f;
-	float presentationInterval;
-	int timeStep;
-	int simulationLength;
-	
-	// used to throttle presentation rate
-	long lastDisplayTime = 0;
-	long lastStatTime = 0;
-	long maxUsedMem = 0;
-	long startWallTime;
-	long startCpuTime;
-	long presentationCnt = 1;
+	private float lastEquatorAverage = 0.0f;
 
-	public EarthDisplayEngine(int gs, int timeStep, float presentationInterval, int simulationLength) {
+	// Profiling fields
+	private float statInterval = 1.0f;
+
+	private long lastStatTime = 0;
+	private long maxUsedMem = 0;
+	private long startWallTime;
+	private long presentationCnt = 1;
+
+	public EarthDisplayEngine() {
 		
-		this.timeStep = timeStep;
-		this.presentationInterval = presentationInterval;
-		this.simulationLength = simulationLength;
+		super();
+		
 		this.display = new EarthDisplay();
-		display.display(gs, timeStep, simulationLength);
-		display.update((IGrid) null);
+
+		this.grid = null;
+
+		Publisher.getInstance().subscribe(DisplayMessage.class, this);
+		Publisher.getInstance().subscribe(ConsumeMessage.class, this);
 	}
 
 	@Override
-	public void dispatchMessage(Message msg) {
-		// TODO Auto-generated method stub
-	}
+	public void performAction(Message msg) {
+		
+		if (msg instanceof StartMessage) {
+			
+			StartMessage start = (StartMessage) msg;
+			start(start.gs(), start.timeStep(), start.simulationLength());
 
-	@Override
-	public void runAutomaticActions() throws InterruptedException {
-		// Don't do anything if enough time hasn't passed for us to display
-		// another datapoint
+		} else if (msg instanceof DisplayMessage) {
 
-		long curTime = System.nanoTime();
-		if ((curTime - lastDisplayTime) * 1e-9 < presentationInterval) {
-			return;
-		}
+			synchronized (grid) {
 
-		// Check to see if there is anything in the data queue to process
-		IGrid data = null;
-		data = Buffer.getBuffer().get();
-
-		if (data != null) {
-			if (STATISTIC_MODE) {
-
-				if (!steadyState && steadyStateReached(data)) {
-					steadyState = true;
-					System.out.printf("========STABLE REACHED!========: %d %d\n",
-							data.getCurrentTime(), data.getCurrentTime()/timeStep);
+				if (grid != null) {
+					if (STATISTIC_MODE)
+						generateStatisicalData(grid);
+					display.update(grid);
+					grid = null;
 				}
-
-				// Sample memory usage periodically
-				if ((curTime - lastStatTime) * 1e-9 > statInterval) {
-					float wallTimePerPresentation = (float) (System.nanoTime() - startWallTime)
-							/ presentationCnt;
-					System.out.printf("walltime/present (msec): %f\n",
-							wallTimePerPresentation / 1e6);
-					Runtime runtime = Runtime.getRuntime();
-					System.gc();
-					maxUsedMem = Math.max(maxUsedMem, runtime.totalMemory()
-							- runtime.freeMemory());
-					System.out.printf("usedMem: %.1f\n", maxUsedMem / 1e6);
-					lastStatTime = curTime;
-
-					IBuffer b = Buffer.getBuffer();
-					System.out.printf("Buffer fill status: %d/%d\n",
-							b.size() + 1, b.size() + b.getRemainingCapacity());
-
-					startWallTime = System.nanoTime();
-					presentationCnt = 0;
-
-				}
-				presentationCnt++;
 			}
-			present(data);
-			lastDisplayTime = curTime;
-			displayRequestPending = false;
+
+		} else if (msg instanceof ConsumeMessage) {
+
+			synchronized (grid) {
+
+				if (grid == null) {
+					try {
+						grid = Buffer.getBuffer().get();
+					} catch (InterruptedException e) {
+						grid = null;
+					}
+				}
+			}
 		} else {
-			if (!displayRequestPending) {
-				pub.send(new NeedDisplayDataMessage());
-				displayRequestPending = true;
-			}
+			System.err.printf("WARNING: No processor specified in class %s for message %s\n",
+					this.getClass().getName(), msg.getClass().getName());
 		}
 	}
 
-	private void present(IGrid data) {
+	@Override
+	public void stop() {
 
-		display.update(data);
-		pub.send(new DisplayMessage());
-	}
+		super.stop();
 
-	public void close() {
 		// destructor when done with class
 		display.close();
 	}
 
-	public boolean steadyStateReached(IGrid grid) {
+	private void start(int gs, int timeStep, int simulationLength) {
+		
+		if (gs < 0 || gs > Integer.MAX_VALUE)
+			throw new IllegalArgumentException("Invalid gs value");
+		
+		if (timeStep < 0 || timeStep > Integer.MAX_VALUE)
+			throw new IllegalArgumentException("Invalid timeStep value");
+
+		if (simulationLength < 0 || simulationLength > Integer.MAX_VALUE)
+			throw new IllegalArgumentException("Invalid simulationLength value");
+		
+		display.display(gs, timeStep, simulationLength);
+		display.update(grid);
+	}
+
+	// TODO move to separate module
+	private void generateStatisicalData(IGrid data) {
+
+		if (!steadyState && steadyStateReached(data)) {
+			steadyState = true;
+			System.out.printf("========STABLE REACHED!========: %d\n", data.getCurrentTime());
+		}
+
+		long curTime = System.nanoTime();
+
+		// Sample memory usage periodically
+		if ((curTime - lastStatTime) * 1e-9 > statInterval) {
+			float wallTimePerPresentation = (float) (System.nanoTime() - startWallTime)
+					/ presentationCnt;
+			System.out.printf("walltime/present (msec): %f\n",
+					wallTimePerPresentation / 1e6);
+			Runtime runtime = Runtime.getRuntime();
+			System.gc();
+			maxUsedMem = Math.max(maxUsedMem,
+					runtime.totalMemory() - runtime.freeMemory());
+			System.out.printf("usedMem: %.1f\n", maxUsedMem / 1e6);
+			lastStatTime = curTime;
+
+			IBuffer b = Buffer.getBuffer();
+			System.out.printf("Buffer fill status: %d/%d\n", b.size() + 1,
+					b.size() + b.getRemainingCapacity());
+
+			startWallTime = System.nanoTime();
+			presentationCnt = 0;
+
+		}
+		presentationCnt++;
+	}
+
+	// TODO move to separate module
+	private boolean steadyStateReached(IGrid grid) {
+
 		float equatorAverage = 0.0f;
 		int eqIdx = grid.getGridHeight() / 2;
 		for (int i = 0; i < grid.getGridWidth(); i++) {
