@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public final class SimulationDB {
+public final class SimulationDBConnection {
 	
 	// Connection parameters
 	private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
@@ -45,7 +45,7 @@ public final class SimulationDB {
 		}
 		
 		try {
-			SimulationDB.initDB();
+			SimulationDBConnection.initDB();
 		} catch (SQLException e) {
 			throw new IllegalStateException("Unable to initialize the database " + NAME + ": " + e);
 		}
