@@ -8,8 +8,9 @@ import simulation.util.GridCell;
 import common.Buffer;
 import common.Grid;
 import common.IGrid;
+import common.IModel;
 
-public final class Earth {
+public final class Earth implements IModel {
 
 	public static final double CIRCUMFERENCE = 4.003014 * Math.pow(10, 7);
 	public static final double SURFACE_AREA = 5.10072 * Math.pow(10, 14);
@@ -41,12 +42,13 @@ public final class Earth {
 	//private ArrayBlockingQueue<IGrid> q;xa
 
 	//P3 Heated Planet
-	public static final double T = 525974.4;				//Orbital period of Earth in minutes
+	public static final double T = 525974.4;					//Orbital period of Earth in minutes
+	
 	//public static final double E = 0.0167; 					//Eccentricity of the planet earth
-	public static final double E = 0.7; 					//EXPERIMENTAL VALUE TO SEE AN ACTUAL ELLIPSE
-	public static final double a = 1.496 * Math.pow(10, 11);//Length of the semi-major axis of earth IN METERS
-	public static final double omega = 114;					//Argument of periapsis for the Earth:
-	public static final double tilt = 23.44;				//Obliquity(tilt) of the planet
+	public static final double E = 0.7; 						//EXPERIMENTAL VALUE TO SEE AN ACTUAL ELLIPSE
+	public static final double a = 1.496 * Math.pow(10, 11);	//Length of the semi-major axis of earth IN METERS
+	public static final double omega = 114;						//Argument of periapsis for the Earth:
+	public static final double tilt = 23.44;					//Obliquity(tilt) of the planet
 	public static int tauAN = 0;								//Time of the Equinox
 	public static int currentTimeInSimulation = 0;
 

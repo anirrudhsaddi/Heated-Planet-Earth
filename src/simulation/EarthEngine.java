@@ -1,18 +1,17 @@
 package simulation;
 
 import common.ComponentBase;
-
 import messaging.Message;
 import messaging.Publisher;
 import messaging.events.NeedDisplayDataMessage;
 import messaging.events.ProduceContinuousMessage;
 import messaging.events.ProduceMessage;
 
-public class Model extends ComponentBase {
-	private Publisher pub = Publisher.getInstance();
+public class EarthEngine extends ComponentBase {
+	
 	Earth model;
 	
-	public Model(int gs, int timeStep, int simulationLength) {
+	public EarthEngine(int gs, int timeStep, int simulationLength) {
 		model = new Earth();
 		model.configure(gs, timeStep, simulationLength);
 		model.start();
@@ -34,7 +33,7 @@ public class Model extends ComponentBase {
 
 	private void process(ProduceContinuousMessage msg) {
 		generateData();
-		pub.send(msg); // resend message to self (since continuous)
+		Publisher.getInstance().send(msg); // resend message to self (since continuous)
 	}
 
 	private void process(ProduceMessage msg) {
@@ -55,5 +54,10 @@ public class Model extends ComponentBase {
 		} catch (InterruptedException e) {
 			stopThread = true;
 		}
+	}
+
+	@Override
+	public void runAutomaticActions() throws Exception {
+		// Do nothing
 	}
 }

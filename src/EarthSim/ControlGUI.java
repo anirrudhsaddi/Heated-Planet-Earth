@@ -19,43 +19,25 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import common.State;
 
-public class ControllerGUI extends JFrame implements ActionListener {
+public class ControlGUI extends JFrame implements ActionListener {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6146431536208036768L;
 	
-	private Controller controller;
+	private ControlEngine controller;
 	
 	private HashMap<String, JTextField> inputs = new HashMap<String, JTextField>();
 	private HashMap<String, JButton> buttons = new HashMap<String, JButton>();
 
-	public ControllerGUI(boolean ownSimThread, boolean ownPresThread, State initiative, long bufferSize) {
+	public ControlGUI() {
 		
-		// Remap initiative setting
-		InitiativeSetting init2;
-		switch(initiative) {
-		
-			case PRESENTATION:
-				init2 = InitiativeSetting.VIEW;
-				break;
-			case SIMULATION:
-				init2 = InitiativeSetting.MODEL;
-				break;
-			case MASTER:
-				init2 = InitiativeSetting.THIRD_PARTY;
-				break;
-			default:
-				init2 = null;
-				
-		}
-		
-		controller = new Controller(ownSimThread, ownPresThread, init2, (int)bufferSize);
+		// don't need this. make messages here
+		controller = new ControlEngine();
 
-		
+		// make widgets
 		setupWindow();
 		pack();
 	}
@@ -103,10 +85,10 @@ public class ControllerGUI extends JFrame implements ActionListener {
 		settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.PAGE_AXIS));
 		settingsPanel.setAlignmentY(Component.TOP_ALIGNMENT);
 		
-		settingsPanel.add(inputField("Grid Spacing", Integer.toString(Controller.DEFAULT_GRID_SPACING)));
-		settingsPanel.add(inputField("Simulation Time Step",Integer.toString(Controller.DEFAULT_TIME_STEP)));
-		settingsPanel.add(inputField("Presentation Rate",Float.toString(Controller.DEFAULT_PRESENTATION_RATE)));
-		settingsPanel.add(inputField("Simulation Length", Integer.toString(Controller.DEFAULT_SIMULATION_LENGTH)));
+		settingsPanel.add(inputField("Grid Spacing", Integer.toString(ControlEngine.DEFAULT_GRID_SPACING)));
+		settingsPanel.add(inputField("Simulation Time Step",Integer.toString(ControlEngine.DEFAULT_TIME_STEP)));
+		settingsPanel.add(inputField("Presentation Rate",Float.toString(ControlEngine.DEFAULT_PRESENTATION_RATE)));
+		settingsPanel.add(inputField("Simulation Length", Integer.toString(ControlEngine.DEFAULT_SIMULATION_LENGTH)));
 		
 		return settingsPanel;
 	}
@@ -162,6 +144,7 @@ public class ControllerGUI extends JFrame implements ActionListener {
 		
 		String cmd = e.getActionCommand();
 		
+		// to message
 		if ("Start".equals(cmd)) {
 			if (configureEngine()) {
 				//do gui stuff to indicate start has occurred.
@@ -173,13 +156,13 @@ public class ControllerGUI extends JFrame implements ActionListener {
 		}
 		
 		else if ("Pause".equals(cmd)) {
-			controller.pause();
+			controller.pause(); // to message
 			buttons.get("Pause").setEnabled(false);
 			buttons.get("Resume").setEnabled(true);
 		}
 		
 		else if ("Resume".equals(cmd)) {
-			controller.resume();
+			controller.resume(); // to message
 			buttons.get("Pause").setEnabled(true);
 			buttons.get("Resume").setEnabled(false);
 			
@@ -187,7 +170,7 @@ public class ControllerGUI extends JFrame implements ActionListener {
 		
 		else if ("Stop".equals(cmd)) {
 			try {
-				controller.stop();
+				controller.stop(); // to message
 			} catch (InterruptedException e1) {
 			}
 			

@@ -9,7 +9,7 @@ import messaging.Publisher;
 import messaging.events.DisplayMessage;
 import messaging.events.NeedDisplayDataMessage;
 
-public class View extends ComponentBase {
+public class EarthDisplayEngine extends ComponentBase {
 
 	// 1e-12f;
 	private final float STABLE_THRESHOLD = 0f;
@@ -44,7 +44,7 @@ public class View extends ComponentBase {
 	long startCpuTime;
 	long presentationCnt = 1;
 
-	public View(int gs, int timeStep, float presentationInterval, int simulationLength) {
+	public EarthDisplayEngine(int gs, int timeStep, float presentationInterval, int simulationLength) {
 		
 		this.timeStep = timeStep;
 		this.presentationInterval = presentationInterval;

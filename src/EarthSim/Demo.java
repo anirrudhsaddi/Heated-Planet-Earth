@@ -95,7 +95,7 @@ public class Demo {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				ControllerGUI ui = new ControllerGUI(ownSimThread, ownPresThread, initiative, bufferSize);
+				ControlGUI ui = new ControlGUI(ownSimThread, ownPresThread, initiative, bufferSize);
 				ui.setVisible(true);
 			}
 		});

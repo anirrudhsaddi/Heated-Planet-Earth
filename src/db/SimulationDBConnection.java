@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Hashtable;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class SimulationDBConnection {
 	
@@ -14,7 +16,7 @@ public final class SimulationDBConnection {
 	private static final String NAME		= "simulationdb";
 	private static final String URL 		= "jdbc:mysql://localhost:3030/" + NAME;
 	private static final String USER 		= "simulation_user";
-	private static final String PASSWORD 	= "p3t22";
+	private static final String PASSWORD 	= "p3t22";									// TODO this could be a char array for security
 	
 	// Define the prepared SQL Statements
 	private static PreparedStatement CREATE_NAMED_TABLE;
@@ -25,6 +27,9 @@ public final class SimulationDBConnection {
 	
 	// Database connection object
 	private static Connection db = null;
+	
+	// Prepared Statement repository
+	private static final ConcurrentHashMap<String, PreparedStatement> repo = new ConcurrentHashMap<String, PreparedStatement>();
 	
 	static {
 		
@@ -64,15 +69,46 @@ public final class SimulationDBConnection {
 		db.commit();
 		
 		// Instantie the prepared statements
-		CREATE_NAMED_TABLE = db.prepareStatement("");
+		CREATE_NAMED_TABLE = db.prepareStatement("CREATE TABLE ? ()");
 		
 	}
 	
-	public static void close() {
+	public static PreparedStatement createPreparedStatement(String queryName, String query) throws SQLException {
+		
+		PreparedStatement stmt = db.prepareStatement(query);
+		repo.put(queryName, stmt);
+		return stmt;
+	}
+	
+	public static PreparedStatement getPreparedStatement(String queryName) {
+		
+		if (!repo.containsKey(queryName)) throw new IllegalArgumentException("Invalid Query name key");
+		
+		return repo.get(queryName);
+	}
+	
+	public void close() {
 		try {
 			if (db != null || !db.isClosed()) db.close();
 		} catch (SQLException e) {
 			System.err.println("Failed to close database connection " + NAME + ": " + e);
 		}
+	}
+	
+	public void query(String queryName, String... args) {
+		
+		if (queryName == null) throw new IllegalArgumentException("PreparedStatement must not be null");
+		
+		PreparedStatement stmt = getPreparedStatement(queryName);
+		
+		ResultSet results = stmt.
+	}
+	
+	public void query(String query) throws SQLException {
+		
+		if (query == null) throw new IllegalArgumentException("Query string must not be null");
+		
+		Statement stmt = db.createStatement();
+		ResultSet result = stmt.executeQuery(query);
 	}
 }

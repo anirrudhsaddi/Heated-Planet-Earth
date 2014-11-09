@@ -75,6 +75,5 @@ public abstract class ComponentBase implements MessageListener, Runnable {
 	}
 	
 	// override this method for actions to be ran automatically
-	public void runAutomaticActions() throws Exception {
-	};
+	public abstract void runAutomaticActions() throws Exception;
 }
