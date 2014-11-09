@@ -19,6 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import common.Controller;
+
 import simulation.EarthEngine;
 import view.EarthDisplayEngine;
 import messaging.Publisher;
@@ -161,6 +163,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 				final float presentationRate = Float.parseFloat(inputs.get("Presentation Rate").getText());
 				final int simulationLength = Integer.parseInt(inputs.get("Simulation Length").getText());
 				
+				new Controller();
 				new ControlEngine();
 				new EarthEngine();
 				new EarthDisplayEngine();
