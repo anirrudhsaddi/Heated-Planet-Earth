@@ -100,7 +100,8 @@ public class GridDisplay extends JPanel {
 			g.drawOval(sunx, suny, 10, 10);
 			
 			//Draw planet orbit around earth
-			//g.drawOval(0,0, (int)(300*Earth.a/Earth.b), 300);
+			g.drawOval(0,0, (int)(300*2*Earth.a/2*Earth.b), 300);
+			g.drawOval(0,150, 10, 300);
 			//Draw planet position on ellipse
 			//g.drawOval((int)(300*Earth.a/grid.getPlanetX()),0, 10,10);
 			//g.drawOval(0,(int)(300*Earth.a/grid.getPlanetY()), 10,10);

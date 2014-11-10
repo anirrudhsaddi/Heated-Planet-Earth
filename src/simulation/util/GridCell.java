@@ -33,6 +33,8 @@ public final class GridCell implements EarthCell<GridCell> {
 
 		this.setTemp(temp);
 		this.visited = false;
+		//P2 Heated Planet: Set time of equinox
+		this.setTimeOfEquinox();
 	}
 
 	public GridCell(GridCell top, GridCell bottom, GridCell left, GridCell right, float temp, int x, int y, int latitude, int longitude, int gs) {
@@ -214,8 +216,10 @@ public final class GridCell implements EarthCell<GridCell> {
 		
 		//return 278 * attenuation_lat * attenuation_longi;
 		//P3 - Heated Planet : Sun's distance from planet, inverse square law
-		return (float) (278 * attenuation_lat * attenuation_longi); 
-		//============ Math.pow(distanceFromPlanet(Earth.currentTimeInSimulation),2));
+		@SuppressWarnings("unused")
+		double inverseDistanceRatio = 0.5 * Math.pow(distanceFromPlanet(Earth.currentTimeInSimulation),2)/Math.pow(distanceFromPlanet(0),2);
+		return (float) (278 * attenuation_lat * attenuation_longi/inverseDistanceRatio); 
+	
 	}
 	
 	private void calSurfaceArea(int latitude, int gs) {
@@ -290,7 +294,11 @@ public final class GridCell implements EarthCell<GridCell> {
 	
 	public double equationSolverNewton(double meanAnamoly) {
 	    double del = 1e-5,xx = 0 ;
-	    double dx =0, x=Math.PI/2;
+	    double dx =0, x=0;
+	    if(Earth.E > 0.8)
+	    	x=Math.PI;
+	    else
+	    	x=meanAnamoly;
 	    int k = 0;
 	    //while (Math.abs(xx-x) > del && k<10 && functionOfX(meanAnamoly, x)!=0) {
 	    while (Math.abs(xx-x) > del && k<10 && functionOfX(meanAnamoly, x)!=0) {
