@@ -55,7 +55,7 @@ public final class Earth {
 	public static final double factor = animationGreatestDimention/2*a;
 	public static final double b =  a * (Math.sqrt(1-(E * E)));
 	public static final double foci = Math.sqrt((a*a)-(b*b));
-
+    //git issues resolution
 
 
 
