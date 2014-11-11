@@ -159,6 +159,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 		// TODO open new tab
 		if ("Start".equals(cmd)) {
 			try {
+				
 				final int gs = Integer.parseInt(inputs.get("Grid Spacing").getText());
 				final int timeStep = Integer.parseInt(inputs.get("Simulation Time Step").getText());
 				final float presentationRate = Float.parseFloat(inputs.get("Presentation Rate").getText());
@@ -168,9 +169,10 @@ public class ControlGUI extends JFrame implements ActionListener {
 				threadManager.add(new ControlEngine());
 				threadManager.add(new EarthEngine());
 				threadManager.add(new EarthDisplayEngine());
-				threadManager.start();
 				
 				Publisher.getInstance().send(new StartMessage(gs, timeStep, presentationRate, simulationLength));
+				
+				threadManager.start();
 				
 				//do gui stuff to indicate start has occurred.
 				buttons.get("Start").setEnabled(false);

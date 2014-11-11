@@ -61,6 +61,6 @@ public final class Controller extends ComponentBase implements IController {
 	
 	private void start() {
 		Buffer.getBuffer().create(DEFAULT_BUFFER_SIZE);
-		publisher.send(new ProduceMessage());
+		// publisher.send(new ProduceMessage());
 	}
 }

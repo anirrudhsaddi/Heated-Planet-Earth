@@ -40,7 +40,7 @@ public abstract class ComponentBase implements MessageListener, Callable<Boolean
 			this.msgQueue.clear();
 			this.stop();
 		} else if (msg instanceof StartMessage) {
-			if (!this.msgQueue.isEmpty()) this.msgQueue.add(msg);
+			this.performAction(msg);
 		} else if (msg instanceof PauseMessage) {
 			this.pause();
 		} else if (msg instanceof ResumeMessage) {
