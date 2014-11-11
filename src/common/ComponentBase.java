@@ -20,6 +20,8 @@ public abstract class ComponentBase implements MessageListener, Callable<Boolean
 	
 	public ComponentBase() {
 		
+		paused = new AtomicBoolean(false);
+		stopped = new AtomicBoolean(false);
 		paused.set(false);
 		stopped.set(false);
 		
@@ -61,7 +63,9 @@ public abstract class ComponentBase implements MessageListener, Callable<Boolean
 
 		while (!Thread.currentThread().isInterrupted() && !stopped.get()) {
 			// TODO try to use wait/notify
-			if(!paused.get()) process();
+			if(!paused.get()){
+				process();
+			}
 		}
 		return true; 
 	}

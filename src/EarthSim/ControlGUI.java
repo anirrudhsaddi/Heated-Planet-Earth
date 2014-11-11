@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import common.Controller;
-
+import common.ThreadManager;
 import simulation.EarthEngine;
 import view.EarthDisplayEngine;
 import messaging.Publisher;
@@ -45,6 +45,8 @@ public class ControlGUI extends JFrame implements ActionListener {
 	private HashMap<String, JTextField> inputs = new HashMap<String, JTextField>();
 	private HashMap<String, JButton> buttons = new HashMap<String, JButton>();
 
+	private ThreadManager threadManager = new ThreadManager();
+	
 	public ControlGUI() {
 
 		// make widgets
@@ -157,16 +159,16 @@ public class ControlGUI extends JFrame implements ActionListener {
 		// TODO open new tab
 		if ("Start".equals(cmd)) {
 			try {
-				
 				final int gs = Integer.parseInt(inputs.get("Grid Spacing").getText());
 				final int timeStep = Integer.parseInt(inputs.get("Simulation Time Step").getText());
 				final float presentationRate = Float.parseFloat(inputs.get("Presentation Rate").getText());
 				final int simulationLength = Integer.parseInt(inputs.get("Simulation Length").getText());
 				
-				new Controller();
-				new ControlEngine();
-				new EarthEngine();
-				new EarthDisplayEngine();
+				threadManager.add(new Controller());
+				threadManager.add(new ControlEngine());
+				threadManager.add(new EarthEngine());
+				threadManager.add(new EarthDisplayEngine());
+				threadManager.start();
 				
 				Publisher.getInstance().send(new StartMessage(gs, timeStep, presentationRate, simulationLength));
 				
@@ -196,6 +198,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 			buttons.get("Resume").setEnabled(false);
 			
 		} else if ("Stop".equals(cmd)) {
+			threadManager.stop();
 			
 			Publisher.getInstance().send(new StopMessage());
 			

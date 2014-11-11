@@ -14,7 +14,7 @@ import messaging.MessageListener;
 import messaging.events.StartMessage;
 import messaging.events.StopMessage;
 
-public class ThreadManager extends ThreadPoolExecutor implements IThreadController, MessageListener {
+public class ThreadManager extends ThreadPoolExecutor implements IThreadController {
 	
 	private static final int CORE_POOL_SIZE = 0;
 	private static final int MAX_POOL_SIZE = Integer.MAX_VALUE;
@@ -53,7 +53,7 @@ public class ThreadManager extends ThreadPoolExecutor implements IThreadControll
 			this.shutdownNow();
 		}
 	}
-
+/*
 	@Override
 	public void onMessage(Message msg) {
 		
@@ -62,5 +62,5 @@ public class ThreadManager extends ThreadPoolExecutor implements IThreadControll
 		if (msg instanceof StopMessage) {
 			this.stop();
 		}
-	}
+	}*/
 }
