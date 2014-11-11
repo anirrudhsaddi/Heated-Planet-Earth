@@ -123,8 +123,7 @@ public final class SimulationDBConnection {
 		}
 	}
 	
-	// TODO return future
-	public void query(String queryName, String... args) throws SQLException {
+	public ResultSet query(String queryName, String... args) throws SQLException {
 		
 		if (queryName == null) throw new IllegalArgumentException("PreparedStatement must not be null");
 		
@@ -138,14 +137,14 @@ public final class SimulationDBConnection {
 			}
 		}
 		
-		ResultSet results = stmt.executeQuery();
+		return stmt.executeQuery();
 	}
 	
-	public void query(String query) throws SQLException {
+	public ResultSet query(String query) throws SQLException {
 		
 		if (query == null) throw new IllegalArgumentException("Query string must not be null");
 		
 		Statement stmt = db.createStatement();
-		ResultSet result = stmt.executeQuery(query);
+		return stmt.executeQuery(query);
 	}
 }
