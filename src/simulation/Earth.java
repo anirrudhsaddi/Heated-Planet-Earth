@@ -172,7 +172,7 @@ public final class Earth implements IModel {
 		System.out.println("Earth. Generating...");
 
 		// Don't attempt to generate if output queue is full...
-		if(Buffer.getBuffer().getRemainingCapacity() == 0) {
+		if (Buffer.getBuffer().getRemainingCapacity() == 0) {
 			return;
 		}
 

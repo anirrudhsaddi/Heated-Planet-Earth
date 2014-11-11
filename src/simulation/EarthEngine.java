@@ -43,6 +43,7 @@ public class EarthEngine extends ComponentBase {
 	private void generateData() {
 		try {
 			model.generate();
+			Publisher.getInstance().send(new ProduceMessage());
 		} catch (InterruptedException e) {
 			this.stop();
 		}

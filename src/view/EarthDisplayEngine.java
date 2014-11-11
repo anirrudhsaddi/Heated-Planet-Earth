@@ -61,14 +61,20 @@ public class EarthDisplayEngine extends ComponentBase {
 			start(start.gs(), start.timeStep(), start.simulationLength());
 
 		} else if (msg instanceof DisplayMessage) {
-
-			System.out.println("EarthDisplayEngine. Got DisplayMessage");
+			
 			if (grid != null) {
 				if (STATISTIC_MODE)
 					generateStatisicalData(grid);
 
 				System.out.println("EarthDisplayEngine. Updating Display");
 				display.update(grid);
+				grid = null;
+				System.out.println("EarthDisplayEngine. Done updating Display");
+			}
+			
+			try {
+				grid = Buffer.getBuffer().get();
+			} catch (InterruptedException e) {
 				grid = null;
 			}
 
