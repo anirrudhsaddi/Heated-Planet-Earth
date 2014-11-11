@@ -53,7 +53,7 @@ public abstract class ComponentBase implements MessageListener, Runnable {
 
 	public void process() {
 		
-		System.out.println(this.getClass() + " is in process");
+		//System.out.println(this.getClass() + " is in process");
 
 		if (msgQueue.isEmpty()) return;
 

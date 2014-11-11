@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import common.Buffer;
 import common.Controller;
 import common.ThreadManager;
 import simulation.EarthEngine;
@@ -40,6 +41,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 	private static final int 	DEFAULT_GRID_SPACING 		= 15;
 	private static final int 	DEFAULT_TIME_STEP 			= 1;
 	private static final int 	DEFAULT_SIMULATION_LENGTH 	= 12;
+	private static final int 	DEFAULT_BUFFFER_SIZE		= 10;
 	private static final float 	DEFAULT_PRESENTATION_RATE 	= 0.01f;
 	
 	private HashMap<String, JTextField> inputs = new HashMap<String, JTextField>();
@@ -164,6 +166,9 @@ public class ControlGUI extends JFrame implements ActionListener {
 				final int timeStep = Integer.parseInt(inputs.get("Simulation Time Step").getText());
 				final float presentationRate = Float.parseFloat(inputs.get("Presentation Rate").getText());
 				final int simulationLength = Integer.parseInt(inputs.get("Simulation Length").getText());
+				
+				// Create the buffer
+				Buffer.getBuffer().create(DEFAULT_BUFFFER_SIZE);
 				
 				//threadManager.add(new Controller());
 				threadManager.add(new ControlEngine());

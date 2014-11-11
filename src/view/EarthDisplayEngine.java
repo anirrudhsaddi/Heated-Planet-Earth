@@ -41,9 +41,9 @@ public class EarthDisplayEngine extends ComponentBase {
 	private long presentationCnt = 1;
 
 	public EarthDisplayEngine() {
-		
+
 		super();
-		
+
 		this.display = new EarthDisplay();
 
 		this.grid = null;
@@ -53,45 +53,40 @@ public class EarthDisplayEngine extends ComponentBase {
 	}
 
 	@Override
-	public void performAction(Message msg) {
-		
+	public synchronized void performAction(Message msg) {
+
 		if (msg instanceof StartMessage) {
-			
+
 			StartMessage start = (StartMessage) msg;
 			start(start.gs(), start.timeStep(), start.simulationLength());
 
 		} else if (msg instanceof DisplayMessage) {
 
-			synchronized (grid) {
+			System.out.println("EarthDisplayEngine. Got DisplayMessage");
+			if (grid != null) {
+				if (STATISTIC_MODE)
+					generateStatisicalData(grid);
 
-				System.out.println("EarthDisplayEngine. Got DisplayMessage");
-				if (grid != null) {
-					if (STATISTIC_MODE)
-						generateStatisicalData(grid);
-					
-					System.out.println("EarthDisplayEngine. Updating Display");
-					display.update(grid);
-					grid = null;
-				}
+				System.out.println("EarthDisplayEngine. Updating Display");
+				display.update(grid);
+				grid = null;
 			}
 
 		} else if (msg instanceof ConsumeMessage) {
 
-			synchronized (grid) {
-				
-				System.out.println("EarthDisplayMessage. Got ConsumeMessage");
+			System.out.println("EarthDisplayMessage. Got ConsumeMessage");
 
-				if (grid == null) {
-					try {
-						grid = Buffer.getBuffer().get();
-					} catch (InterruptedException e) {
-						grid = null;
-					}
+			if (grid == null) {
+				try {
+					grid = Buffer.getBuffer().get();
+				} catch (InterruptedException e) {
+					grid = null;
 				}
 			}
 		} else {
-			System.err.printf("WARNING: No processor specified in class %s for message %s\n",
-					this.getClass().getName(), msg.getClass().getName());
+			System.err
+					.printf("WARNING: No processor specified in class %s for message %s\n",
+							this.getClass().getName(), msg.getClass().getName());
 		}
 	}
 
@@ -105,19 +100,19 @@ public class EarthDisplayEngine extends ComponentBase {
 	}
 
 	private void start(int gs, int timeStep, int simulationLength) {
-		
+
 		if (gs < 0 || gs > Integer.MAX_VALUE)
 			throw new IllegalArgumentException("Invalid gs value");
-		
+
 		if (timeStep < 0 || timeStep > Integer.MAX_VALUE)
 			throw new IllegalArgumentException("Invalid timeStep value");
 
 		if (simulationLength < 0 || simulationLength > Integer.MAX_VALUE)
 			throw new IllegalArgumentException("Invalid simulationLength value");
-		
+
 		display.display(gs, timeStep, simulationLength);
 		display.update(grid);
-		
+
 		System.out.println("EarthDisplayEngine. Finished starting.");
 	}
 
@@ -126,7 +121,8 @@ public class EarthDisplayEngine extends ComponentBase {
 
 		if (!steadyState && steadyStateReached(data)) {
 			steadyState = true;
-			System.out.printf("========STABLE REACHED!========: %d\n", data.getCurrentTime());
+			System.out.printf("========STABLE REACHED!========: %d\n",
+					data.getCurrentTime());
 		}
 
 		long curTime = System.nanoTime();

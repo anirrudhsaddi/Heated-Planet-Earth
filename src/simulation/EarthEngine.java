@@ -20,7 +20,7 @@ public class EarthEngine extends ComponentBase {
 	@Override
 	public void performAction(Message msg) {
 		
-		System.out.println("EarthEngine. performAction on msg " + msg);
+		//System.out.println("EarthEngine. performAction on msg " + msg);
 		
 		if (msg instanceof StartMessage) {
 			
@@ -28,6 +28,7 @@ public class EarthEngine extends ComponentBase {
 			start(start.gs(), start.timeStep(), start.simulationLength());
 
 		} else if (msg instanceof ProduceMessage) {
+			System.out.println("EarthEngine got a ProduceMessage");
 			generateData();
 		} else {
 			System.err.printf("WARNING: No processor specified in class %s for message %s\n",
