@@ -20,7 +20,7 @@ public final class Controller extends ComponentBase implements IController {
 	}
 
 	@Override
-	public Boolean call() {
+	public void run() {
 		
 		while (!Thread.currentThread().isInterrupted() && !stopped.get()) {
 		
@@ -36,7 +36,6 @@ public final class Controller extends ComponentBase implements IController {
 				publisher.send(new ConsumeMessage()); 
 		
 		}
-		return true;
 	}
 
 	@Override

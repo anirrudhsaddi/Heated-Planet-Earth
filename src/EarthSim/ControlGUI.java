@@ -170,8 +170,6 @@ public class ControlGUI extends JFrame implements ActionListener {
 				threadManager.add(new EarthEngine());
 				threadManager.add(new EarthDisplayEngine());
 				
-				threadManager.start();
-				
 				Publisher.getInstance().send(new StartMessage(gs, timeStep, presentationRate, simulationLength));
 				
 				//do gui stuff to indicate start has occurred.

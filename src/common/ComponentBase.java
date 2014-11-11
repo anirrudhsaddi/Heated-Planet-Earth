@@ -12,7 +12,7 @@ import messaging.events.ResumeMessage;
 import messaging.events.StartMessage;
 import messaging.events.StopMessage;
 
-public abstract class ComponentBase implements MessageListener, Callable<Boolean> {
+public abstract class ComponentBase implements MessageListener, Runnable {
 
 	private final ConcurrentLinkedQueue<Message> msgQueue = new ConcurrentLinkedQueue<Message>();
 	
@@ -61,7 +61,7 @@ public abstract class ComponentBase implements MessageListener, Callable<Boolean
 	}
 
 	@Override
-	public Boolean call() {
+	public void run() {
 
 		while (!Thread.currentThread().isInterrupted() && !stopped.get()) {
 			// TODO try to use wait/notify
@@ -69,7 +69,6 @@ public abstract class ComponentBase implements MessageListener, Callable<Boolean
 				process();
 			}
 		}
-		return true; 
 	}
 
 	// Used to pause a component
