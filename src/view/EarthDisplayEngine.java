@@ -64,9 +64,12 @@ public class EarthDisplayEngine extends ComponentBase {
 
 			synchronized (grid) {
 
+				System.out.println("EarthDisplayEngine. Got DisplayMessage");
 				if (grid != null) {
 					if (STATISTIC_MODE)
 						generateStatisicalData(grid);
+					
+					System.out.println("EarthDisplayEngine. Updating Display");
 					display.update(grid);
 					grid = null;
 				}
@@ -75,6 +78,8 @@ public class EarthDisplayEngine extends ComponentBase {
 		} else if (msg instanceof ConsumeMessage) {
 
 			synchronized (grid) {
+				
+				System.out.println("EarthDisplayMessage. Got ConsumeMessage");
 
 				if (grid == null) {
 					try {
@@ -112,6 +117,8 @@ public class EarthDisplayEngine extends ComponentBase {
 		
 		display.display(gs, timeStep, simulationLength);
 		display.update(grid);
+		
+		System.out.println("EarthDisplayEngine. Finished starting.");
 	}
 
 	// TODO move to separate module

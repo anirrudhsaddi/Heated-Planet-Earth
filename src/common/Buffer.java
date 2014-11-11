@@ -4,6 +4,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import messaging.Publisher;
+import messaging.events.ConsumeMessage;
+import messaging.events.ProduceMessage;
+
 public class Buffer implements IBuffer {
 	
 	private BlockingQueue<IGrid> buffer;
@@ -36,12 +40,28 @@ public class Buffer implements IBuffer {
 		if (grid == null)
 			throw new IllegalArgumentException("IGrid is null");
 		
-		buffer.offer(grid, 1, TimeUnit.SECONDS);
+		System.out.println("Buffer. Attempting to add IGrid");
+		
+		// Something that would be smart would to double buffer up and if we can't add now,
+		// we attempt to add upon a get trigger
+		buffer.offer(grid, 10, TimeUnit.SECONDS);
+		
+		System.out.println("Buffer. Done adding IGrid");
+		
+		if (buffer.size() != 0) {
+			System.out.println("Buffer. Sending ConsumeMessage");
+			Publisher.getInstance().send(new ConsumeMessage());
+		}
+		
+		System.out.println("Buffer. Sending ProduceMessage");
+		Publisher.getInstance().send(new ProduceMessage());
 	}
 
 	@Override
 	public IGrid get() throws InterruptedException {
-		return buffer.poll(10, TimeUnit.MILLISECONDS);
+		if (buffer.isEmpty()) return null;
+		System.out.println("Buffer. Attempting to return IGrid");
+		return buffer.poll(1, TimeUnit.SECONDS);
 	}
 	
 	@Override

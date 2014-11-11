@@ -165,14 +165,14 @@ public class ControlGUI extends JFrame implements ActionListener {
 				final float presentationRate = Float.parseFloat(inputs.get("Presentation Rate").getText());
 				final int simulationLength = Integer.parseInt(inputs.get("Simulation Length").getText());
 				
-				threadManager.add(new Controller());
+				//threadManager.add(new Controller());
 				threadManager.add(new ControlEngine());
 				threadManager.add(new EarthEngine());
 				threadManager.add(new EarthDisplayEngine());
 				
-				Publisher.getInstance().send(new StartMessage(gs, timeStep, presentationRate, simulationLength));
-				
 				threadManager.start();
+				
+				Publisher.getInstance().send(new StartMessage(gs, timeStep, presentationRate, simulationLength));
 				
 				//do gui stuff to indicate start has occurred.
 				buttons.get("Start").setEnabled(false);
@@ -200,7 +200,6 @@ public class ControlGUI extends JFrame implements ActionListener {
 			buttons.get("Resume").setEnabled(false);
 			
 		} else if ("Stop".equals(cmd)) {
-			threadManager.stop();
 			
 			Publisher.getInstance().send(new StopMessage());
 			

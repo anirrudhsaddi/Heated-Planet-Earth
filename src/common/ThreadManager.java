@@ -11,10 +11,9 @@ import java.util.concurrent.TimeUnit;
 
 import messaging.Message;
 import messaging.MessageListener;
-import messaging.events.StartMessage;
 import messaging.events.StopMessage;
 
-public class ThreadManager extends ThreadPoolExecutor implements IThreadController {
+public class ThreadManager extends ThreadPoolExecutor implements IThreadController, MessageListener {
 	
 	private static final int CORE_POOL_SIZE = 0;
 	private static final int MAX_POOL_SIZE = Integer.MAX_VALUE;
@@ -46,21 +45,13 @@ public class ThreadManager extends ThreadPoolExecutor implements IThreadControll
 	
 	public void stop() {
 		this.shutdown();
-		
-		try {
-			this.awaitTermination(5L, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
-			this.shutdownNow();
-		}
 	}
-/*
+
 	@Override
 	public void onMessage(Message msg) {
 		
-		if (msg instanceof StartMessage)
-			this.start();
 		if (msg instanceof StopMessage) {
 			this.stop();
 		}
-	}*/
+	}
 }

@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import messaging.Publisher;
+import messaging.events.ProduceMessage;
 import simulation.util.GridCell;
 import common.Buffer;
 import common.Grid;
@@ -57,11 +59,8 @@ public final class Earth implements IModel {
 	public static final double factor = animationGreatestDimention/2*a;
 	public static final double b =  a * (Math.sqrt(1-(E * E)));
 
-
-
-
 	public Earth() {
-		//this.q = q;
+		// do nothing
 	}
 
 	public GridCell getGrid() {
@@ -159,12 +158,18 @@ public final class Earth implements IModel {
 			}
 			curr = curr.getTop();
 		}
+		
 		// Set initial average temperature
 		GridCell.setAvgSuntemp(totaltemp / (width * height));
 		GridCell.setAverageArea(totalarea / (width * height));
+		
+		System.out.println("Earth: Finished starting. Sending produce message now");
+		Publisher.getInstance().send(new ProduceMessage());
 	}
 
 	public void generate() throws InterruptedException {
+		
+		System.out.println("Earth. Generating...");
 
 		// Don't attempt to generate if output queue is full...
 		if(Buffer.getBuffer().getRemainingCapacity() == 0) {
@@ -232,6 +237,7 @@ public final class Earth implements IModel {
 			c = calcd.poll();
 		}
 
+		System.out.println("Earth. Done Generating.");
 		Buffer.getBuffer().add(grid);
 	}
 

@@ -14,14 +14,6 @@ public class ControlEngine extends ComponentBase {
 	public ControlEngine() {
 		super();
 	}
-
-	private void start(float presentationInterval) {
-
-		if (presentationInterval < 0 || presentationInterval > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("Invalid presentationInterval value");
-		
-		this.presentationInterval = presentationInterval;
-	}
 	
 	// override run
 	// fire off display each interval
@@ -47,5 +39,13 @@ public class ControlEngine extends ComponentBase {
 			System.err.printf("WARNING: No processor specified in class %s for message %s\n",
 					this.getClass().getName(), msg.getClass().getName());
 		}
+	}
+	
+	private void start(float presentationInterval) {
+
+		if (presentationInterval < 0 || presentationInterval > Integer.MAX_VALUE)
+			throw new IllegalArgumentException("Invalid presentationInterval value");
+		
+		this.presentationInterval = presentationInterval;
 	}
 }

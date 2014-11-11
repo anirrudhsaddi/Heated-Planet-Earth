@@ -20,6 +20,8 @@ public class EarthEngine extends ComponentBase {
 	@Override
 	public void performAction(Message msg) {
 		
+		System.out.println("EarthEngine. performAction on msg " + msg);
+		
 		if (msg instanceof StartMessage) {
 			
 			StartMessage start = (StartMessage) msg;

@@ -52,6 +52,8 @@ public abstract class ComponentBase implements MessageListener, Callable<Boolean
 	}
 
 	public void process() {
+		
+		System.out.println(this.getClass() + " is in process");
 
 		if (msgQueue.isEmpty()) return;
 
