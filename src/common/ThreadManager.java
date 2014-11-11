@@ -10,7 +10,7 @@ import messaging.events.StopMessage;
 
 public class ThreadManager extends ThreadPoolExecutor implements IThreadController, MessageListener {
 	
-	private static final int CORE_POOL_SIZE = 0;
+	private static final int CORE_POOL_SIZE = 10;
 	private static final int MAX_POOL_SIZE = Integer.MAX_VALUE;
 	private static final long KEEP_ALIVE = 60L;
 
@@ -34,5 +34,17 @@ public class ThreadManager extends ThreadPoolExecutor implements IThreadControll
 		if (msg instanceof StopMessage) {
 			this.stop();
 		}
+	}
+	
+	@Override
+	protected void beforeExecute(Thread t, Runnable r) {
+		super.beforeExecute(t, r);
+		System.out.println("Adding Task " + r + " under Thread " + t);
+	}
+	
+	@Override
+	protected void afterExecute(Runnable r, Throwable t) {
+		super.afterExecute(r, t);
+		System.out.println("Task " + r + " completing. Errors '" + t + "'");
 	}
 }

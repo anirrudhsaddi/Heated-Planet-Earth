@@ -64,6 +64,8 @@ public abstract class ComponentBase implements MessageListener, Runnable {
 	public void run() {
 
 		while (!Thread.currentThread().isInterrupted() && !stopped.get()) {
+			
+			//System.out.println(this.getClass() + " doing loop");
 			// TODO try to use wait/notify
 			if(!paused.get()){
 				process();
