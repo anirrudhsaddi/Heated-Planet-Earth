@@ -94,8 +94,6 @@ public final class SimulationDBConnection {
 	
 	private static void initDB() throws SQLException {
 		
-		db.setAutoCommit(false);
-		
 		// Create or Upgrade Nodes
 		
 		
