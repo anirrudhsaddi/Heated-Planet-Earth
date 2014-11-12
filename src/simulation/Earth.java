@@ -4,27 +4,25 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import messaging.Publisher;
+import messaging.events.ProduceMessage;
 import simulation.util.GridCell;
 import common.Buffer;
 import common.Grid;
 import common.IGrid;
+import common.IModel;
 
-public final class Earth {
+public final class Earth implements IModel {
 
-	public static final double CIRCUMFERENCE = 4.003014 * Math.pow(10, 7);
-	public static final double SURFACE_AREA = 5.10072 * Math.pow(10, 14);
+	public static final double CIRCUMFERENCE 	= 4.003014 * Math.pow(10, 7);
+	public static final double SURFACE_AREA 	= 5.10072 * Math.pow(10, 14);
 
-	public static final int MAX_TEMP = 550; // shot in the dark here...
-	public static final int INITIAL_TEMP = 288;
-	public static final int MIN_TEMP = 0;
-
-	private static final int DEFAULT_DEGREES = 15;
-	private static final int DEFAULT_SPEED = 1; // minutes
-	private static final int MAX_DEGREES = 180;
-	private static final int MAX_SPEED = 1440;
-	private static final int MAX_LENGTH = 1200; //months
-	private static final int DEFAULT_LENGTH = 12;
-
+	public static final int MAX_TEMP 		= 550; // shot in the dark here...
+	public static final int INITIAL_TEMP 	= 288;
+	public static final int MIN_TEMP 		= 0;
+	
+	private static final int MAX_DEGREES 	= 180;
+	private static final int MAX_SPEED 		= 1440;
 
 	private static final int[] increments = { 1,2,3,4,5,6, 9, 10, 12, 15, 18, 20, 30, 36, 45, 60, 90, 180 };
 
@@ -34,32 +32,29 @@ public final class Earth {
 	private int sunPositionCell;
 
 	private GridCell prime = null;
-	private int timeStep = DEFAULT_SPEED;
-	private int gs = DEFAULT_DEGREES;
-	private int simulationLength =  DEFAULT_LENGTH;
-
-	//private ArrayBlockingQueue<IGrid> q;xa
+	
+	private int timeStep;
+	private int gs;
+	private int simulationLength;
 
 	//P3 Heated Planet
-	public static final double T = 525974.4;				//Orbital period of Earth in minutes
-	//public static final double E = 0.0167; 					//Eccentricity of the planet earth
-	public static final double E = 0.7; 					//EXPERIMENTAL VALUE TO SEE AN ACTUAL ELLIPSE
-	public static final double a = 1.496 * Math.pow(10, 11);//Length of the semi-major axis of earth IN METERS
-	public static final double omega = 114;					//Argument of periapsis for the Earth:
-	public static final double tilt = 23.44;				//Obliquity(tilt) of the planet
-	public static int tauAN = 0;								//Time of the Equinox
-	public static int currentTimeInSimulation = 0;
+	public static final double T 				= 525974.4;						// Orbital period of Earth in minutes
+	
+	//public static final double E 				= 0.0167; 						// Eccentricity of the planet earth
+	public static final double E 				= 0.7; 							// EXPERIMENTAL VALUE TO SEE AN ACTUAL ELLIPSE
+	public static final double a 				= 1.496 * Math.pow(10, 11);		// Length of the semi-major axis of earth IN METERS
+	public static final double omega 			= 114;							// Argument of periapsis for the Earth:
+	public static final double tilt 			= 23.44;						// Obliquity(tilt) of the planet
+	public static int tauAN 					= 0;							// Time of the Equinox
+	public static int currentTimeInSimulation 	= 0;
 
 	//planet around sun animation
-	public static final double animationGreatestDimention = 150; 
-	public static final double factor = animationGreatestDimention/2*a;
-	public static final double b =  a * (Math.sqrt(1-(E * E)));
-
-
-
+	public static final double animationGreatestDimention 	= 150; 
+	public static final double factor 						= animationGreatestDimention/2*a;
+	public static final double b 							=  a * (Math.sqrt(1-(E * E)));
 
 	public Earth() {
-		//this.q = q;
+		// do nothing
 	}
 
 	public GridCell getGrid() {
@@ -67,15 +62,6 @@ public final class Earth {
 	}
 
 	public void configure(int gs, int timeStep, int simulationLength, float axisTilt, float eccentricity) {
-
-		if (gs <= 0 || gs > MAX_DEGREES)
-			throw new IllegalArgumentException("Invalid grid spacing");
-
-		if (timeStep <= 0 || timeStep > MAX_SPEED)
-			throw new IllegalArgumentException("Invalid speed setting");
-
-		if (simulationLength < 12 || simulationLength > MAX_LENGTH )
-			throw new IllegalArgumentException("Invalid simulation length");
 
 		this.timeStep = timeStep;
 		this.simulationLength = simulationLength;
@@ -157,15 +143,21 @@ public final class Earth {
 			}
 			curr = curr.getTop();
 		}
+		
 		// Set initial average temperature
 		GridCell.setAvgSuntemp(totaltemp / (width * height));
 		GridCell.setAverageArea(totalarea / (width * height));
+		
+		System.out.println("Earth: Finished starting. Sending produce message now");
+		Publisher.getInstance().send(new ProduceMessage());
 	}
 
 	public void generate() throws InterruptedException {
+		
+		System.out.println("Earth. Generating...");
 
 		// Don't attempt to generate if output queue is full...
-		if(Buffer.getBuffer().getRemainingCapacity() == 0) {
+		if (Buffer.getBuffer().getRemainingCapacity() == 0) {
 			return;
 		}
 
@@ -230,6 +222,7 @@ public final class Earth {
 			c = calcd.poll();
 		}
 
+		System.out.println("Earth. Done Generating.");
 		Buffer.getBuffer().add(grid);
 	}
 

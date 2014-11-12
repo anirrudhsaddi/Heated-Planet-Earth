@@ -1,15 +1,12 @@
 // Demo.java
 package EarthSim;
 
-import common.State;
-
 import javax.swing.SwingUtilities;
 
 public class Demo {
 	
 	private boolean ownSimThread = false, ownPresThread = false;
 
-	private State initiative = State.MASTER;
 	private boolean rset = false, tset = false;
 
 	private long bufferSize = 1;
@@ -74,8 +71,6 @@ public class Demo {
 			System.out.println("Cannot set both -r and -t.");
 			usage();
 		}
-		
-		initiative = rset ? State.PRESENTATION : (tset ? State.SIMULATION : State.MASTER);
 	}
 
 	private void usage() {
@@ -95,7 +90,7 @@ public class Demo {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				ControlGUI ui = new ControlGUI(ownSimThread, ownPresThread, initiative, bufferSize);
+				ControlGUI ui = new ControlGUI();
 				ui.setVisible(true);
 			}
 		});
@@ -105,7 +100,6 @@ public class Demo {
 		
 		debug("Simulation on own thread\t:" + ownSimThread);
 		debug("Presentation on own thread\t:" + ownPresThread);
-		debug("Initiative\t\t\t:" + initiative);
 		debug("Buffer Size\t\t\t:" + bufferSize);
 		debug("");
 	}
