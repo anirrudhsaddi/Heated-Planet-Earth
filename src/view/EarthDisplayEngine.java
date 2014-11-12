@@ -58,7 +58,7 @@ public class EarthDisplayEngine extends ComponentBase {
 		if (msg instanceof StartMessage) {
 
 			StartMessage start = (StartMessage) msg;
-			start(start.gs(), start.timeStep(), start.simulationLength());
+			start(start.gs(), start.timeStep(), start.simulationLength(), start.axisTilt(), start.eccentricity());
 
 		} else if (msg instanceof DisplayMessage) {
 			
@@ -90,9 +90,7 @@ public class EarthDisplayEngine extends ComponentBase {
 				}
 			}
 		} else {
-			System.err
-					.printf("WARNING: No processor specified in class %s for message %s\n",
-							this.getClass().getName(), msg.getClass().getName());
+			System.err.printf("WARNING: No processor specified in class %s for message %s\n", this.getClass().getName(), msg.getClass().getName());
 		}
 	}
 
@@ -105,21 +103,10 @@ public class EarthDisplayEngine extends ComponentBase {
 		display.close();
 	}
 
-	private void start(int gs, int timeStep, int simulationLength) {
+	private void start(int gs, int timeStep, int simulationLength, float axisTilt, float eccentricity) {
 
-		if (gs < 0 || gs > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("Invalid gs value");
-
-		if (timeStep < 0 || timeStep > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("Invalid timeStep value");
-
-		if (simulationLength < 0 || simulationLength > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("Invalid simulationLength value");
-
-		display.display(gs, timeStep, simulationLength);
+		display.display(gs, timeStep, simulationLength, axisTilt, eccentricity);
 		display.update(grid);
-
-		System.out.println("EarthDisplayEngine. Finished starting.");
 	}
 
 	// TODO move to separate module
@@ -135,20 +122,19 @@ public class EarthDisplayEngine extends ComponentBase {
 
 		// Sample memory usage periodically
 		if ((curTime - lastStatTime) * 1e-9 > statInterval) {
-			float wallTimePerPresentation = (float) (System.nanoTime() - startWallTime)
-					/ presentationCnt;
-			System.out.printf("walltime/present (msec): %f\n",
-					wallTimePerPresentation / 1e6);
+			
+			float wallTimePerPresentation = (float) (System.nanoTime() - startWallTime) / presentationCnt;
+			System.out.printf("walltime/present (msec): %f\n", wallTimePerPresentation / 1e6);
 			Runtime runtime = Runtime.getRuntime();
+			
 			System.gc();
-			maxUsedMem = Math.max(maxUsedMem,
-					runtime.totalMemory() - runtime.freeMemory());
+			
+			maxUsedMem = Math.max(maxUsedMem, runtime.totalMemory() - runtime.freeMemory());
 			System.out.printf("usedMem: %.1f\n", maxUsedMem / 1e6);
 			lastStatTime = curTime;
 
 			IBuffer b = Buffer.getBuffer();
-			System.out.printf("Buffer fill status: %d/%d\n", b.size() + 1,
-					b.size() + b.getRemainingCapacity());
+			System.out.printf("Buffer fill status: %d/%d\n", b.size() + 1, b.size() + b.getRemainingCapacity());
 
 			startWallTime = System.nanoTime();
 			presentationCnt = 0;
@@ -162,9 +148,11 @@ public class EarthDisplayEngine extends ComponentBase {
 
 		float equatorAverage = 0.0f;
 		int eqIdx = grid.getGridHeight() / 2;
+		
 		for (int i = 0; i < grid.getGridWidth(); i++) {
 			equatorAverage += grid.getTemperature(i, eqIdx);
 		}
+		
 		equatorAverage /= grid.getGridWidth();
 
 		boolean stable = false;
@@ -172,6 +160,7 @@ public class EarthDisplayEngine extends ComponentBase {
 		if (Math.abs(equatorAverage - lastEquatorAverage) <= STABLE_THRESHOLD) {
 			stable = true;
 		}
+		
 		lastEquatorAverage = equatorAverage;
 		return stable;
 

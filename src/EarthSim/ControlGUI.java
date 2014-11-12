@@ -38,11 +38,31 @@ public class ControlGUI extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 6146431536208036768L;
 	
-	private static final int 	DEFAULT_GRID_SPACING 		= 15;
-	private static final int 	DEFAULT_TIME_STEP 			= 1;
-	private static final int 	DEFAULT_SIMULATION_LENGTH 	= 12;
-	private static final int 	DEFAULT_BUFFFER_SIZE		= 10;
-	private static final float 	DEFAULT_PRESENTATION_RATE 	= 0.01f;
+	private static final int DEFAULT_BUFFFER_SIZE	= 10;
+	
+	private static final int MIN_GRID_SPACING 		= 1;
+	private static final int DEFAULT_GRID_SPACING  	= 15;
+	private static final int MAX_GRID_SPACING 		= 180;
+	
+	private static final int MIN_TIME_STEP 			= 1;
+	private static final int DEFAULT_TIME_STEP		= 1440;
+	private static final int MAX_TIME_STEP			= 525600;
+	
+	private static final int MIN_SIM_LEN			= 1;
+	private static final int DEFAULT_SIM_LEN		= 12;
+	private static final int MAX_SIM_LEN			= 1200;
+	
+	private static final float MIN_PRESENTATION		= 1f;
+	private static final float DEFAULT_PRESENTATION	= 1f;
+	private static final float MAX_PRESENTATION		= Float.MAX_VALUE;
+	
+	private final static float MIN_AXIS_TILT 		= -180.0f;
+	private final static float DEFAULT_AXIS_TILT	= 23.44f;
+	private final static float MAX_AXIS_TILT 		= 180f;
+	
+	private static final float MIN_ECCENTRICITY 	= 0f;
+	private static final float DEFAULT_ECCENTRICITY	= 0.0167f;
+	private static final float MAX_ECCENTRICITY 	= 1.0f;
 	
 	private HashMap<String, JTextField> inputs = new HashMap<String, JTextField>();
 	private HashMap<String, JButton> buttons = new HashMap<String, JButton>();
@@ -66,7 +86,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 		
 		setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+
 		lowerRightWindow(); // Set window location to lower right (so we don't hide dialogs)
 		setAlwaysOnTop(true);
 		
@@ -101,8 +121,10 @@ public class ControlGUI extends JFrame implements ActionListener {
 		
 		settingsPanel.add(inputField("Grid Spacing", Integer.toString(DEFAULT_GRID_SPACING)));
 		settingsPanel.add(inputField("Simulation Time Step",Integer.toString(DEFAULT_TIME_STEP)));
-		settingsPanel.add(inputField("Presentation Rate",Float.toString(DEFAULT_PRESENTATION_RATE)));
-		settingsPanel.add(inputField("Simulation Length", Integer.toString(DEFAULT_SIMULATION_LENGTH)));
+		settingsPanel.add(inputField("Presentation Rate",Float.toString(DEFAULT_PRESENTATION)));
+		settingsPanel.add(inputField("Simulation Length", Integer.toString(DEFAULT_SIM_LEN)));
+		settingsPanel.add(inputField("Axis Tilt",Float.toString(DEFAULT_AXIS_TILT)));
+		settingsPanel.add(inputField("Orbital Eccentricity",Float.toString(DEFAULT_ECCENTRICITY)));
 		
 		return settingsPanel;
 	}
@@ -166,6 +188,26 @@ public class ControlGUI extends JFrame implements ActionListener {
 				final int timeStep = Integer.parseInt(inputs.get("Simulation Time Step").getText());
 				final float presentationRate = Float.parseFloat(inputs.get("Presentation Rate").getText());
 				final int simulationLength = Integer.parseInt(inputs.get("Simulation Length").getText());
+				final float axisTilt = Float.parseFloat(inputs.get("Axis Tilt").getText());
+				final float eccentricity = Float.parseFloat(inputs.get("Orbital Eccentricity").getText());
+				
+				if (gs < MIN_GRID_SPACING || gs > MAX_GRID_SPACING)
+					throw new IllegalArgumentException("Invalid grid spacing");
+
+				if (timeStep < MIN_TIME_STEP || timeStep > MAX_TIME_STEP)
+					throw new IllegalArgumentException("Invalid time step");
+
+				if (simulationLength < MIN_SIM_LEN || simulationLength > MAX_SIM_LEN)
+					throw new IllegalArgumentException("Invalid simulation length");
+
+				if (presentationRate < MIN_PRESENTATION || presentationRate > MAX_PRESENTATION)
+					throw new IllegalArgumentException("Invalid presentation interval");
+				
+				if (axisTilt < MIN_AXIS_TILT || axisTilt > MAX_AXIS_TILT)
+					throw new IllegalArgumentException("Invalid axisTilt value");
+				
+				if (eccentricity < MIN_ECCENTRICITY || eccentricity > MAX_ECCENTRICITY)
+					throw new IllegalArgumentException("Invalid eccentricity value");
 				
 				// Create the buffer
 				Buffer.getBuffer().create(DEFAULT_BUFFFER_SIZE);
@@ -175,7 +217,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 				threadManager.add(new EarthEngine());
 				threadManager.add(new EarthDisplayEngine());
 				
-				Publisher.getInstance().send(new StartMessage(gs, timeStep, presentationRate, simulationLength));
+				Publisher.getInstance().send(new StartMessage(gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity));
 				
 				//do gui stuff to indicate start has occurred.
 				buttons.get("Start").setEnabled(false);
@@ -184,8 +226,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 				buttons.get("Stop").setEnabled(true);
 				
 			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(null,
-						"Please correct input. All fields need numbers");
+				JOptionPane.showMessageDialog(null, "Please correct input. All fields need numbers");
 			} catch (IllegalArgumentException ex) {
 				JOptionPane.showMessageDialog(null, "Please correct input. All fields need numbers");
 			}

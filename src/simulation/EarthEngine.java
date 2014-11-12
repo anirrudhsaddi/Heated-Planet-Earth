@@ -25,7 +25,7 @@ public class EarthEngine extends ComponentBase {
 		if (msg instanceof StartMessage) {
 			
 			StartMessage start = (StartMessage) msg;
-			start(start.gs(), start.timeStep(), start.simulationLength());
+			start(start.gs(), start.timeStep(), start.simulationLength(), start.axisTilt(), start.eccentricity());
 
 		} else if (msg instanceof ProduceMessage) {
 			System.out.println("EarthEngine got a ProduceMessage");
@@ -49,18 +49,9 @@ public class EarthEngine extends ComponentBase {
 		}
 	}
 
-	private void start(int gs, int timeStep, int simulationLength) {
+	private void start(int gs, int timeStep, int simulationLength, float axisTilt, float eccentricity) {
 		
-		if (gs < 0 || gs > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("Invalid gs value");
-		
-		if (timeStep < 0 || timeStep > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("Invalid timeStep value");
-
-		if (simulationLength < 0 || simulationLength > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("Invalid simulationLength value");
-		
-		model.configure(gs, timeStep, simulationLength);
+		model.configure(gs, timeStep, simulationLength, axisTilt, eccentricity);
 		model.start();
 	}
 }

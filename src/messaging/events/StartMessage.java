@@ -8,25 +8,17 @@ public class StartMessage implements Message {
 	private final int timeStep;
 	private final int simulationLength;
 	private final float presentationInterval;
+	private final float axisTilt;
+	private final float eccentricity;
 	
-	public StartMessage(int gs, int timeStep, float presentationInterval, int simulationLength) {
+	public StartMessage(int gs, int timeStep, float presentationInterval, int simulationLength, float axisTilt, float eccentricity) {
 		
-		if (gs < 1 || gs > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("Invalid grid spacing");
-
-		if (timeStep < 1 || gs > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("Invalid time step");
-
-		if (simulationLength < 12 || simulationLength > 1200)
-			throw new IllegalArgumentException("Invalid simulation length");
-
-		if (presentationInterval < 0)
-			throw new IllegalArgumentException("Invalid presentation interval");
-		
-		this.gs = gs;
-		this.timeStep = timeStep;
-		this.simulationLength = simulationLength;
-		this.presentationInterval = presentationInterval;
+		this.gs 					= gs;
+		this.timeStep 				= timeStep;
+		this.simulationLength 		= simulationLength;
+		this.presentationInterval 	= presentationInterval;
+		this.axisTilt 				= axisTilt;
+		this.eccentricity 			= eccentricity;
 		
 	}
 	
@@ -44,5 +36,13 @@ public class StartMessage implements Message {
 	
 	public float presentationInterval() {
 		return new Float(this.presentationInterval);
+	}
+	
+	public float axisTilt() {
+		return new Float(this.axisTilt);
+	}
+	
+	public float eccentricity() {
+		return new Float(this.eccentricity);
 	}
 }
