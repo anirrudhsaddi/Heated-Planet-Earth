@@ -12,7 +12,7 @@ public interface IDBConnection {
 	
 	public PreparedStatement getPreparedStatement(String queryName);
 	
-	public ResultSet query(String queryName, String... args) throws SQLException;
+	public ResultSet query(PreparedStatement stmt) throws SQLException;
 	
 	public ResultSet query(String query) throws SQLException;
 }

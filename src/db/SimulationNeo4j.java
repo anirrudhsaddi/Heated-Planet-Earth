@@ -120,19 +120,9 @@ public final class SimulationNeo4j implements IDBConnection {
 		}
 	}
 	
-	public ResultSet query(String queryName, String... args) throws SQLException {
+	public ResultSet query(PreparedStatement stmt) throws SQLException {
 		
-		if (queryName == null) throw new IllegalArgumentException("PreparedStatement must not be null");
-		
-		PreparedStatement stmt = getPreparedStatement(queryName);
-
-		// apply args
-		if (args != null && args.length > 0) {
-			int index = 0;
-			for (String arg : args) {
-				stmt.setString(index++, arg);
-			}
-		}
+		if (stmt == null) throw new IllegalArgumentException("PreparedStatement must not be null");
 		
 		return stmt.executeQuery();
 	}
