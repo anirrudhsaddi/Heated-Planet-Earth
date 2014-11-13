@@ -6,10 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Hashtable;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class SimulationDBConnection {
+public final class SimulationNeo4j implements IDBConnection {
 	
 	// Connection parameters
 	private static final String JDBC_DRIVER = "org.neo4j.jdbc.Driver";  
@@ -85,7 +84,7 @@ public final class SimulationDBConnection {
 		}
 		
 		try {
-			SimulationDBConnection.initDB();
+			SimulationNeo4j.initDB();
 		} catch (SQLException e) {
 			throw new IllegalStateException("Unable to initialize the database " + NAME + ": " + e);
 		}
@@ -99,14 +98,14 @@ public final class SimulationDBConnection {
 		
 	}
 	
-	public static PreparedStatement createPreparedStatement(String queryName, String query) throws SQLException {
+	public PreparedStatement createPreparedStatement(String queryName, String query) throws SQLException {
 		
 		PreparedStatement stmt = db.prepareStatement(query);
 		SAVED_QUERIES.put(queryName, stmt);
 		return stmt;
 	}
 	
-	public static PreparedStatement getPreparedStatement(String queryName) {
+	public PreparedStatement getPreparedStatement(String queryName) {
 		
 		if (!SAVED_QUERIES.containsKey(queryName)) throw new IllegalArgumentException("Invalid Query name key");
 		

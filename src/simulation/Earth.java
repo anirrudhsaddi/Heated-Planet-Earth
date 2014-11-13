@@ -172,7 +172,7 @@ public final class Earth implements IModel {
 		sunPositionCell = ( (width * rotationalAngle) / 360 + (width / 2) ) % width;
 
 		float sunPositionDeg = rotationalAngle;
-		if(sunPositionDeg>180) {
+		if (sunPositionDeg > 180) {
 			sunPositionDeg = sunPositionDeg - 360;
 		}
 
@@ -206,7 +206,9 @@ public final class Earth implements IModel {
 				calcdTemp = child.calculateTemp(sunPositionCell);
 				grid.setTemperature(child.getX(), child.getY(), calcdTemp);
 				bfs.add(child);
+				
 				suntotal += child.calTsun(sunPositionCell);
+				
 				//Set display values here
 				grid.setSunLatitudeDeg((float) child.getSunLatitudeOnEarth());
 				grid.setPlanetX(child.getPlanetX(Earth.currentTimeInSimulation));

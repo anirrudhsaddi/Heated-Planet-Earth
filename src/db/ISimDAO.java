@@ -1,6 +1,6 @@
 package db;
 
-public interface ISimulationDBDAO {
+public interface ISimDAO {
 	
 	// Let's make this async
 

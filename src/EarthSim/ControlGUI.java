@@ -67,7 +67,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 	private HashMap<String, JTextField> inputs = new HashMap<String, JTextField>();
 	private HashMap<String, JButton> buttons = new HashMap<String, JButton>();
 
-	private ThreadManager threadManager = new ThreadManager();
+	private ThreadManager threadManager = ThreadManager.getManager();
 	
 	public ControlGUI() {
 
@@ -213,9 +213,9 @@ public class ControlGUI extends JFrame implements ActionListener {
 				Buffer.getBuffer().create(DEFAULT_BUFFFER_SIZE);
 				
 				//threadManager.add(new Controller());
-				threadManager.add(new ControlEngine());
-				threadManager.add(new EarthEngine());
-				threadManager.add(new EarthDisplayEngine());
+				threadManager.execute(new ControlEngine());
+				threadManager.execute(new EarthEngine());
+				threadManager.execute(new EarthDisplayEngine());
 				
 				Publisher.getInstance().send(new StartMessage(gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity));
 				
