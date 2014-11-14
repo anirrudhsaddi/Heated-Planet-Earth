@@ -11,16 +11,26 @@ public class Neo4jResult implements IQueryResult {
 	private float presentationInterval, axisTilt, eccentricity;
 	private IGrid grid;
 	private Exception error;
-	private boolean populated;
+	
+	private boolean populated = false;
+	
+	public Neo4jResult(String queryName, int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float eccentricity) {
+		
+		this.queryName = queryName;
+		this.gridSpacing = gridSpacing;
+		this.timeStep = timeStep;
+		this.simulationLength = simulationLength;
+		this.presentationInterval = presentationInterval;
+		this.axisTilt = axisTilt;
+		this.eccentricity = eccentricity;
+		
+		populated = true;
+	}
 	
 	public Neo4jResult(final ResultSet result) {
 		
-		populated = false;
-		
 		// populate from result. If result has stuff...
-		
 		populated = true;
-		
 	}
 	
 	public Neo4jResult(final Exception result) {
@@ -28,9 +38,8 @@ public class Neo4jResult implements IQueryResult {
 		if (result == null)
 			throw new IllegalArgumentException("Invalid Exception provided");
 		
-		populated = false;
-		
 		this.error = result;
+		populated = true;
 	}
 
 	@Override

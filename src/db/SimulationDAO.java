@@ -239,6 +239,7 @@ public class SimulationDAO extends ComponentBase implements ISimDAO {
 	public IQueryResult setSimulationName(String name, int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float eccentricity) throws Exception {
 		
 		// First do findSimulationByName
+		// TODO What if we only want to look up by name?
 		Future<IQueryResult> f = findSimulationByName(name, gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, eccentricity);
 		
 		IQueryResult result = f.get();
@@ -248,14 +249,10 @@ public class SimulationDAO extends ComponentBase implements ISimDAO {
 		if (result.isEmpty()) {
 			if (result.isErrored()) throw result.getError();
 			
-			PreparedStatement query = conn.getPreparedStatement(CREATE_SIMULATION_KEY);
-			// TODO What if we only want to look up by name?
+			// TODO Create links
 			// TODO Set values
-			try {
-				return new Neo4jResult(conn.query(query));
-			} catch (SQLException e) {
-				return new Neo4jResult(e);
-			}
+			// TODO return a custom built IQueryResult if all the creates worked
+			return new Neo4jResult(name, gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, eccentricity);
 		} else {
 			return result;
 		}
