@@ -25,7 +25,7 @@ public final class Earth implements IModel {
 	private static final int MAX_SPEED 		= 1440;
 
 	private static final int[] increments = { 1,2,3,4,5,6, 9, 10, 12, 15, 18, 20, 30, 36, 45, 60, 90, 180 };
-
+	
 	private int currentStep;
 	private int width;
 	private int height;

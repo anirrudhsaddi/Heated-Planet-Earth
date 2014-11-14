@@ -25,7 +25,5 @@ public interface IGrid {
 	public int getGridWidth();
 	
 	public int getGridHeight();
-	
-	public String getQueryName();
 
 }

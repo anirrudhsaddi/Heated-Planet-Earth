@@ -184,6 +184,8 @@ public class ControlGUI extends JFrame implements ActionListener {
 		if ("Start".equals(cmd)) {
 			try {
 				
+				// TODO check for stop and reset?
+				
 				final int gs = Integer.parseInt(inputs.get("Grid Spacing").getText());
 				final int timeStep = Integer.parseInt(inputs.get("Simulation Time Step").getText());
 				final float presentationRate = Float.parseFloat(inputs.get("Presentation Rate").getText());
@@ -209,17 +211,20 @@ public class ControlGUI extends JFrame implements ActionListener {
 				if (eccentricity < MIN_ECCENTRICITY || eccentricity > MAX_ECCENTRICITY)
 					throw new IllegalArgumentException("Invalid eccentricity value");
 				
+				// TODO clear rather than create?
 				// Create the buffer
 				Buffer.getBuffer().create(DEFAULT_BUFFFER_SIZE);
 				
-				//threadManager.add(new Controller());
+				// TODO name?
+				
+				//threadManager.add(new SimulationDAO(simulationName, new SimulationNeo4j()));
 				threadManager.execute(new ControlEngine());
 				threadManager.execute(new EarthEngine());
 				threadManager.execute(new EarthDisplayEngine());
 				
 				Publisher.getInstance().send(new StartMessage(gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity));
 				
-				//do gui stuff to indicate start has occurred.
+				// do gui stuff to indicate start has occurred.
 				buttons.get("Start").setEnabled(false);
 				buttons.get("Pause").setEnabled(true);
 				buttons.get("Resume").setEnabled(false);

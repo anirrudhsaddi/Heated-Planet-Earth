@@ -14,6 +14,7 @@ import common.ThreadManager;
 
 public class SimulationDAO extends ComponentBase implements ISimDAO {
 	
+	private final String simulationName;
 	private final IDBConnection conn;
 	
 	private final static String MATCH_NODE_BY_NAME_KEY = "";
@@ -26,11 +27,15 @@ public class SimulationDAO extends ComponentBase implements ISimDAO {
 	private final static String GET_GRID_BY_DATE_TIME_KEY = "";
 	private final static String GET_GRID_BY_DATE_TIME_QUERY = "";
 	
-	public SimulationDAO(final IDBConnection conn) throws SQLException {
+	public SimulationDAO(final String simulationName, final IDBConnection conn) throws SQLException {
+		
+		if (simulationName == null)
+			throw new IllegalArgumentException("Invalid Simulation Name provided");
 		
 		if (conn == null)
 			throw new IllegalArgumentException("Invalid DB Connection object");
 		
+		this.simulationName = simulationName;
 		this.conn = conn;
 		
 		this.conn.createPreparedStatement(MATCH_NODE_BY_NAME_KEY, MATCH_NODE_BY_NAME_QUERY);
