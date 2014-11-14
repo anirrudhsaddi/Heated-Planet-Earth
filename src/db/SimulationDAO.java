@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import messaging.Message;
+import messaging.Publisher;
 import messaging.events.DeliverMessage;
 import common.ComponentBase;
 import common.IGrid;
@@ -17,15 +18,15 @@ public class SimulationDAO extends ComponentBase implements ISimDAO {
 	private final String simulationName;
 	private final IDBConnection conn;
 	
-	private final static String MATCH_NODE_BY_NAME_KEY = "";
-	private final static String MATCH_NODE_BY_NAME_QUERY = "";
+	private final static String MATCH_NODE_BY_NAME_KEY = "match_node_name";
+	private final static String MATCH_NODE_BY_NAME_QUERY = "MATCH";
 	
-	private final static String MATCH_NODE_BY_DATA_KEY = "";
-	private final static String MATCH_NODE_BY_DATA_QUERY = "";
+	private final static String MATCH_NODE_BY_DATA_KEY = "match_node_values";
+	private final static String MATCH_NODE_BY_DATA_QUERY = "MATCH";
 	
 	// TODO should we get the entire grid? or just a specific area?
-	private final static String GET_GRID_BY_DATE_TIME_KEY = "";
-	private final static String GET_GRID_BY_DATE_TIME_QUERY = "";
+	private final static String GET_GRID_BY_DATE_TIME_KEY = "match_area_by_date";
+	private final static String GET_GRID_BY_DATE_TIME_QUERY = "MATCH";
 	
 	public SimulationDAO(final String simulationName, final IDBConnection conn) throws SQLException {
 		
@@ -41,6 +42,8 @@ public class SimulationDAO extends ComponentBase implements ISimDAO {
 		this.conn.createPreparedStatement(MATCH_NODE_BY_NAME_KEY, MATCH_NODE_BY_NAME_QUERY);
 		this.conn.createPreparedStatement(MATCH_NODE_BY_DATA_KEY, MATCH_NODE_BY_DATA_QUERY);
 		this.conn.createPreparedStatement(GET_GRID_BY_DATE_TIME_KEY, GET_GRID_BY_DATE_TIME_QUERY);
+		
+		Publisher.getInstance().subscribe(DeliverMessage.class, this);
 	}
 	
 	// TODO initial create of node?

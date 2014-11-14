@@ -4,9 +4,11 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import messaging.Message;
 import messaging.Publisher;
 import messaging.events.ConsumeMessage;
-import messaging.events.ProduceMessage;
+import messaging.events.DeliverMessage;
+import messaging.events.ResultMessage;
 
 public class Buffer implements IBuffer {
 
@@ -34,7 +36,8 @@ public class Buffer implements IBuffer {
 	}
 
 	private Buffer() {
-		// do nothing
+		
+		Publisher.getInstance().subscribe(DeliverMessage.class, this);
 	}
 
 	@Override
@@ -42,8 +45,6 @@ public class Buffer implements IBuffer {
 
 		if (grid == null)
 			throw new IllegalArgumentException("IGrid is null");
-
-		System.out.println("Buffer. Attempting to add IGrid");
 
 		// Something that would be smart would to double buffer up and if we
 		// can't add now,
@@ -64,8 +65,6 @@ public class Buffer implements IBuffer {
 				Publisher.getInstance().send(new ConsumeMessage());
 			}
 		}
-
-		System.out.println("Buffer. Done adding IGrid");
 	}
 
 	@Override
@@ -91,5 +90,19 @@ public class Buffer implements IBuffer {
 	@Override
 	public int getRemainingCapacity() {
 		return buffer.remainingCapacity();
+	}
+
+	@Override
+	public void onMessage(Message msg) {
+		
+		if (msg instanceof DeliverMessage) {
+			try {
+				add(((DeliverMessage) msg).getGrid());
+			} catch (InterruptedException e) {
+				Publisher.getInstance().send(new ResultMessage(e));
+			}
+		} else {
+			System.err.printf("WARNING: No processor specified in class %s for message %s\n", this.getClass().getName(), msg.getClass().getName());
+		}
 	}
 }

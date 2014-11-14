@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import messaging.Publisher;
+import messaging.events.DeliverMessage;
 import messaging.events.ProduceMessage;
 import simulation.util.GridCell;
 import common.Buffer;
@@ -225,7 +226,8 @@ public final class Earth implements IModel {
 		}
 
 		System.out.println("Earth. Done Generating.");
-		Buffer.getBuffer().add(grid);
+		// Buffer.getBuffer().add(grid);
+		Publisher.getInstance().send(new DeliverMessage(grid));
 	}
 
 	private void createRow(GridCell curr, GridCell next, GridCell bottom,

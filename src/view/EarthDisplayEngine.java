@@ -1,14 +1,15 @@
 package view;
 
+import messaging.Message;
+import messaging.Publisher;
+import messaging.events.ConsumeMessage;
+import messaging.events.DisplayMessage;
+import messaging.events.StartMessage;
+
 import common.Buffer;
 import common.ComponentBase;
 import common.IBuffer;
 import common.IGrid;
-import messaging.Message;
-import messaging.Publisher;
-import messaging.events.DisplayMessage;
-import messaging.events.ConsumeMessage;
-import messaging.events.StartMessage;
 
 public class EarthDisplayEngine extends ComponentBase {
 
