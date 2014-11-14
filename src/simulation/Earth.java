@@ -37,10 +37,10 @@ public final class Earth implements IModel {
 	
 	private float axisTilt;
 	private float eccentricity;
+	private int currentTimeInSimulation;
 	
 	private int timeStep;
 	private int gs;
-	private int currSimulationInterval;
 
 	//P3 Heated Planet
 	public static final double T 				= 525974.4;						// Orbital period of Earth in minutes
@@ -51,12 +51,11 @@ public final class Earth implements IModel {
 	public static final double omega 			= 114;							// Argument of periapsis for the Earth:
 	public static final double tilt 			= 23.44;						// Obliquity(tilt) of the planet
 	public static int tauAN 					= 0;							// Time of the Equinox
-	public static int currentTimeInSimulation 	= 0;
 
 	//planet around sun animation
 	public static final double animationGreatestDimention 	= 150; 
 	public static final double factor 						= animationGreatestDimention/2*a;
-	public static final double b 							=  a * (Math.sqrt(1-(E * E)));
+	public static final double b 							= a * (Math.sqrt(1-(E * E)));
 	
 	protected final IMonitorCallback monitor;
 	
@@ -77,7 +76,7 @@ public final class Earth implements IModel {
 		this.timeStep = timeStep;
 		this.axisTilt = axisTilt;
 		this.eccentricity = eccentricity;
-		this.currSimulationInterval = 0;
+		this.currentTimeInSimulation = 0;
 
 		// The following could be done better - if we have time, we should do so
 		if (MAX_DEGREES % gs != 0) {
@@ -148,7 +147,7 @@ public final class Earth implements IModel {
 		for (x = 0; x < height; x++) {
 			GridCell rowgrid = curr.getLeft();
 			for (y = 0; y < width; y++) {
-				totaltemp += rowgrid.calTsun(sunPositionCell);
+				totaltemp += rowgrid.calTsun(sunPositionCell, currentTimeInSimulation);
 				totalarea += rowgrid.getSurfarea();
 				rowgrid = rowgrid.getLeft();
 			}
@@ -159,6 +158,7 @@ public final class Earth implements IModel {
 		GridCell.setAvgSuntemp(totaltemp / (width * height));
 		GridCell.setAverageArea(totalarea / (width * height));
 		
+		// TODO don't auto-start
 		System.out.println("Earth: Finished starting. Sending produce message now");
 		Publisher.getInstance().send(new ProduceMessage());
 	}
@@ -167,7 +167,7 @@ public final class Earth implements IModel {
 		
 		// TODO update currSimulationInterval (one month)
 		// TODO make sure timeStep is scaled
-		this.monitor.notifyCurrentInterval(currSimulationInterval);
+		this.monitor.notifyCurrentInterval(currentTimeInSimulation);
 
 		// Don't attempt to generate if output queue is full...
 		if (Buffer.getBuffer().getRemainingCapacity() == 0) {
@@ -194,15 +194,15 @@ public final class Earth implements IModel {
 		float suntotal = 0;
 		float calcdTemp = 0;
 
-		calcdTemp = prime.calculateTemp(sunPositionCell);
-		suntotal = suntotal + prime.calTsun(sunPositionCell);
+		calcdTemp = prime.calculateTemp(sunPositionCell, currentTimeInSimulation);
+		suntotal = suntotal + prime.calTsun(sunPositionCell, currentTimeInSimulation);
 		grid.setTemperature(prime.getX(), prime.getY(), calcdTemp);
 
 		prime.visited(true);
 		bfs.add(prime);
 
 		//P3 - Heated Planet
-		Earth.currentTimeInSimulation = currentStep*200;
+		currentTimeInSimulation = currentStep * 200;
 
 		while (!bfs.isEmpty()) {
 
@@ -216,16 +216,16 @@ public final class Earth implements IModel {
 
 				child = itr.next();
 				child.visited(true);
-				calcdTemp = child.calculateTemp(sunPositionCell);
+				calcdTemp = child.calculateTemp(sunPositionCell, currentTimeInSimulation);
 				grid.setTemperature(child.getX(), child.getY(), calcdTemp);
 				bfs.add(child);
 				
-				suntotal += child.calTsun(sunPositionCell);
+				suntotal += child.calTsun(sunPositionCell, currentTimeInSimulation);
 				
 				//Set display values here
-				grid.setSunLatitudeDeg((float) child.getSunLatitudeOnEarth());
-				grid.setPlanetX(child.getPlanetX(Earth.currentTimeInSimulation));
-				grid.setPlanetY(child.getPlanetY(Earth.currentTimeInSimulation));
+				grid.setSunLatitudeDeg((float) child.getSunLatitudeOnEarth(currentTimeInSimulation));
+				grid.setPlanetX(child.getPlanetX(currentTimeInSimulation));
+				grid.setPlanetY(child.getPlanetY(currentTimeInSimulation));
 			}
 		}
 

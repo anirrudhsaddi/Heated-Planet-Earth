@@ -141,8 +141,8 @@ public final class GridCell implements EarthCell<GridCell> {
 	}
 	
 	@Override
-	public float calculateTemp(int sunPosition) {
-		float temp   = this.currTemp + (calTneighbors() - this.currTemp) / 5 + ( calTsun(sunPosition) + calTcool() ) / 10;
+	public float calculateTemp(int sunPosition, int currentTimeInSimulation) {
+		float temp   = this.currTemp + (calTneighbors() - this.currTemp) / 5 + ( calTsun(sunPosition, currentTimeInSimulation) + calTcool() ) / 10;
 		this.newTemp = (temp > 0) ? temp : 0;    // avoid negative temperature
 		return this.newTemp; // new temp
 	}
@@ -200,12 +200,13 @@ public final class GridCell implements EarthCell<GridCell> {
 		return this.gs;
 	}
 	
-	public float calTsun(int sunPosition) {
+	
+	public float calTsun(int sunPosition, int currentTimeInSimulation) {
 		
 		int   sunLongitude      = getSunLocationOnEarth(sunPosition);
 		//float attenuation_lat   = (float) Math.cos(Math.toRadians(this.latitude  + 1.0 * this.gs / 2));
 		//P2 - Heated Planet : Find correct attenuation depending on the sun latitude
-		int   sunLatitude      = (int) getSunLatitudeOnEarth();
+		int   sunLatitude      = (int) getSunLatitudeOnEarth(currentTimeInSimulation);
 		//System.out.println("\n" + "Sun Latitude is " + sunLatitude + " for Earth.currentTimeInSimulation " + Earth.currentTimeInSimulation);
 		float attenuation_lat   = (float) Math.cos(Math.toRadians(Math.abs(sunLatitude - this.latitude)));
 		//float attenuation_longi = (float) (( (Math.abs(sunLongitude - this.longitude) % 360 ) < 90 ) ? Math.cos(Math.toRadians(sunLongitude - this.longitude)) : 0);
@@ -351,15 +352,14 @@ public final class GridCell implements EarthCell<GridCell> {
 		}
 	}
 	
-	public double getRotationalAngle(int currentTime)
-	{
+	public double getRotationalAngle(int currentTime) {
 		double mod = (currentTime - Earth.tauAN) % Earth.T;
 		return (mod * 2 * Math.PI / Earth.T);
 	}
 		
-	public double getSunLatitudeOnEarth() {
+	public double getSunLatitudeOnEarth(int currentTimeInSimulation) {
 		//return (Earth.tilt * Math.sin((getRotationalAngle(currentTime))));
-		return (Earth.tilt * Math.sin((getRotationalAngle(Earth.currentTimeInSimulation))));
+		return (Earth.tilt * Math.sin((getRotationalAngle(currentTimeInSimulation))));
 	}
 }
 
