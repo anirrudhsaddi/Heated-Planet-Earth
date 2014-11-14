@@ -38,9 +38,9 @@ public class SimulationDAO implements ISimDAO, Callable<IQueryResult> {
 	public IQueryResult call() {
 		
 		try {
-			return new Neo4jQueryResult(conn.query(query));
+			return new Neo4jSimulationDataResult(conn.query(query));
 		} catch (SQLException e) {
-			return new Neo4jQueryResult(e);
+			return new Neo4jSimulationDataResult(e);
 		}
 	}
 }
