@@ -4,6 +4,8 @@ import common.IGrid;
 
 public interface IQueryResult {
 	
+	public boolean isEmpty();
+	
 	public boolean isErrored();
 	
 	public Exception getError();

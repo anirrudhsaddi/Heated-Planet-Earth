@@ -18,51 +18,6 @@ public final class SimulationNeo4j implements IDBConnection {
 	private static final String USER 		= "simulation_user";
 	private static final String PASSWORD 	= "p3t22";									// TODO this could be a char array for security
 	
-	// Define the prepared Cypher Statements
-	private static PreparedStatement CREATE_QUERY_STMT;
-	private static PreparedStatement CREATE_TEMP_STMT;
-	private static PreparedStatement CREATE_AXIAL_STMT;
-	private static PreparedStatement CREATE_ORBIAL_STMT;
-	private static PreparedStatement CREATE_GRID_SPACING_STMT;
-	private static PreparedStatement CREATE_TIME_STEP_STMT;
-	private static PreparedStatement CREATE_PRESENTATION_RATE_STMT;
-	
-	private static PreparedStatement CREATE_QUERY_TEMP_REL_STMT;
-	private static PreparedStatement CREATE_QUERY_AXIAL_REL_STMT;
-	private static PreparedStatement CREATE_QUERY_ORBITAL_REL_STMT;
-	private static PreparedStatement CREATE_QUERY_GRID_REL_STMT;
-	private static PreparedStatement CREATE_QUERY_TIME_REL_STMT;
-	private static PreparedStatement CREATE_QUERY_PRESENTATIONAL_REL_STMT;
-	
-	// Define the node creation statements
-	private static final String CREATE_SIMULATION_NODE				= "CREATE (n:Simulation { name : ? })";
-	private static final String CREATE_TEMP_NODE 					= "CREATE (n:Temperature { value : ? })";
-	private static final String CREATE_AXIAL_DATA_NODE 				= "CREATE (n:AxialData { value : ? })";
-	private static final String CREATE_ORBIAL_DATA_NODE				= "CREATE (n:OrbitalEccentricity { value : ? })";
-	private static final String CREATE_GRID_SPACING_DATA_NODE 		= "CREATE (n:GridSpacing { value : ? })";
-	private static final String CREATE_TIME_STEP_DATA_NODE 			= "CREATE (n:TimeStep { value : ? })";
-	private static final String CREATE_PRESENTATION_RATE_DATA_NODE 	= "CREATE (n:PresentationRate { value : ? })";
-	
-	// Define the relationships creation statements
-	private static final String CREATE_QUERY_TEMP_REL = "MATCH (a:Simulation),(b:Temperature) "
-			+ "WHERE a.name = '?' AND b.value = '?' "
-			+ "CREATE (a)-[r:HAS_TEMP { latitude : '?', longitude : '?', date : '?', time : '?' } ]->(b)";
-	private static final String CREATE_QUERY_AXIS_REL = "MATCH (a:Simulation),(b:AxialData) "
-			+ "WHERE a.name = '?' AND b.value = '?' "
-			+ "CREATE (a)-[r:HAS_AXIS]->(b)";
-	private static final String CREATE_QUERY_ECCENTRICITYL_REL = "MATCH (a:Simulation)(b:OrbitalEccentricity) "
-			+ "WHERE a.name = '?' AND b.value = '?' "
-			+ "CREATE (a)-[r:HAS_ECCENTRICITY]->(b)";
-	private static final String CREATE_QUERY_GRID_REL = "MATCH (a:Simulation)(b:GridSpacing) "
-			+ "WHERE a.name = '?' AND b.value = '?' "
-			+ "CREATE (a)-[r:HAS_GRID]->(b)";
-	private static final String CREATE_QUERY_TIME_REL = "MATCH (a:Simulation)(b:TimeStep) "
-			+ "WHERE a.name = '?' AND b.value = '?' "
-			+ "CREATE (a)-[r:HAS_TIME]->(b)";
-	private static final String CREATE_QUERY_PRESENTATIONAL_REL = "MATCH (a:Simulation)(b:PresentationInterval) "
-			+ "WHERE a.name = '?' AND b.value = '?' "
-			+ "CREATE (a)-[r:HAS_PRESENTATION]->(b)";
-	
 	// Database connection object
 	private static Connection db = null;
 	

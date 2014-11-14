@@ -4,21 +4,31 @@ import java.sql.ResultSet;
 
 import common.IGrid;
 
-public class Neo4jGridResult implements IQueryResult {
+public class Neo4jResult implements IQueryResult {
 	
 	private String queryName;
 	private int gridSpacing, timeStep, simulationLength;
 	private float presentationInterval, axisTilt, eccentricity;
 	private IGrid grid;
 	private Exception error;
+	private boolean populated;
 	
-	public Neo4jGridResult(final ResultSet result) {
+	public Neo4jResult(final ResultSet result) {
+		
+		populated = false;
+		
+		// populate from result. If result has stuff...
+		
+		populated = true;
 		
 	}
 	
-	public Neo4jGridResult(final Exception result) {
+	public Neo4jResult(final Exception result) {
+		
 		if (result == null)
 			throw new IllegalArgumentException("Invalid Exception provided");
+		
+		populated = false;
 		
 		this.error = result;
 	}
@@ -71,6 +81,11 @@ public class Neo4jGridResult implements IQueryResult {
 	@Override
 	public Exception getError() {
 		return error;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return populated;
 	}
 
 }
