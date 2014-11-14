@@ -15,20 +15,33 @@ import common.ThreadManager;
 
 public class SimulationDAO extends ComponentBase implements ISimDAO {
 	
-	private final String simulationName;
 	private final IDBConnection conn;
 	
+	private String simulationName;
+	
 	private final static String MATCH_NODE_BY_NAME_KEY = "match_node_name";
-	private final static String MATCH_NODE_BY_NAME_QUERY = "MATCH";
+	private final static String MATCH_NODE_BY_NAME_QUERY = "MATCH "
+			+ "(n:Simulation)-[:HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY:|HAS_AXIS]->(o)"
+			+ "WHERE n.name = ?"
+			+ "RETURN { "
+			+ "name: n.name, "
+			+ "result: filter(x IN o.values WHERE x = ? OR x = ? OR x = ? OR x = ? OR x = ? )"
+			+ "}";
 	
 	private final static String MATCH_NODE_BY_DATA_KEY = "match_node_values";
-	private final static String MATCH_NODE_BY_DATA_QUERY = "MATCH";
+	private final static String MATCH_NODE_BY_DATA_QUERY = "MATCH "
+			+ "(n:Simulation)-[:HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY:|HAS_AXIS]->(o)"
+			+ "RETURN { "
+			+ "name: n.name, "
+			+ "result: filter(x IN o.values WHERE x = ? OR x = ? OR x = ? OR x = ? OR x = ? )"
+			+ "}";
 	
 	// TODO should we get the entire grid? or just a specific area?
 	private final static String GET_GRID_BY_DATE_TIME_KEY = "match_area_by_date";
-	private final static String GET_GRID_BY_DATE_TIME_QUERY = "MATCH";
+	private final static String GET_GRID_BY_DATE_TIME_QUERY = "MATCH "
+			+ "RETURN {}";
 	
-	public SimulationDAO(final String simulationName, final IDBConnection conn) throws SQLException {
+	public SimulationDAO(final IDBConnection conn) throws SQLException {
 		
 		if (simulationName == null)
 			throw new IllegalArgumentException("Invalid Simulation Name provided");
@@ -36,7 +49,6 @@ public class SimulationDAO extends ComponentBase implements ISimDAO {
 		if (conn == null)
 			throw new IllegalArgumentException("Invalid DB Connection object");
 		
-		this.simulationName = simulationName;
 		this.conn = conn;
 		
 		this.conn.createPreparedStatement(MATCH_NODE_BY_NAME_KEY, MATCH_NODE_BY_NAME_QUERY);
@@ -47,6 +59,13 @@ public class SimulationDAO extends ComponentBase implements ISimDAO {
 	}
 	
 	// TODO initial create of node?
+	public void setSimulationName(String simulationName) {
+		
+		if (simulationName == null)
+			throw new IllegalArgumentException("Invalid Simulation Name provided");
+		
+		this.simulationName = simulationName;
+	}
 	
 	@Override
 	public Future<IQueryResult> findSimulationByName(String name, int gridSpacing, int timeStep, int simulationLength, float presentatinoInterval, float axisTilt, float eccentricity) {

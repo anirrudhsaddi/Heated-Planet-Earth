@@ -12,6 +12,7 @@ import common.Buffer;
 import common.Grid;
 import common.IGrid;
 import common.IModel;
+import common.IMonitorCallback;
 
 public final class Earth implements IModel {
 
@@ -34,9 +35,12 @@ public final class Earth implements IModel {
 
 	private GridCell prime = null;
 	
+	private float axisTilt;
+	private float eccentricity;
+	
 	private int timeStep;
 	private int gs;
-	private int simulationLength;
+	private int currSimulationInterval;
 
 	//P3 Heated Planet
 	public static final double T 				= 525974.4;						// Orbital period of Earth in minutes
@@ -53,19 +57,27 @@ public final class Earth implements IModel {
 	public static final double animationGreatestDimention 	= 150; 
 	public static final double factor 						= animationGreatestDimention/2*a;
 	public static final double b 							=  a * (Math.sqrt(1-(E * E)));
-
-	public Earth() {
-		// do nothing
+	
+	protected final IMonitorCallback monitor;
+	
+	public Earth(IMonitorCallback monitor) {
+		
+		if (monitor == null)
+			throw new IllegalArgumentException("Invalid monitor provided");
+		
+		this.monitor = monitor;
 	}
 
 	public GridCell getGrid() {
 		return prime;
 	}
 
-	public void configure(int gs, int timeStep, int simulationLength, float axisTilt, float eccentricity) {
+	public void configure(int gs, int timeStep, float axisTilt, float eccentricity) {
 
 		this.timeStep = timeStep;
-		this.simulationLength = simulationLength;
+		this.axisTilt = axisTilt;
+		this.eccentricity = eccentricity;
+		this.currSimulationInterval = 0;
 
 		// The following could be done better - if we have time, we should do so
 		if (MAX_DEGREES % gs != 0) {
@@ -74,8 +86,6 @@ public final class Earth implements IModel {
 					this.gs = increments[i];
 				}
 			}
-
-			System.out.println("gs: " + this.gs);
 		} else
 			this.gs = gs;
 	}
@@ -155,7 +165,9 @@ public final class Earth implements IModel {
 
 	public void generate() throws InterruptedException {
 		
-		System.out.println("Earth. Generating...");
+		// TODO update currSimulationInterval (one month)
+		// TODO make sure timeStep is scaled
+		this.monitor.notifyCurrentInterval(currSimulationInterval);
 
 		// Don't attempt to generate if output queue is full...
 		if (Buffer.getBuffer().getRemainingCapacity() == 0) {

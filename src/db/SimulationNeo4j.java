@@ -35,33 +35,33 @@ public final class SimulationNeo4j implements IDBConnection {
 	private static PreparedStatement CREATE_QUERY_PRESENTATIONAL_REL_STMT;
 	
 	// Define the node creation statements
-	private static final String CREATE_QUERY_NODE					= "CREATE (n:Query { name : ? })";
+	private static final String CREATE_SIMULATION_NODE				= "CREATE (n:Simulation { name : ? })";
 	private static final String CREATE_TEMP_NODE 					= "CREATE (n:Temperature { value : ? })";
-	private static final String CREATE_AXIAL_DATA_NODE 				= "CREATE (n:Axial Data { value : ? })";
-	private static final String CREATE_ORBIAL_DATA_NODE				= "CREATE (n:Orbital Eccentricity { value : ? })";
-	private static final String CREATE_GRID_SPACING_DATA_NODE 		= "CREATE (n:Grid Spacing { value : ? })";
-	private static final String CREATE_TIME_STEP_DATA_NODE 			= "CREATE (n:Time Step { value : ? })";
-	private static final String CREATE_PRESENTATION_RATE_DATA_NODE 	= "CREATE (n:Presentation Rate { value : ? })";
+	private static final String CREATE_AXIAL_DATA_NODE 				= "CREATE (n:AxialData { value : ? })";
+	private static final String CREATE_ORBIAL_DATA_NODE				= "CREATE (n:OrbitalEccentricity { value : ? })";
+	private static final String CREATE_GRID_SPACING_DATA_NODE 		= "CREATE (n:GridSpacing { value : ? })";
+	private static final String CREATE_TIME_STEP_DATA_NODE 			= "CREATE (n:TimeStep { value : ? })";
+	private static final String CREATE_PRESENTATION_RATE_DATA_NODE 	= "CREATE (n:PresentationRate { value : ? })";
 	
 	// Define the relationships creation statements
-	private static final String CREATE_QUERY_TEMP_REL = "MATCH (a:Query),(b:Temperature) "
+	private static final String CREATE_QUERY_TEMP_REL = "MATCH (a:Simulation),(b:Temperature) "
 			+ "WHERE a.name = '?' AND b.value = '?' "
-			+ "CREATE (a)-[r:RELTYPE { latitude : '?', longitude : '?', date : '?', time : '?' } ]->(b)";
-	private static final String CREATE_QUERY_AXIAL_REL = "MATCH (a:Query),(b:Axial Data) "
+			+ "CREATE (a)-[r:HAS_TEMP { latitude : '?', longitude : '?', date : '?', time : '?' } ]->(b)";
+	private static final String CREATE_QUERY_AXIS_REL = "MATCH (a:Simulation),(b:AxialData) "
 			+ "WHERE a.name = '?' AND b.value = '?' "
-			+ "CREATE (a)-[r:RELTYPE]->(b)";
-	private static final String CREATE_QUERY_ORBITAL_REL = "MATCH (a:Query)(b:Orbital Eccentricity) "
+			+ "CREATE (a)-[r:HAS_AXIS]->(b)";
+	private static final String CREATE_QUERY_ECCENTRICITYL_REL = "MATCH (a:Simulation)(b:OrbitalEccentricity) "
 			+ "WHERE a.name = '?' AND b.value = '?' "
-			+ "CREATE (a)-[r:RELTYPE]->(b)";
-	private static final String CREATE_QUERY_GRID_REL = "MATCH (a:Query)(b:Grid Spacing) "
+			+ "CREATE (a)-[r:HAS_ECCENTRICITY]->(b)";
+	private static final String CREATE_QUERY_GRID_REL = "MATCH (a:Simulation)(b:GridSpacing) "
 			+ "WHERE a.name = '?' AND b.value = '?' "
-			+ "CREATE (a)-[r:RELTYPE]->(b)";
-	private static final String CREATE_QUERY_TIME_REL = "MATCH (a:Query)(b:Time Step) "
+			+ "CREATE (a)-[r:HAS_GRID]->(b)";
+	private static final String CREATE_QUERY_TIME_REL = "MATCH (a:Simulation)(b:TimeStep) "
 			+ "WHERE a.name = '?' AND b.value = '?' "
-			+ "CREATE (a)-[r:RELTYPE]->(b)";
-	private static final String CREATE_QUERY_PRESENTATIONAL_REL = "MATCH (a:Query)(b:Presentation Rate) "
+			+ "CREATE (a)-[r:HAS_TIME]->(b)";
+	private static final String CREATE_QUERY_PRESENTATIONAL_REL = "MATCH (a:Simulation)(b:PresentationInterval) "
 			+ "WHERE a.name = '?' AND b.value = '?' "
-			+ "CREATE (a)-[r:RELTYPE]->(b)";
+			+ "CREATE (a)-[r:HAS_PRESENTATION]->(b)";
 	
 	// Database connection object
 	private static Connection db = null;
@@ -94,7 +94,7 @@ public final class SimulationNeo4j implements IDBConnection {
 	private static void initDB() throws SQLException {
 		
 		// Create or Upgrade Nodes
-		
+		throw new IllegalStateException("Not initializing DB");
 		
 	}
 	

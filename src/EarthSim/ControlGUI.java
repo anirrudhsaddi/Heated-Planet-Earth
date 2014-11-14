@@ -215,9 +215,8 @@ public class ControlGUI extends JFrame implements ActionListener {
 				// Create the buffer
 				Buffer.getBuffer().create(DEFAULT_BUFFFER_SIZE);
 				
-				// TODO name?
-				
-				//threadManager.add(new SimulationDAO(simulationName, new SimulationNeo4j()));
+				// TODO set name?
+				//threadManager.add(new SimulationDAO(new SimulationNeo4j()));
 				threadManager.execute(new ControlEngine());
 				threadManager.execute(new EarthEngine());
 				threadManager.execute(new EarthDisplayEngine());
