@@ -100,6 +100,8 @@ public final class SimulationNeo4j implements IDBConnection {
 	
 	public PreparedStatement createPreparedStatement(String queryName, String query) throws SQLException {
 		
+		if (SAVED_QUERIES.containsKey(queryName)) getPreparedStatement(queryName);
+		
 		PreparedStatement stmt = db.prepareStatement(query);
 		SAVED_QUERIES.put(queryName, stmt);
 		return stmt;
