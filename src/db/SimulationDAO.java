@@ -97,7 +97,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 																+ "(n:Simulation)-[ "
 																+ "r:HAS_TEMP "
 																+ "]->(o:Temperature) "
-																+ "WHERE ? <= r.latitude <= ? AND ? <= r.longitude <= ? AND ? <= r.date <= ? AND ? <= r.time <= ?" // ranges
+																+ "WHERE ? <= r.latitude <= ? AND ? <= r.longitude <= ? AND ? <= r.datetime <= ? " // ranges
 																+ "RETURN o";
 
 	/**
@@ -144,7 +144,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	public boolean createSimulationNode(String name) throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(CREATE_SIMULATION_KEY);
-		// TODO Set values
+		query.setString(0, name);
 		
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst()) return false;
@@ -156,7 +156,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	public boolean createTemperatureRelationship(String name, int temperature) throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(CREATE_TEMP_KEY);
-		// TODO Set values
+		query.setString(0, name);
+		query.setInt(1, temperature);
 		
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst()) return false;
@@ -167,7 +168,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	public boolean createAxisTiltRelationship(String name, float axisTilt) throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(CREATE_AXIS_TILT_KEY);
-		// TODO Set values
+		query.setString(0, name);
+		query.setFloat(1, axisTilt);
 		
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst()) return false;
@@ -178,7 +180,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	public boolean createOrbitalEccentricityRelationship(String name, float eccentricity) throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(CREATE_ECCENTRICITY_KEY);
-		// TODO Set values
+		query.setString(0, name);
+		query.setFloat(1, eccentricity);
 		
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst()) return false;
@@ -189,7 +192,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	public boolean createGridSpacingRelationship(String name, int gridSpacing) throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(CREATE_GRID_SPACING_KEY);
-		// TODO Set values
+		query.setString(0, name);
+		query.setInt(1, gridSpacing);
 		
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst()) return false;
@@ -200,7 +204,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	public boolean createTimeStepRelationship(String name, int timeStep) throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(CREATE_TIME_STEP_KEY);
-		// TODO Set values
+		query.setString(0, name);
+		query.setInt(1, timeStep);
 		
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst()) return false;
@@ -211,7 +216,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	public boolean createPresentationIntervalRelationship(String name, float presentationInterval) throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(CREATE_PRESENTATION_INTERVAL_KEY);
-		// TODO Set values
+		query.setString(0, name);
+		query.setFloat(1, presentationInterval);
 		
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst()) return false;
@@ -222,7 +228,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	public boolean createSimulationLengthRelationship(String name, int simulationLength) throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(CREATE_SIMULATION_LENGTH_KEY);
-		// TODO Set values
+		query.setString(0, name);
+		query.setInt(1, simulationLength);
 		
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst()) return false;
