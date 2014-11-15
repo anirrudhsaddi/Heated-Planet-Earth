@@ -81,9 +81,8 @@ public final class Earth implements IModel {
 		// The following could be done better - if we have time, we should do so
 		if (MAX_DEGREES % gs != 0) {
 			for (int i=0; i < increments.length; i++) {
-				if (gs > increments[i]) {
+				if (gs > increments[i])
 					this.gs = increments[i];
-				}
 			}
 		} else
 			this.gs = gs;
@@ -195,7 +194,8 @@ public final class Earth implements IModel {
 		float calcdTemp = 0;
 
 		calcdTemp = prime.calculateTemp(sunPositionCell, currentTimeInSimulation);
-		suntotal = suntotal + prime.calTsun(sunPositionCell, currentTimeInSimulation);
+		// suntotal = suntotal + prime.calTsun(sunPositionCell, currentTimeInSimulation);
+		suntotal = suntotal + prime.getTSun();
 		grid.setTemperature(prime.getX(), prime.getY(), calcdTemp);
 
 		prime.visited(true);
@@ -220,7 +220,8 @@ public final class Earth implements IModel {
 				grid.setTemperature(child.getX(), child.getY(), calcdTemp);
 				bfs.add(child);
 				
-				suntotal += child.calTsun(sunPositionCell, currentTimeInSimulation);
+				// suntotal += child.calTsun(sunPositionCell, currentTimeInSimulation);
+				suntotal += child.getTSun();
 				
 				//Set display values here
 				grid.setSunLatitudeDeg((float) child.getSunLatitudeOnEarth(currentTimeInSimulation));

@@ -1,6 +1,7 @@
 package db;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import common.IGrid;
 
@@ -27,9 +28,12 @@ public class Neo4jResult implements IQueryResult {
 		populated = true;
 	}
 	
-	public Neo4jResult(final ResultSet result) {
+	public Neo4jResult(final ResultSet result) throws SQLException {
 		
 		// populate from result. If result has stuff...
+		if (!result.isBeforeFirst())
+			return;
+		
 		populated = true;
 	}
 	
