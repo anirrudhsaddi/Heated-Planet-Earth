@@ -37,20 +37,6 @@ public final class SimulationNeo4j implements IDBConnection {
 		} catch (SQLException e) {
 			throw new IllegalStateException("Unable to create a connection to the database " + NAME + ": " + e);
 		}
-		
-		try {
-			SimulationNeo4j.initDB();
-		} catch (SQLException e) {
-			throw new IllegalStateException("Unable to initialize the database " + NAME + ": " + e);
-		}
-		
-	}
-	
-	private static void initDB() throws SQLException {
-		
-		// Create or Upgrade Nodes
-		throw new IllegalStateException("Not initializing DB");
-		
 	}
 	
 	public PreparedStatement createPreparedStatement(String queryName, String query) throws SQLException {

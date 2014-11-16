@@ -20,79 +20,88 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	private final IDBConnection conn;
 
 	// TODO move someplace else
+	
+	// Define the DB constraints
+	private static final String CREATE_NODE_NAME_CONSTRAINT			= "CREATE CONSTRAINT ON (n: Simulation) ASSERT n.name IS UNIQUE";
 
 	// Define the node creation statements
-	private static String CREATE_SIMULATION_KEY					= "create_simulation_node";
-	private static String CREATE_TEMP_KEY						= "create_temperature_node";
-	private static String CREATE_AXIS_TILT_KEY					= "create_axis_node";
-	private static String CREATE_ECCENTRICITY_KEY				= "create_eccentricity_node";
-	private static String CREATE_GRID_SPACING_KEY				= "create_grid_spacing_node";
-	private static String CREATE_TIME_STEP_KEY					= "create_time_step_node";
-	private static String CREATE_PRESENTATION_INTERVAL_KEY		= "create_presentation_interval_node";
-	private static String CREATE_SIMULATION_LENGTH_KEY			= "create_simulation_length_node";
+	private static final String CREATE_SIMULATION_KEY				= "create_simulation_node";
+	private static final String CREATE_TEMP_KEY						= "create_temperature_node";
+	private static final String CREATE_AXIS_TILT_KEY				= "create_axis_node";
+	private static final String CREATE_ECCENTRICITY_KEY				= "create_eccentricity_node";
+	private static final String CREATE_GRID_SPACING_KEY				= "create_grid_spacing_node";
+	private static final String CREATE_TIME_STEP_KEY				= "create_time_step_node";
+	private static final String CREATE_PRESENTATION_INTERVAL_KEY	= "create_presentation_interval_node";
+	private static final String CREATE_SIMULATION_LENGTH_KEY		= "create_simulation_length_node";
 
-	private static final String CREATE_SIMULATION_NODE 			  = "CREATE UNIQUE (n: Simulation { name : ? }) 			RETURN n";
-	private static final String CREATE_TEMP_NODE 				  = "CREATE UNIQUE (n: Temperature { value : ? }) 			RETURN n";
-	private static final String CREATE_AXIS_TILT_NODE 			  = "CREATE UNIQUE (n: AxislTilt { value : ? }) 			RETURN n";
-	private static final String CREATE_ECCENTRICITY_NODE 		  = "CREATE UNIQUE (n: OrbitalEccentricity { value : ? }) 	RETURN n";
-	private static final String CREATE_GRID_SPACING_NODE 		  = "CREATE UNIQUE (n: GridSpacing { value : ? }) 			RETURN n";
-	private static final String CREATE_TIME_STEP_NODE 			  = "CREATE UNIQUE (n: TimeStep { value : ? }) 				RETURN n";
-	private static final String CREATE_PRESENTATION_INTERVAL_NODE = "CREATE UNIQUE (n: PresentationInterval { value : ? }) 	RETURN n";
-	private static final String CREATE_SIMULATION_LENGTH_NODE 	  = "CREATE UNIQUE (n: SimulationLength { value : ? }) 		RETURN n";
+	private static final String CREATE_SIMULATION_NODE 			  	= "CREATE UNIQUE (n: Simulation { name : ? }) 			RETURN n";
+	private static final String CREATE_TEMP_NODE 				  	= "CREATE UNIQUE (n: Temperature { value : ? }) 			RETURN n";
+	private static final String CREATE_AXIS_TILT_NODE 			  	= "CREATE UNIQUE (n: AxislTilt { value : ? }) 			RETURN n";
+	private static final String CREATE_ECCENTRICITY_NODE 		  	= "CREATE UNIQUE (n: OrbitalEccentricity { value : ? }) 	RETURN n";
+	private static final String CREATE_GRID_SPACING_NODE 		  	= "CREATE UNIQUE (n: GridSpacing { value : ? }) 			RETURN n";
+	private static final String CREATE_TIME_STEP_NODE 			  	= "CREATE UNIQUE (n: TimeStep { value : ? }) 				RETURN n";
+	private static final String CREATE_PRESENTATION_INTERVAL_NODE 	= "CREATE UNIQUE (n: PresentationInterval { value : ? }) 	RETURN n";
+	private static final String CREATE_SIMULATION_LENGTH_NODE 	  	= "CREATE UNIQUE (n: SimulationLength { value : ? }) 		RETURN n";
 
 	// Define the relationships creation statements
-	private static String CREATE_TEMP_REL_KEY					= "create_temp_rel";
-	private static String CREATE_AXIS_REL_KEY					= "create_axis_rel";
-	private static String CREATE_ECCENTRICITY_REL_KEY			= "create_eccentricity_rel";
-	private static String CREATE_GRID_REL_KEY					= "create_grid_rel";
-	private static String CREATE_TIME_REL_KEY					= "create_time_rel";
-	private static String CREATE_PRESENTATIONAL_REL_KEY			= "create_presentational_rel";
-	private static String CREATE_LENGTH_REL_KEY					= "create_length_rel";
+	private static final String CREATE_TEMP_REL_KEY					= "create_temp_rel";
+	private static final String CREATE_AXIS_REL_KEY					= "create_axis_rel";
+	private static final String CREATE_ECCENTRICITY_REL_KEY			= "create_eccentricity_rel";
+	private static final String CREATE_GRID_REL_KEY					= "create_grid_rel";
+	private static final String CREATE_TIME_REL_KEY					= "create_time_rel";
+	private static final String CREATE_PRESENTATIONAL_REL_KEY		= "create_presentational_rel";
+	private static final String CREATE_LENGTH_REL_KEY				= "create_length_rel";
 	
-	private static final String CREATE_TEMP_REL 				= "MATCH (a: Simulation) WHERE a.name = '?' "
-																+ "CREATE UNIQUE (a)-[r: HAS_TEMP { latitude : '?', longitude : '?', datetime : '?' }]->(b: Temperate {value: ?}) "
-																+ "RETURN a,r,b";
-	private static final String CREATE_AXIS_REL 				= "MATCH (a: Simulation) WHERE a.name = '?' "
-																+ "CREATE UNIQUE (a)-[r: HAS_AXIS]->(b: AxisTilt {value: ?}) "
-																+ "RETURN a,r,b";
-	private static final String CREATE_ECCENTRICITY_REL 		= "MATCH (a: Simulation) WHERE a.name = '?' "
-																+ "CREATE UNIQUE (a)-[r: HAS_ECCENTRICITY]->(b: OrbitalEccentricity {value: ?}) "
-																+ "RETURN a,r,b";
-	private static final String CREATE_GRID_REL 				= "MATCH (a: Simulation) WHERE a.name = '?' "
-																+ "CREATE UNIQUE (a)-[r: HAS_GRID]->(b: GridSpacing {value: ?}) "
-																+ "RETURN a,r,b";
-	private static final String CREATE_TIME_REL 				= "MATCH (a: Simulation) WHERE a.name = '?' "
-																+ "CREATE UNIQUE (a)-[r: HAS_TIME]->(b: TimeStep {value: ?}) "
-																+ "RETURN a,r,b";
-	private static final String CREATE_PRESENTATIONAL_REL 		= "MATCH (a: Simulation) WHERE a.name = '?' "
-																+ "CREATE UNIQUE (a)-[r: HAS_PRESENTATION]->(b: PresentationInterval { value: ?}) "
-																+ "RETURN a,r,b";
-	private static final String CREATE_LENGTH_REL 				= "MATCH (a: Simulation) WHERE a.name = '?' "
-																+ "CREATE UNIQUE (a)-[r: HAS_LENGTH]->(b: SimulationLength { value: ?}) "
-																+ "RETURN a,r,b";
+	private static final String CREATE_TEMP_REL 					= "MATCH (a: Simulation) WHERE a.name = '?' "
+																	+ "CREATE UNIQUE (a)-[r: HAS_TEMP { latitude : '?', longitude : '?', datetime : '?' }]->(b: Temperate {value: ?}) "
+																	+ "RETURN a,r,b";
+	
+	private static final String CREATE_AXIS_REL 					= "MATCH (a: Simulation) WHERE a.name = '?' "
+																	+ "CREATE UNIQUE (a)-[r: HAS_AXIS]->(b: AxisTilt {value: ?}) "
+																	+ "RETURN a,r,b";
+	
+	private static final String CREATE_ECCENTRICITY_REL 			= "MATCH (a: Simulation) WHERE a.name = '?' "
+																	+ "CREATE UNIQUE (a)-[r: HAS_ECCENTRICITY]->(b: OrbitalEccentricity {value: ?}) "
+																	+ "RETURN a,r,b";
+	
+	private static final String CREATE_GRID_REL 					= "MATCH (a: Simulation) WHERE a.name = '?' "
+																	+ "CREATE UNIQUE (a)-[r: HAS_GRID]->(b: GridSpacing {value: ?}) "
+																	+ "RETURN a,r,b";
+	
+	private static final String CREATE_TIME_REL 					= "MATCH (a: Simulation) WHERE a.name = '?' "
+																	+ "CREATE UNIQUE (a)-[r: HAS_TIME]->(b: TimeStep {value: ?}) "
+																	+ "RETURN a,r,b";
+	
+	private static final String CREATE_PRESENTATIONAL_REL 			= "MATCH (a: Simulation) WHERE a.name = '?' "
+																	+ "CREATE UNIQUE (a)-[r: HAS_PRESENTATION]->(b: PresentationInterval { value: ?}) "
+																	+ "RETURN a,r,b";
+	
+	private static final String CREATE_LENGTH_REL 					= "MATCH (a: Simulation) WHERE a.name = '?' "
+																	+ "CREATE UNIQUE (a)-[r: HAS_LENGTH]->(b: SimulationLength { value: ?}) "
+																	+ "RETURN a,r,b";
 
 	// Define the Query Statements
-	private final static String MATCH_NODE_BY_NAME_KEY 			= "match_node_name";
-	private final static String MATCH_NODE_BY_DATA_KEY 			= "match_node_values";
-	private final static String GET_GRID_BY_DATE_TIME_KEY 		= "match_area_by_date";
+	private static final String MATCH_NODE_BY_NAME_KEY 				= "match_node_name";
+	private static final String MATCH_NODE_BY_DATA_KEY 				= "match_node_values";
+	private static final String GET_GRID_BY_DATE_TIME_KEY 			= "match_area_by_date";
 	
-	private final static String MATCH_NODE_BY_NAME_QUERY 		= "MATCH (n:Simulation)-[ "
-																+ ":HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY:|HAS_AXIS "
-																+ "]->(o) "
-																+ "WHERE n.name = ? "
-																+ "RETURN { name: n.name, "
-																+ "		result: filter(x IN o.values WHERE x = ? OR x = ? OR x = ? OR x = ? OR x = ? )"
-																+ "}";
-	private final static String MATCH_NODE_BY_DATA_QUERY 		= "MATCH (n:Simulation)-[ "
-																+ ":HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY:|HAS_AXIS "
-																+ "]->(o) "
-																+ "RETURN { name: n.name, "
-																+ "		result: filter(x IN o.values WHERE x = ? OR x = ? OR x = ? OR x = ? OR x = ? )"
-																+ "}";
-	private final static String GET_GRID_BY_DATE_TIME_QUERY 	= "MATCH (n:Simulation)-[ r:HAS_TEMP ]->(o:Temperature) "
-																+ "WHERE n.name = ? AND ? <= r.latitude <= ? AND ? <= r.longitude <= ? AND ? <= r.datetime <= ? " 	// specify ranges to search in
-																+ "ORDER BY r.datetime "																			// Order the results ascending by datetime (long) 								
-																+ "RETURN o";
+	private static final String MATCH_NODE_BY_NAME_QUERY 			= "MATCH (n:Simulation)-[ "
+																	+ ":HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY|:HAS_AXIS "
+																	+ "]->(o) "
+																	+ "WHERE n.name = ? "
+																	+ "RETURN { name: n.name, result: o }";
+	
+	private static final String MATCH_NODE_BY_DATA_QUERY 			= "MATCH (n:Simulation)-[ "
+																	+ ":HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY:|HAS_AXIS "
+																	+ "]->(o) "
+																	+ "RETURN { name: n.name, "
+																	+ "		result: filter(x IN o.values WHERE x = ? OR x = ? OR x = ? OR x = ? OR x = ? )"
+																	+ "}";
+	
+	private static final String GET_GRID_BY_DATE_TIME_QUERY 		= "MATCH (n:Simulation)-[ r:HAS_TEMP ]->(o:Temperature) "
+																	+ "WHERE n.name = ? AND ? <= r.latitude <= ? AND ? <= r.longitude <= ? AND ? <= r.datetime <= ? " 	// specify ranges to search in
+																	+ "ORDER BY r.datetime "																			// Order the results ascending by datetime (long) 								
+																	+ "RETURN o";
 
 	/**
 	 * Given a <code>IDBConnection</code>, create the Simulation <code>Data Access Object</code>
@@ -128,6 +137,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		this.conn.createPreparedStatement(CREATE_LENGTH_REL_KEY, CREATE_LENGTH_REL);
 		
 		Publisher.getInstance().subscribe(DeliverMessage.class, this);
+		
+		this.conn.query(CREATE_NODE_NAME_CONSTRAINT);
 	}
 	
 	@Override
@@ -230,8 +241,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	public IQueryResult setSimulationName(String name, int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float eccentricity) throws Exception {
 		
 		// First do findSimulationByName
-		// TODO What if we only want to look up by name?
-		Future<IQueryResult> f = findSimulationByName(name, gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, eccentricity);
+		Future<IQueryResult> f = findSimulationByData(gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, eccentricity);
 		
 		// Wait for the result back from the DB
 		IQueryResult result = f.get();
@@ -268,19 +278,11 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	}
 
 	@Override
-	public Future<IQueryResult> findSimulationByName(String name,
-			int gridSpacing, int timeStep, int simulationLength,
-			float presentationInterval, float axisTilt, float eccentricity) throws SQLException {
+	public Future<IQueryResult> findSimulationByName(String name) throws SQLException {
 
 		PreparedStatement query = conn.getPreparedStatement(MATCH_NODE_BY_NAME_KEY);
 		
 		query.setString(1, name);
-		query.setInt(2, gridSpacing);
-		query.setInt(3, timeStep);
-		query.setInt(4,  simulationLength);
-		query.setFloat(5, presentationInterval);
-		query.setFloat(6, axisTilt);
-		query.setFloat(7, eccentricity);
 		
 		return ThreadManager.getManager().submit(new Query(query));
 	}
@@ -303,7 +305,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	}
 
 	@Override
-	public void findTemperaturesAt(String name, Calendar datetime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException {
+	public void findTemperaturesAt(String name, Calendar startDateTime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException {
 		
 		// how to set range??
 

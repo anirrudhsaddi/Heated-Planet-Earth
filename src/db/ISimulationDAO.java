@@ -22,12 +22,13 @@ public interface ISimulationDAO {
 	
 	public boolean createSimulationLengthRelationship(String name, int simulationLength) throws SQLException;
 	
+	// Only user for Starting a simulation
 	public IQueryResult setSimulationName(String name, int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float eccentricity) throws Exception;
 	
-	public Future<IQueryResult> findSimulationByName(String name, int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float eccentricity) throws SQLException;
+	public Future<IQueryResult> findSimulationByName(String name) throws SQLException;
 	
 	public Future<IQueryResult> findSimulationByData(int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float eccentricity) throws SQLException;
 	
-	public void findTemperaturesAt(String name, Calendar datetime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException;
+	public void findTemperaturesAt(String name, Calendar startDateTime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException;
 
 }

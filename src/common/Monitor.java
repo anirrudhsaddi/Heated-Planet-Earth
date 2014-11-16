@@ -22,6 +22,7 @@ public class Monitor implements IMonitorCallback,MessageListener{
 	}
 	
 	public void onMessage(Message msg) {
+		
 		if (msg instanceof StartMessage) {
 			StartMessage startMsg = (StartMessage)msg;
 			this.simulationLength = startMsg.simulationLength();
@@ -32,8 +33,9 @@ public class Monitor implements IMonitorCallback,MessageListener{
 	}
 
 	@Override
-	public void notifyCurrentInterval(int currSimulationInterval) {
-		this.currentTimeInSimulation = currSimulationInterval*this.timeStep;
+	public void notifyCurrentInterval(int currSimulationInterval, long date, long time) {
+		
+		this.currentTimeInSimulation = currSimulationInterval * this.timeStep;
 		
 		if(this.currentTimeInSimulation >= simulationLength){
 			publisher.send(new StopMessage());

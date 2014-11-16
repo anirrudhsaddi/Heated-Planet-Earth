@@ -225,7 +225,6 @@ public class ControlGUI extends JFrame implements ActionListener {
 				
 				// TODO set name?
 				//threadManager.add(new SimulationDAO(new SimulationNeo4j()));
-				threadManager.execute(new ControlEngine());
 				threadManager.execute(new EarthEngine());
 				threadManager.execute(new EarthDisplayEngine());
 				
