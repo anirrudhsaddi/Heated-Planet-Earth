@@ -64,11 +64,15 @@ public class GridDisplay extends JPanel {
 					int cellx = Math.round(x * cellWidth);
 					int nextCelly = Math.round((y+1) * cellHeight);
 					int nextCellx = Math.round((x+1) * cellWidth);
-					int cellw = nextCellx-cellx;
-					int cellh = nextCelly-celly;
+					int cellw = nextCellx - cellx;
+					int cellh = nextCelly - celly;
 
 					// "fill" the rectangle with the temp color
-					g.setColor(visualizer.calculateColor(t));
+					if (t == -1) 
+						g.setColor(new Color(0 ,0 ,0, 0));
+					else
+						g.setColor(visualizer.calculateColor(t));
+					
 					g.fillRect(cellx, celly, cellw, cellh);
 				}
 			}

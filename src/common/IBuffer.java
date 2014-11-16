@@ -1,6 +1,8 @@
 package common;
 
-public interface IBuffer {
+import messaging.MessageListener;
+
+public interface IBuffer extends MessageListener {
 	
 	public void add(IGrid grid) throws InterruptedException;
 

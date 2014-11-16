@@ -8,31 +8,41 @@ public class Grid implements IGrid {
 	// Used to transport the temps in the buffer
 	private final int sunPosition, time, width, height;
 	private final float sunPositionDeg;
-	private float sunLatitudeDeg=0;
+	private final long dateTime;
+	private final String simulationName;
+	
 	private float planetX, planetY;
+	private float sunLatitudeDeg = 0;
 
 	// We use a TreeMap to not consume a contiguous amount of memory. It's
 	// backed by a Red/Black Tree, so we get pretty decent access times
 	private final Map<Integer, Float> grid;
 
-	public Grid(int sunPosition, float sunPositionDeg, int time, int width, int height) {
+	public Grid(String simulationName, int sunPosition, float sunPositionDeg, int time, int width, int height, long dateTime) {
 
+		this.simulationName = simulationName;
 		this.sunPosition = sunPosition;
 		this.sunPositionDeg = sunPositionDeg;
 		this.time = time;
 		this.width = width;
 		this.height = height;
+		this.dateTime = dateTime;
 
 		grid = new TreeMap<Integer, Float>();
 	}
 	
 	public Grid(Grid toCopy) {
 		
+		this.simulationName = toCopy.simulationName;
 		this.sunPosition = toCopy.sunPosition;
 		this.sunPositionDeg = toCopy.sunPositionDeg;
 		this.time = toCopy.time;
 		this.width = toCopy.width;
 		this.height = toCopy.height;
+		this.planetX = toCopy.planetX;
+		this.planetY = toCopy.planetY;
+		this.sunLatitudeDeg = toCopy.sunLatitudeDeg;
+		this.dateTime = toCopy.dateTime;
 		
 		this.grid = new TreeMap<Integer, Float>(toCopy.grid);
 	}
@@ -99,5 +109,15 @@ public class Grid implements IGrid {
 	@Override
 	public float getPlanetY() {
 		return this.planetY;
+	}
+	
+	@Override
+	public long getDateTime() {
+		return this.dateTime;
+	}
+	
+	@Override
+	public String getSimulationName() {
+		return this.simulationName;
 	}
 }

@@ -13,8 +13,11 @@ public interface IGrid {
 	public float getSunLatitudeDeg();
 	
 	public void setPlanetX(float x);
+	
 	public void setPlanetY(float y);
+	
 	public float getPlanetX();
+	
 	public float getPlanetY();	
 	
 	public int getCurrentTime();
@@ -22,5 +25,9 @@ public interface IGrid {
 	public int getGridWidth();
 	
 	public int getGridHeight();
+	
+	public long getDateTime();
+	
+	public String getSimulationName();
 
 }

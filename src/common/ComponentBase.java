@@ -1,80 +1,89 @@
 package common;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import messaging.Message;
 import messaging.MessageListener;
+import messaging.Publisher;
+import messaging.events.PauseMessage;
+import messaging.events.ResumeMessage;
+import messaging.events.StartMessage;
+import messaging.events.StopMessage;
 
 public abstract class ComponentBase implements MessageListener, Runnable {
 
 	private final ConcurrentLinkedQueue<Message> msgQueue = new ConcurrentLinkedQueue<Message>();
 	
-	// can be set to signal thread run loop should exit
-	protected Boolean stopThread = false; 
-	protected Boolean paused = false;
+	protected AtomicBoolean stopped, paused;
+	
+	public ComponentBase() {
+		
+		paused = new AtomicBoolean(false);
+		stopped = new AtomicBoolean(false);
+		paused.set(false);
+		stopped.set(false);
+		
+		Publisher publisher = Publisher.getInstance();
+		publisher.subscribe(StartMessage.class, this);
+		publisher.subscribe(StopMessage.class, this);
+		publisher.subscribe(PauseMessage.class, this);
+		publisher.subscribe(ResumeMessage.class, this);
+
+	}
 
 	public void onMessage(Message msg) {
-
-		// enque message to be processed later
-		msgQueue.add(msg);
-	}
-
-	public void processFullMessageQueue() {
-		while (!processMessageQueue()) {
-			// Do nothing
-		}
-	}
-
-	public Boolean processMessageQueue() {
-
-		Boolean queueEmpty = true;
-		if(!paused) {
-			Message msg = msgQueue.poll();
-			if (msg != null) {
-				dispatchMessage(msg);
-				queueEmpty = false;
-			}
-		}
 		
-		return queueEmpty;
+		if (msg instanceof StopMessage) {
+			this.msgQueue.clear();
+			this.stop();
+		} else if (msg instanceof StartMessage) {
+			this.performAction(msg);
+		} else if (msg instanceof PauseMessage) {
+			this.pause();
+		} else if (msg instanceof ResumeMessage) {
+			this.resume();
+		} else {
+			// enque message to be processed later
+			this.msgQueue.add(msg);
+		}
 	}
 
-	// This method dispatches a message to the appropriate processor
-	public abstract void dispatchMessage(Message msg);
+	public void process() {
+		
+		//System.out.println(this.getClass() + " is in process");
+
+		if (msgQueue.isEmpty()) return;
+
+		performAction(msgQueue.poll());
+	}
 
 	@Override
 	public void run() {
-		boolean sleep;
-		try {
-			while (!Thread.currentThread().isInterrupted() && !stopThread) {
-				sleep = false;
-				if(!paused) {
-					runAutomaticActions();
-					if (!processMessageQueue()) {
-						sleep = true;
-					}
-				}
-				else {
-					sleep = true;
-				}
-				if (sleep) {
-					Thread.sleep(1);
-				}
-			}
-		} catch (InterruptedException e) {
-			// OK
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
+		while (!Thread.currentThread().isInterrupted() && !stopped.get()) {
+			
+			// TODO try to use wait/notify
+			if(!paused.get()){
+				process();
+			}
+		}
 	}
 
 	// Used to pause a component
-	public void pause(Boolean pause) {
-		this.paused = pause;
+	protected void pause() {
+		this.paused.compareAndSet(false, true);
 	}
 	
-	// override this method for actions to be ran automatically
-	public void runAutomaticActions() throws Exception {
-	};
+	protected void stop() {
+		this.stopped.compareAndSet(false, true);
+	}
+	
+	protected void resume() {
+		this.paused.compareAndSet(true, false);
+	}
+	
+	// This method dispatches a message to the appropriate processor
+	protected abstract void performAction(Message msg);
 }

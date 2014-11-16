@@ -12,8 +12,9 @@ import view.widgets.EarthImage;
 import view.widgets.GridDisplay;
 import view.widgets.SimulationStatus;
 import common.IGrid;
+import common.IView;
 
-public class EarthDisplay extends JFrame {
+public class EarthDisplay extends JFrame implements IView {
 
 	/**
 	 * 
@@ -35,6 +36,8 @@ public class EarthDisplay extends JFrame {
 	private static final int GRID = 1;
 	
 	private int gs = 0, timeStep = 0, simulationLength=0;
+
+	float axisTilt = 0 , eccentricity =0;
 	
 	public EarthDisplay() {
 		
@@ -69,11 +72,14 @@ public class EarthDisplay extends JFrame {
 
 	}
 	
-	public void display(int gs, int timeStep, int simulationLength) {
+	public void display(int gs, int timeStep, int simulationLength, float axisTilt, float eccentricity) {
 		
 		this.gs = gs;
 		this.timeStep = timeStep;
 		this.simulationLength = simulationLength;
+		this.axisTilt = axisTilt;
+		this.eccentricity = eccentricity;
+		
 		
 		this.pack();
 		this.setVisible(true);
@@ -86,9 +92,9 @@ public class EarthDisplay extends JFrame {
 	
 	public void update(IGrid grid) {
 		if (grid != null)
-			simStatus.update(grid.getSunPositionDeg(), grid.getCurrentTime(), this.gs, this.timeStep , this.simulationLength);
+			simStatus.update(grid.getSunPositionDeg(), grid.getCurrentTime(), this.gs, this.timeStep , this.simulationLength, this.axisTilt, this.eccentricity);
 		else
-			simStatus.update(0, 0, this.gs, this.timeStep, this.simulationLength);
+			simStatus.update(0, 0, this.gs, this.timeStep, this.simulationLength, this.axisTilt, this.eccentricity);
 		gridDisplay.update(grid);
 	}
 }

@@ -21,7 +21,7 @@ public final class GridCell implements EarthCell<GridCell> {
 	private GridCell top = null, bottom = null, left = null, right = null;
 
 	// Cell properties: surface area, perimeter
-	private float lv, lb, lt, surfarea, pm;
+	private float lv, lb, lt, surfarea, pm, tSun;
 
 	public GridCell(float temp, int x, int y, int latitude, int longitude, int gs) {
 
@@ -131,6 +131,16 @@ public final class GridCell implements EarthCell<GridCell> {
 	@Override
 	public void setLongitude(int longitude) {
 		this.longitude = longitude;
+	}
+	
+	@Override
+	public int getLatitude() {
+		return this.latitude;
+	}
+
+	@Override
+	public int getLongitude() {
+		return this.longitude;
 	}
 
 	@Override
@@ -299,15 +309,18 @@ public final class GridCell implements EarthCell<GridCell> {
 	}
 	
 	public double equationSolverNewton(double meanAnamoly) {
+<<<<<<< HEAD
 	    double del = 1e-5,xx = 0 ;
 	    double dx =0, x=0;
 	    if(Earth.E > 0.8)
 	    	x=Math.PI;
 	    else
 	    	x=meanAnamoly;
+=======
 		
 	    double del = 1e-5, xx = 0 ;
 	    double dx = 0, x = Math.PI/2;
+>>>>>>> db_and_cleanup
 	    int k = 0;
 	    
 	    //while (Math.abs(xx-x) > del && k<10 && functionOfX(meanAnamoly, x)!=0) {

@@ -45,7 +45,6 @@ public final class GridCell implements EarthCell<GridCell> {
 		this.setBottom(bottom);
 		this.setLeft(left);
 		this.setRight(right);
-		
 		//P2 Heated Planet: Set time of equinox
 		this.setTimeOfEquinox();
 	}
@@ -143,9 +142,17 @@ public final class GridCell implements EarthCell<GridCell> {
 		this. y = y;
 	}
 	
-	// TODO add to interface
-	public float getTSun() {
-		return this.tSun;
+	@Override
+	public float calculateTemp(int sunPosition) {
+		float temp   = this.currTemp + (calTneighbors() - this.currTemp) / 5 + ( calTsun(sunPosition) + calTcool() ) / 10;
+		this.newTemp = (temp > 0) ? temp : 0;    // avoid negative temperature
+		return this.newTemp; // new temp
+	}
+
+	@Override
+	public void swapTemp() {
+		this.currTemp = this.newTemp;
+		this.newTemp = 0;
 	}
 
 	@Override
@@ -155,7 +162,6 @@ public final class GridCell implements EarthCell<GridCell> {
 
 	@Override
 	public Iterator<GridCell> getChildren(boolean visited) {
-		
 		List<GridCell> ret = new ArrayList<GridCell>();
 
 		if (this.top != null 	&& this.top.visited == visited) 	ret.add(this.top);
@@ -177,6 +183,16 @@ public final class GridCell implements EarthCell<GridCell> {
 	}
 
 	@Override
+	public int getLatitude() {
+		return this.latitude;
+	}
+
+	@Override
+	public int getLongitude() {
+		return this.longitude;
+	}
+
+	@Override
 	public void setGridSpacing(int gs) {
 		this.gs = gs;
 	}
@@ -186,33 +202,14 @@ public final class GridCell implements EarthCell<GridCell> {
 		return this.gs;
 	}
 	
-	@Override
-	public float calculateTemp(int sunPosition, int currentTimeInSimulation) {
+	public float calTsun(int sunPosition) {
 		
-		this.tSun = calTsun(sunPosition, currentTimeInSimulation);
-		float temp = this.currTemp + (calTneighbors() - this.currTemp) / 5 + (this.tSun + calTcool()) / 10;
-		this.newTemp = (temp > 0) ? temp : 0;    // avoid negative temperature
-		return this.newTemp; // new temp
-	}
-
-	@Override
-	public void swapTemp() {
-		this.currTemp = this.newTemp;
-		this.newTemp = 0;
-	}
-	
-	// TODD Add to interface
-	public float calTsun(int sunPosition, int currentTimeInSimulation) {
-		
-		int sunLongitude = getSunLocationOnEarth(sunPosition);
+		int   sunLongitude      = getSunLocationOnEarth(sunPosition);
 		//float attenuation_lat   = (float) Math.cos(Math.toRadians(this.latitude  + 1.0 * this.gs / 2));
-		
 		//P2 - Heated Planet : Find correct attenuation depending on the sun latitude
-		int sunLatitude = (int) getSunLatitudeOnEarth(currentTimeInSimulation);
-		
+		int   sunLatitude      = (int) getSunLatitudeOnEarth();
 		//System.out.println("\n" + "Sun Latitude is " + sunLatitude + " for Earth.currentTimeInSimulation " + Earth.currentTimeInSimulation);
-		float attenuation_lat = (float) Math.cos(Math.toRadians(Math.abs(sunLatitude - this.latitude)));
-		
+		float attenuation_lat   = (float) Math.cos(Math.toRadians(Math.abs(sunLatitude - this.latitude)));
 		//float attenuation_longi = (float) (( (Math.abs(sunLongitude - this.longitude) % 360 ) < 90 ) ? Math.cos(Math.toRadians(sunLongitude - this.longitude)) : 0);
 		float attenuation_longi = (float) Math.cos(Math.toRadians(sunLongitude - this.longitude));
 		attenuation_longi = attenuation_longi > 0 ? attenuation_longi : 0;
@@ -233,10 +230,10 @@ public final class GridCell implements EarthCell<GridCell> {
 		this.lb   = this.lb > 0 ? this.lb: 0;
 		this.lt   = (float) (Math.cos(Math.toRadians(latitude + gs)) * this.lv);
 		this.lt   = this.lt > 0 ? this.lt: 0;
-		double h  = Math.sqrt(Math.pow(this.lv, 2) - 1/4 * Math.pow((this.lb - this.lt), 2));
+		double h  = Math.sqrt(Math.pow(this.lv,2) - 1/4 * Math.pow((this.lb - this.lt), 2));
 
 		this.pm = (float) (this.lt + this.lb + 2 * this.lv);
-		this.surfarea =  (float) (1.0 / 2 * (this.lt + this.lb) * h);
+		this.surfarea =  (float) (1.0/2 * (this.lt + this.lb) * h);
 	}
 
 	// A help function for get the Sun's corresponding location on longitude.
@@ -278,11 +275,8 @@ public final class GridCell implements EarthCell<GridCell> {
 
 		float top_temp = 0, bottom_temp = 0;
 
-		if (this.top != null)
-			top_temp = this.lt / this.pm * this.top.getTemp();
-		
-		if (this.bottom != null)
-			bottom_temp = this.lb / this.pm * this.bottom.getTemp();
+		if (this.top != null) 	top_temp = this.lt / this.pm * this.top.getTemp();
+		if (this.bottom != null) 	bottom_temp = this.lb / this.pm * this.bottom.getTemp();
 
 		//System.out.println(this.lt / this.pm + this.lb / this.pm + this.lv / this.pm * 2);
 		return  top_temp + bottom_temp + this.lv / this.pm * (this.left.getTemp() + this.right.getTemp());
@@ -305,16 +299,12 @@ public final class GridCell implements EarthCell<GridCell> {
 	    	x=Math.PI;
 	    else
 	    	x=meanAnamoly;
-		
-	    double del = 1e-5, xx = 0 ;
-	    double dx = 0, x = Math.PI/2;
 	    int k = 0;
-	    
 	    //while (Math.abs(xx-x) > del && k<10 && functionOfX(meanAnamoly, x)!=0) {
-	    while (Math.abs(xx - x) > del && k<10 && functionOfX(meanAnamoly, x) != 0) {
-	      dx = functionOfX(meanAnamoly, x) / derivativeOfX(x);
-	      xx = x;
-	      x = x - dx;
+	    while (Math.abs(xx-x) > del && k<10 && functionOfX(meanAnamoly, x)!=0) {
+	      dx = functionOfX(meanAnamoly, x)/derivativeOfX(x);
+	      xx=x;
+	      x =x - dx;
 	      k++;
 	    
 	    //System.out.println("Iteration number: " + k);
@@ -357,30 +347,27 @@ public final class GridCell implements EarthCell<GridCell> {
 	}
 	
 	public void setTimeOfEquinox() {
-		
-		int t = 0;
-		
-		for ( ; Earth.tauAN == 0 && t < Earth.T; t++) {
-			
+		int t=0;
+		for ( ; Earth.tauAN==0 && t < Earth.T; t++) {
 			double trueAnamoly = trueAnamoly(t);
-			
 			//System.out.println("\n" + "trueAnamoly " + trueAnamoly);
-			// Try 10 as a limit to try first
-			if (Math.abs(Math.toRadians(Earth.omega)- trueAnamoly) <= 0.1) {
+			if(Math.abs(Math.toRadians(Earth.omega)- trueAnamoly) <= 0.1)			//Try 10 as a limit to try first
+			{
 				Earth.tauAN = t;
 				break;
 			}
 		}
 	}
 	
-	public double getRotationalAngle(int currentTime) {
+	public double getRotationalAngle(int currentTime)
+	{
 		double mod = (currentTime - Earth.tauAN) % Earth.T;
 		return (mod * 2 * Math.PI / Earth.T);
 	}
 		
-	public double getSunLatitudeOnEarth(int currentTimeInSimulation) {
+	public double getSunLatitudeOnEarth() {
 		//return (Earth.tilt * Math.sin((getRotationalAngle(currentTime))));
-		return (Earth.tilt * Math.sin((getRotationalAngle(currentTimeInSimulation))));
+		return (Earth.tilt * Math.sin((getRotationalAngle(Earth.currentTimeInSimulation))));
 	}
 }
 

@@ -21,7 +21,7 @@ public final class GridCell implements EarthCell<GridCell> {
 	private GridCell top = null, bottom = null, left = null, right = null;
 
 	// Cell properties: surface area, perimeter
-	private float lv, lb, lt, surfarea, pm;
+	private float lv, lb, lt, surfarea, pm, tSun;
 
 	public GridCell(float temp, int x, int y, int latitude, int longitude, int gs) {
 
@@ -33,8 +33,6 @@ public final class GridCell implements EarthCell<GridCell> {
 
 		this.setTemp(temp);
 		this.visited = false;
-		//P2 Heated Planet: Set time of equinox
-		this.setTimeOfEquinox();
 	}
 
 	public GridCell(GridCell top, GridCell bottom, GridCell left, GridCell right, float temp, int x, int y, int latitude, int longitude, int gs) {
@@ -132,6 +130,16 @@ public final class GridCell implements EarthCell<GridCell> {
 	public void setLongitude(int longitude) {
 		this.longitude = longitude;
 	}
+	
+	@Override
+	public int getLatitude() {
+		return this.latitude;
+	}
+
+	@Override
+	public int getLongitude() {
+		return this.longitude;
+	}
 
 	@Override
 	public void setX(int x) {
@@ -219,10 +227,8 @@ public final class GridCell implements EarthCell<GridCell> {
 		
 		//return 278 * attenuation_lat * attenuation_longi;
 		//P3 - Heated Planet : Sun's distance from planet, inverse square law
-		@SuppressWarnings("unused")
-		double inverseDistanceRatio = 0.5 * Math.pow(distanceFromPlanet(Earth.currentTimeInSimulation),2)/Math.pow(distanceFromPlanet(0),2);
-		return (float) (278 * attenuation_lat * attenuation_longi/inverseDistanceRatio); 
-	
+		return (float) (278 * attenuation_lat * attenuation_longi); 
+		//============ Math.pow(distanceFromPlanet(Earth.currentTimeInSimulation),2));
 	}
 	
 	private void calSurfaceArea(int latitude, int gs) {
@@ -299,12 +305,6 @@ public final class GridCell implements EarthCell<GridCell> {
 	}
 	
 	public double equationSolverNewton(double meanAnamoly) {
-	    double del = 1e-5,xx = 0 ;
-	    double dx =0, x=0;
-	    if(Earth.E > 0.8)
-	    	x=Math.PI;
-	    else
-	    	x=meanAnamoly;
 		
 	    double del = 1e-5, xx = 0 ;
 	    double dx = 0, x = Math.PI/2;

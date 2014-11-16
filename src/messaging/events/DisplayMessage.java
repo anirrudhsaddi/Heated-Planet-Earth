@@ -2,6 +2,6 @@ package messaging.events;
 
 import messaging.Message;
 
-public class DisplayMessage extends Message {
+public class DisplayMessage implements Message {
 
 }
