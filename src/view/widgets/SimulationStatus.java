@@ -19,8 +19,8 @@ public class SimulationStatus extends JPanel {
     private JTextField sunPosStats, currTimeStatus, gsStatus, timeStepStatus, simulationLength, axisTilt, eccentricity;
     private JLabel lblSunPos, lblCurrTime, lblGs, lblTimeStep, lblSimLength, lblAxisTilt, lblEccentricity;
 
-    private static final int HEIGHT = 7;
-    private static final int WIDTH = 2;
+    private static final int HEIGHT = 10;
+    private static final int WIDTH = 3;
     private static final int HGAP = 1;
     private static final int VGAP = 1;
 
