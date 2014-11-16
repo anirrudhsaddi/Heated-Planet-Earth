@@ -26,7 +26,7 @@ public final class Earth implements IModel {
 	private static final int MAX_DEGREES 	= 180;
 	private static final int MAX_SPEED 		= 1440;
 
-	private static final int[] increments = { 1,2,3,4,5,6, 9, 10, 12, 15, 18, 20, 30, 36, 45, 60, 90, 180 };
+	private static final int[] increments = { 6, 9, 10, 12, 15, 18, 20, 30, 36, 45, 60, 90, 180 };
 	
 	private int currentStep;
 	private int width;
@@ -80,7 +80,7 @@ public final class Earth implements IModel {
 
 		// The following could be done better - if we have time, we should do so
 		if (MAX_DEGREES % gs != 0) {
-			for (int i=0; i < increments.length; i++) {
+			for (int i = 0; i < increments.length; i++) {
 				if (gs > increments[i])
 					this.gs = increments[i];
 			}

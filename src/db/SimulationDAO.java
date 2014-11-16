@@ -19,8 +19,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 
 	private final IDBConnection conn;
 
-	private String simulationName;
-
 	// TODO move someplace else
 
 	// Define the node creation statements
@@ -78,26 +76,22 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	private final static String MATCH_NODE_BY_DATA_KEY 			= "match_node_values";
 	private final static String GET_GRID_BY_DATE_TIME_KEY 		= "match_area_by_date";
 	
-	private final static String MATCH_NODE_BY_NAME_QUERY 		= "MATCH "
-																+ "(n:Simulation)-[ "
+	private final static String MATCH_NODE_BY_NAME_QUERY 		= "MATCH (n:Simulation)-[ "
 																+ ":HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY:|HAS_AXIS "
 																+ "]->(o) "
 																+ "WHERE n.name = ? "
 																+ "RETURN { name: n.name, "
 																+ "		result: filter(x IN o.values WHERE x = ? OR x = ? OR x = ? OR x = ? OR x = ? )"
 																+ "}";
-	private final static String MATCH_NODE_BY_DATA_QUERY 		= "MATCH "
-																+ "(n:Simulation)-[ "
+	private final static String MATCH_NODE_BY_DATA_QUERY 		= "MATCH (n:Simulation)-[ "
 																+ ":HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY:|HAS_AXIS "
 																+ "]->(o) "
 																+ "RETURN { name: n.name, "
 																+ "		result: filter(x IN o.values WHERE x = ? OR x = ? OR x = ? OR x = ? OR x = ? )"
 																+ "}";
-	private final static String GET_GRID_BY_DATE_TIME_QUERY 	= "MATCH " 					// TODO fix
-																+ "(n:Simulation)-[ "
-																+ "r:HAS_TEMP "
-																+ "]->(o:Temperature) "
-																+ "WHERE ? <= r.latitude <= ? AND ? <= r.longitude <= ? AND ? <= r.datetime <= ? " // ranges
+	private final static String GET_GRID_BY_DATE_TIME_QUERY 	= "MATCH (n:Simulation)-[ r:HAS_TEMP ]->(o:Temperature) "
+																+ "WHERE n.name = ? AND ? <= r.latitude <= ? AND ? <= r.longitude <= ? AND ? <= r.datetime <= ? " 	// specify ranges to search in
+																+ "ORDER BY r.datetime "																			// Order the results ascending by datetime (long) 								
 																+ "RETURN o";
 
 	/**
@@ -106,10 +100,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	 * @throws SQLException
 	 */
 	public SimulationDAO(final IDBConnection conn) throws SQLException {
-
-		if (simulationName == null)
-			throw new IllegalArgumentException(
-					"Invalid Simulation Name provided");
 
 		if (conn == null)
 			throw new IllegalArgumentException("Invalid DB Connection object");
@@ -243,49 +233,98 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		// TODO What if we only want to look up by name?
 		Future<IQueryResult> f = findSimulationByName(name, gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, eccentricity);
 		
+		// Wait for the result back from the DB
 		IQueryResult result = f.get();
 		
-		this.simulationName = name;
-		
+		// If the result is empty, then the simulation does not exist and we should create it (or it errored)
 		if (result.isEmpty()) {
+			
 			if (result.isErrored()) throw result.getError();
 			
-			// TODO Create links
-			// TODO Set values
-			// TODO return a custom built IQueryResult if all the creates worked
+			if (!createSimulationNode(name))
+				throw new SQLException("Failed to create Node(Simulation {" + name + "})");
+			
+			if (!createGridSpacingRelationship(name, gridSpacing))
+				throw new SQLException("Failed to create Relationship Node(Simulation {" + name + "})-[:HAS_GRID]->Node(GridSpacing {" + gridSpacing + "})");
+			
+			if (!createTimeStepRelationship(name, timeStep))
+				throw new SQLException("Failed to create Relationship Node(Simulation {" + name + "})-[:HAS_TIME]->Node(TimeStep {" + timeStep + "})");
+			
+			if (!createSimulationLengthRelationship(name, simulationLength))
+				throw new SQLException("Failed to create Relationship Node(Simulation {" + name + "})-[:HAS_LENGTH]->Node(SimulationLength {" + simulationLength + "})");
+			
+			if (!createPresentationIntervalRelationship(name, presentationInterval))
+				throw new SQLException("Failed to create Relationship Node(Simulation {" + name + "})-[:HAS_PRESENTATION]->Node(PresentationInterval {" + presentationInterval + "})");
+			
+			if (!createAxisTiltRelationship(name, axisTilt))
+				throw new SQLException("Failed to create Relationship Node(Simulation {" + name + "})-[:HAS_AXIS]->Node(AxisTilt {" + axisTilt + "})");
+			
+			if (!createOrbitalEccentricityRelationship(name, eccentricity))
+				throw new SQLException("Failed to create Relationship Node(Simulation {" + name + "})-[:HAS_ECCENTRICITY]->Node(OrbitalEccentricity {" + gridSpacing + "})");
+			
 			return new Neo4jResult(name, gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, eccentricity);
-		} else {
+		} else 
 			return result;
-		}
 	}
 
 	@Override
 	public Future<IQueryResult> findSimulationByName(String name,
 			int gridSpacing, int timeStep, int simulationLength,
-			float presentationInterval, float axisTilt, float eccentricity) {
+			float presentationInterval, float axisTilt, float eccentricity) throws SQLException {
 
 		PreparedStatement query = conn.getPreparedStatement(MATCH_NODE_BY_NAME_KEY);
-		// TODO Set values
+		
+		query.setString(1, name);
+		query.setInt(2, gridSpacing);
+		query.setInt(3, timeStep);
+		query.setInt(4,  simulationLength);
+		query.setFloat(5, presentationInterval);
+		query.setFloat(6, axisTilt);
+		query.setFloat(7, eccentricity);
+		
 		return ThreadManager.getManager().submit(new Query(query));
 	}
 
 	@Override
 	public Future<IQueryResult> findSimulationByData(int gridSpacing,
 			int timeStep, int simulationLength, float presentationInterval,
-			float axisTilt, float eccentricity) {
+			float axisTilt, float eccentricity) throws SQLException {
 
 		PreparedStatement query = conn.getPreparedStatement(MATCH_NODE_BY_DATA_KEY);
-		// TODO Set values
+		
+		query.setInt(1, gridSpacing);
+		query.setInt(2, timeStep);
+		query.setInt(3,  simulationLength);
+		query.setFloat(4, presentationInterval);
+		query.setFloat(5, axisTilt);
+		query.setFloat(6, eccentricity);
+		
 		return ThreadManager.getManager().submit(new Query(query));
 	}
 
 	@Override
-	public Future<IQueryResult> findTemperaturesAt(String name,
-			Calendar datetime, int[] locations) {
+	public void findTemperaturesAt(String name, Calendar datetime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException {
+		
+		// how to set range??
 
 		PreparedStatement query = conn.getPreparedStatement(GET_GRID_BY_DATE_TIME_KEY);
-		// TODO Set values
-		return ThreadManager.getManager().submit(new Query(query));
+		
+		long epochHigh = 
+		long epochLow = 
+		
+		// TODO do some calcs to figure out equator and prime
+		query.setString(1, name);
+		query.setInt(2, northLatitude);
+		query.setInt(3, southLatitude);
+		query.setInt(4, westLongitude);
+		query.setInt(5, rightLongitude);				
+		query.setLong(6, eastLongitude);		// Bind the date range to the closest lowest interval
+		query.setLong(7, epochHigh);			// Bind the date range to the closest highest interval
+		
+		IQueryResult result = ThreadManager.getManager().submit(new Query(query)).get();
+		
+		// TODO populate grid
+		// figure out if to calc or update
 	}
 
 	@Override
@@ -299,13 +338,15 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	@Override
 	public void onMessage(Message msg) {
 
-		if (msg instanceof DeliverMessage) {
-			offer(((DeliverMessage) msg).getGrid());
-		} else {
-			System.err
-					.printf("WARNING: No processor specified in class %s for message %s\n",
-							this.getClass().getName(), msg.getClass().getName());
-		}
+		if (msg instanceof DeliverMessage)
+			try {
+				offer(((DeliverMessage) msg).getGrid());
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.err.println("Unable to add Grid to Database");
+			}
+		else
+			System.err.printf("WARNING: No processor specified in class %s for message %s\n", this.getClass().getName(), msg.getClass().getName());
 	}
 
 	@Override
@@ -313,10 +354,25 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		// Do nothing
 	}
 
-	private void offer(IGrid grid) {
-		// check if we need to store this
-		// if so, save physical data
-		// loop through grid and create relationships
+	private void offer(IGrid grid) throws SQLException {
+		
+		// TODO do we want to check to see if we should save this based on date?
+		long dateTime = grid.getDateTime();
+		
+		
+		String name = grid.getSimulationName();
+		PreparedStatement query = conn.getPreparedStatement(CREATE_TIME_REL_KEY);
+		
+		int width = grid.getGridWidth(), height = grid.getGridHeight();
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++ ) {
+				query.setString(1, name);
+				query.setInt(2, getLatitude(y, height));
+				query.setInt(3, getLongitude(x, width));
+				query.setLong(4, dateTime);
+				query.setFloat(5, grid.getTemperature(x, y));
+			}
+		}
 	}
 
 	private class Query implements Callable<IQueryResult> {
@@ -325,8 +381,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 
 		public Query(PreparedStatement query) {
 			if (query == null)
-				throw new IllegalArgumentException(
-						"Invalid PreparedStatement provided");
+				throw new IllegalArgumentException("Invalid PreparedStatement provided");
 
 			this.query = query;
 		}
@@ -340,5 +395,13 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 				return new Neo4jResult(e);
 			}
 		}
+	}
+	
+	private int getLatitude(int y, int height) {
+		return (y - (height / 2)) * (180 / height);
+	}
+
+	private int getLongitude(int x, int width) {
+		return x < (width / 2) ? -(x + 1) *  (2 * 180 / width) : (360) - (x + 1) * (2 * 180 / width);
 	}
 }

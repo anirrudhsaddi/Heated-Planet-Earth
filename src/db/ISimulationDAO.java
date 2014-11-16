@@ -24,10 +24,10 @@ public interface ISimulationDAO {
 	
 	public IQueryResult setSimulationName(String name, int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float eccentricity) throws Exception;
 	
-	public Future<IQueryResult> findSimulationByName(String name, int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float eccentricity);
+	public Future<IQueryResult> findSimulationByName(String name, int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float eccentricity) throws SQLException;
 	
-	public Future<IQueryResult> findSimulationByData(int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float eccentricity);
+	public Future<IQueryResult> findSimulationByData(int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float eccentricity) throws SQLException;
 	
-	public Future<IQueryResult> findTemperaturesAt(String name, Calendar datetime, int[] locations);
+	public void findTemperaturesAt(String name, Calendar datetime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException;
 
 }

@@ -25,5 +25,9 @@ public interface IGrid {
 	public int getGridWidth();
 	
 	public int getGridHeight();
+	
+	public long getDateTime();
+	
+	public String getSimulationName();
 
 }

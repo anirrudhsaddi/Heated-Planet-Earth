@@ -130,6 +130,16 @@ public final class GridCell implements EarthCell<GridCell> {
 	public void setLongitude(int longitude) {
 		this.longitude = longitude;
 	}
+	
+	@Override
+	public int getLatitude() {
+		return this.latitude;
+	}
+
+	@Override
+	public int getLongitude() {
+		return this.longitude;
+	}
 
 	@Override
 	public void setX(int x) {
@@ -175,16 +185,6 @@ public final class GridCell implements EarthCell<GridCell> {
 	}
 
 	@Override
-	public int getLatitude() {
-		return this.latitude;
-	}
-
-	@Override
-	public int getLongitude() {
-		return this.longitude;
-	}
-
-	@Override
 	public void setGridSpacing(int gs) {
 		this.gs = gs;
 	}
@@ -196,6 +196,7 @@ public final class GridCell implements EarthCell<GridCell> {
 	
 	@Override
 	public float calculateTemp(int sunPosition, int currentTimeInSimulation) {
+		
 		this.tSun = calTsun(sunPosition, currentTimeInSimulation);
 		float temp = this.currTemp + (calTneighbors() - this.currTemp) / 5 + (this.tSun + calTcool()) / 10;
 		this.newTemp = (temp > 0) ? temp : 0;    // avoid negative temperature

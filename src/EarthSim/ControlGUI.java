@@ -8,7 +8,9 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -64,12 +66,17 @@ public class ControlGUI extends JFrame implements ActionListener {
 	private static final float DEFAULT_ECCENTRICITY	= 0.0167f;
 	private static final float MAX_ECCENTRICITY 	= 1.0f;
 	
+	private static final Calendar START_DATE		= Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+	
 	private HashMap<String, JTextField> inputs = new HashMap<String, JTextField>();
 	private HashMap<String, JButton> buttons = new HashMap<String, JButton>();
 
 	private ThreadManager threadManager = ThreadManager.getManager();
 	
 	public ControlGUI() {
+		
+		// START_DATE is epoch UTC (01/01/1970). Add 3 days to make it 01/04/1970 
+		START_DATE.add(Calendar.DAY_OF_YEAR, 3);
 
 		// make widgets
 		setupWindow();
@@ -185,6 +192,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 			try {
 				
 				// TODO check for stop and reset?
+				// TODO All simulations need to start at Jan 4th (epoch)
 				
 				final int gs = Integer.parseInt(inputs.get("Grid Spacing").getText());
 				final int timeStep = Integer.parseInt(inputs.get("Simulation Time Step").getText());
