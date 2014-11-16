@@ -32,8 +32,8 @@ public class QueryWidget extends JPanel implements ActionListener{
 	setAlignmentY(Component.RIGHT_ALIGNMENT);
 
 	JScrollPane listScrollPane = new JScrollPane(list("Simulation List"));
-	add(listScrollPane, BorderLayout.NORTH);
-	add(inputPanel(), BorderLayout.SOUTH);
+	add(listScrollPane, BorderLayout.WEST);
+	add(inputPanel(), BorderLayout.EAST);
 	
 	
     }
