@@ -35,7 +35,6 @@ public abstract class ComponentBase implements MessageListener, Runnable {
 
 	public void onMessage(Message msg) {
 		
-		// TODO clear queue on stop
 		if (msg instanceof StopMessage) {
 			this.msgQueue.clear();
 			this.stop();
@@ -65,7 +64,6 @@ public abstract class ComponentBase implements MessageListener, Runnable {
 
 		while (!Thread.currentThread().isInterrupted() && !stopped.get()) {
 			
-			//System.out.println(this.getClass() + " doing loop");
 			// TODO try to use wait/notify
 			if(!paused.get()){
 				process();

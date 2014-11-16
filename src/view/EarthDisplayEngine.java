@@ -5,7 +5,6 @@ import messaging.Publisher;
 import messaging.events.ConsumeMessage;
 import messaging.events.DisplayMessage;
 import messaging.events.StartMessage;
-
 import common.Buffer;
 import common.ComponentBase;
 import common.IBuffer;
@@ -17,6 +16,9 @@ public class EarthDisplayEngine extends ComponentBase {
 
 	// Current IGrid this display is updating with
 	private IGrid grid;
+	
+	private float presentationInterval;
+	private long lastDisplayTime;
 
 	// Statistical data - TODO move to different module
 
@@ -59,29 +61,9 @@ public class EarthDisplayEngine extends ComponentBase {
 		if (msg instanceof StartMessage) {
 
 			StartMessage start = (StartMessage) msg;
-			start(start.gs(), start.timeStep(), start.simulationLength(), start.axisTilt(), start.eccentricity());
-
-		} else if (msg instanceof DisplayMessage) {
-			
-			if (grid != null) {
-				if (STATISTIC_MODE)
-					generateStatisicalData(grid);
-
-				System.out.println("EarthDisplayEngine. Updating Display");
-				display.update(grid);
-				grid = null;
-				System.out.println("EarthDisplayEngine. Done updating Display");
-			}
-			
-			try {
-				grid = Buffer.getBuffer().get();
-			} catch (InterruptedException e) {
-				grid = null;
-			}
+			start(start.gs(), start.timeStep(), start.simulationLength(), start.axisTilt(), start.eccentricity(), start.presentationInterval());
 
 		} else if (msg instanceof ConsumeMessage) {
-
-			System.out.println("EarthDisplayMessage. Got ConsumeMessage");
 
 			if (grid == null) {
 				try {
@@ -94,6 +76,33 @@ public class EarthDisplayEngine extends ComponentBase {
 			System.err.printf("WARNING: No processor specified in class %s for message %s\n", this.getClass().getName(), msg.getClass().getName());
 		}
 	}
+	
+	@Override
+	public void run() {
+		
+		while (!Thread.currentThread().isInterrupted() && !stopped.get()) {
+			
+			long curTime = System.nanoTime();
+			if ((curTime - lastDisplayTime) * 1e-9 >= presentationInterval) {
+				
+				if (grid != null) {
+					if (STATISTIC_MODE)
+						generateStatisicalData(grid);
+
+					display.update(grid);
+					grid = null;
+				}
+				
+				try {
+					grid = Buffer.getBuffer().get();
+				} catch (InterruptedException e) {
+					grid = null;
+				}
+				
+				lastDisplayTime = curTime;
+			}
+		}
+	}
 
 	@Override
 	public void stop() {
@@ -104,7 +113,9 @@ public class EarthDisplayEngine extends ComponentBase {
 		display.close();
 	}
 
-	private void start(int gs, int timeStep, int simulationLength, float axisTilt, float eccentricity) {
+	private void start(int gs, int timeStep, int simulationLength, float axisTilt, float eccentricity, float presentationInterval) {
+		
+		this.presentationInterval = presentationInterval;
 
 		display.display(gs, timeStep, simulationLength, axisTilt, eccentricity);
 		display.update(grid);
