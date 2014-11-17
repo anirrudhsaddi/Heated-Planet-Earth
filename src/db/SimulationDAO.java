@@ -34,9 +34,9 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	private static final String CREATE_PRESENTATION_INTERVAL_KEY	= "create_presentation_interval_node";
 	private static final String CREATE_SIMULATION_LENGTH_KEY		= "create_simulation_length_node";
 
-	private static final String CREATE_SIMULATION_NODE 			  	= "CREATE UNIQUE (n: Simulation { name : ? }) 			RETURN n";
+	private static final String CREATE_SIMULATION_NODE 			  	= "CREATE UNIQUE (n: Simulation { name : \"?\" }) 			RETURN n";
 	private static final String CREATE_TEMP_NODE 				  	= "CREATE UNIQUE (n: Temperature { value : ? }) 			RETURN n";
-	private static final String CREATE_AXIS_TILT_NODE 			  	= "CREATE UNIQUE (n: AxislTilt { value : ? }) 			RETURN n";
+	private static final String CREATE_AXIS_TILT_NODE 			  	= "CREATE UNIQUE (n: AxislTilt { value : ? }) 				RETURN n";
 	private static final String CREATE_ECCENTRICITY_NODE 		  	= "CREATE UNIQUE (n: OrbitalEccentricity { value : ? }) 	RETURN n";
 	private static final String CREATE_GRID_SPACING_NODE 		  	= "CREATE UNIQUE (n: GridSpacing { value : ? }) 			RETURN n";
 	private static final String CREATE_TIME_STEP_NODE 			  	= "CREATE UNIQUE (n: TimeStep { value : ? }) 				RETURN n";
@@ -52,31 +52,31 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	private static final String CREATE_PRESENTATIONAL_REL_KEY		= "create_presentational_rel";
 	private static final String CREATE_LENGTH_REL_KEY				= "create_length_rel";
 	
-	private static final String CREATE_TEMP_REL 					= "MATCH (a: Simulation) WHERE a.name = '?' "
+	private static final String CREATE_TEMP_REL 					= "MATCH (a: Simulation) WHERE a.name = \"?\" "
 																	+ "CREATE UNIQUE (a)-[r: HAS_TEMP { latitude : '?', longitude : '?', datetime : '?' }]->(b: Temperate {value: ?}) "
 																	+ "RETURN a,r,b";
 	
-	private static final String CREATE_AXIS_REL 					= "MATCH (a: Simulation) WHERE a.name = '?' "
+	private static final String CREATE_AXIS_REL 					= "MATCH (a: Simulation) WHERE a.name = \"?\" "
 																	+ "CREATE UNIQUE (a)-[r: HAS_AXIS]->(b: AxisTilt {value: ?}) "
 																	+ "RETURN a,r,b";
 	
-	private static final String CREATE_ECCENTRICITY_REL 			= "MATCH (a: Simulation) WHERE a.name = '?' "
+	private static final String CREATE_ECCENTRICITY_REL 			= "MATCH (a: Simulation) WHERE a.name = \"?\" "
 																	+ "CREATE UNIQUE (a)-[r: HAS_ECCENTRICITY]->(b: OrbitalEccentricity {value: ?}) "
 																	+ "RETURN a,r,b";
 	
-	private static final String CREATE_GRID_REL 					= "MATCH (a: Simulation) WHERE a.name = '?' "
+	private static final String CREATE_GRID_REL 					= "MATCH (a: Simulation) WHERE a.name = \"?\" "
 																	+ "CREATE UNIQUE (a)-[r: HAS_GRID]->(b: GridSpacing {value: ?}) "
 																	+ "RETURN a,r,b";
 	
-	private static final String CREATE_TIME_REL 					= "MATCH (a: Simulation) WHERE a.name = '?' "
+	private static final String CREATE_TIME_REL 					= "MATCH (a: Simulation) WHERE a.name = \"?\" "
 																	+ "CREATE UNIQUE (a)-[r: HAS_TIME]->(b: TimeStep {value: ?}) "
 																	+ "RETURN a,r,b";
 	
-	private static final String CREATE_PRESENTATIONAL_REL 			= "MATCH (a: Simulation) WHERE a.name = '?' "
+	private static final String CREATE_PRESENTATIONAL_REL 			= "MATCH (a: Simulation) WHERE a.name = \"?\" "
 																	+ "CREATE UNIQUE (a)-[r: HAS_PRESENTATION]->(b: PresentationInterval { value: ?}) "
 																	+ "RETURN a,r,b";
 	
-	private static final String CREATE_LENGTH_REL 					= "MATCH (a: Simulation) WHERE a.name = '?' "
+	private static final String CREATE_LENGTH_REL 					= "MATCH (a: Simulation) WHERE a.name = \"?\" "
 																	+ "CREATE UNIQUE (a)-[r: HAS_LENGTH]->(b: SimulationLength { value: ?}) "
 																	+ "RETURN a,r,b";
 
@@ -84,11 +84,12 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	private static final String MATCH_NODE_BY_NAME_KEY 				= "match_node_name";
 	private static final String MATCH_NODE_BY_DATA_KEY 				= "match_node_values";
 	private static final String GET_GRID_BY_DATE_TIME_KEY 			= "match_area_by_date";
+	private static final String GET_DATE_TIME_KEY					= "match_closest_datetime";
 	
 	private static final String MATCH_NODE_BY_NAME_QUERY 			= "MATCH (n:Simulation)-[ "
 																	+ ":HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY|:HAS_AXIS "
 																	+ "]->(o) "
-																	+ "WHERE n.name = ? "
+																	+ "WHERE n.name = \"?\" "
 																	+ "RETURN { name: n.name, result: o }";
 	
 	private static final String MATCH_NODE_BY_DATA_QUERY 			= "MATCH (n:Simulation)-[ "
@@ -98,10 +99,15 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 																	+ "		result: filter(x IN o.values WHERE x = ? OR x = ? OR x = ? OR x = ? OR x = ? )"
 																	+ "}";
 	
-	private static final String GET_GRID_BY_DATE_TIME_QUERY 		= "MATCH (n:Simulation)-[ r:HAS_TEMP ]->(o:Temperature) "
-																	+ "WHERE n.name = ? AND ? <= r.latitude <= ? AND ? <= r.longitude <= ? AND ? <= r.datetime <= ? " 	// specify ranges to search in
-																	+ "ORDER BY r.datetime "																			// Order the results ascending by datetime (long) 								
-																	+ "RETURN o";
+	private static final String GET_GRID_BY_DATE_TIME_QUERY 		= "MATCH (n:Simulation)-[ r:HAS_TEMP ]->(t:Temperature) "
+																	+ "WHERE n.name = \"?\" AND r.datetime = ? "
+																	+ "WITH r.latitude as latitude, r.longitude as longitude, t.value as temperature "
+																	+ "RETURN temperature, latitude, longitude ";
+	
+	private static final String GET_DATE_TIME_QUERY					= "MATCH (n:Simulation)-[r:HAS_TEMPERATURE]-(t:Temperature) "
+																	+ "WHERE n.name = \"?\" AND r.datetime <= ? "
+																	+ "WITH max(r.datetime) as datetime"
+																	+ "RETURN datetime";
 
 	/**
 	 * Given a <code>IDBConnection</code>, create the Simulation <code>Data Access Object</code>
@@ -118,6 +124,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		this.conn.createPreparedStatement(MATCH_NODE_BY_NAME_KEY, MATCH_NODE_BY_NAME_QUERY);
 		this.conn.createPreparedStatement(MATCH_NODE_BY_DATA_KEY, MATCH_NODE_BY_DATA_QUERY);
 		this.conn.createPreparedStatement(GET_GRID_BY_DATE_TIME_KEY, GET_GRID_BY_DATE_TIME_QUERY);
+		this.conn.createPreparedStatement(GET_DATE_TIME_KEY, GET_DATE_TIME_QUERY);
 		
 		this.conn.createPreparedStatement(CREATE_SIMULATION_KEY, CREATE_SIMULATION_NODE);
 		this.conn.createPreparedStatement(CREATE_TEMP_KEY, CREATE_TEMP_NODE);
@@ -305,28 +312,39 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	}
 
 	@Override
-	public void findTemperaturesAt(String name, Calendar startDateTime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException {
-		
-		// how to set range??
+	public void findTemperaturesAt(String name, Calendar startDateTime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException, InterruptedException, ExecutionException {
 
-		PreparedStatement query = conn.getPreparedStatement(GET_GRID_BY_DATE_TIME_KEY);
+		ResultSet result;
+		long queryDateTime = startDateTime.getTimeInMillis();
 		
-		long epochHigh = 
-		long epochLow = 
-		
-		// TODO do some calcs to figure out equator and prime
+		// First, find the closest datetime-valued relationship
+		PreparedStatement query = conn.getPreparedStatement(GET_DATE_TIME_KEY);
 		query.setString(1, name);
-		query.setInt(2, northLatitude);
-		query.setInt(3, southLatitude);
-		query.setInt(4, westLongitude);
-		query.setInt(5, rightLongitude);				
-		query.setLong(6, eastLongitude);		// Bind the date range to the closest lowest interval
-		query.setLong(7, epochHigh);			// Bind the date range to the closest highest interval
+		query.setLong(2, startDateTime.getTimeInMillis());
+		result = conn.query(query);
+		if (!result.isBeforeFirst())
+			throw new SQLException("Failed to find a date");
 		
-		IQueryResult result = ThreadManager.getManager().submit(new Query(query)).get();
+		// This should be the closest date available to us
+		long foundDateTime = Long.parseLong(result.getString("datetime"));
 		
-		// TODO populate grid
+		// Now get all the temps
+		query = conn.getPreparedStatement(GET_GRID_BY_DATE_TIME_KEY);
+		
+		query.setString(1, name);
+		query.setLong(2, foundDateTime);
+		
+		result = conn.query(query);
+		if (!result.isBeforeFirst())
+			throw new SQLException("Failed to find a temperatures");
+		
+		// populate the base-line grid
+		while(result.next()) {
+			
+		}
+		
 		// figure out if to calc or update
+		if (foundDateTime == queryDateTime)
 	}
 
 	@Override
