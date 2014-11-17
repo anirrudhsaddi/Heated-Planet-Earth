@@ -24,7 +24,9 @@ public class Monitor implements IMonitorCallback,MessageListener{
 	public void onMessage(Message msg) {
 		
 		if (msg instanceof StartMessage) {
-			StartMessage startMsg = (StartMessage)msg;
+			StartMessage startMsg = (StartMessage) msg;
+			
+			// TODO convert to long representation since epoch of the end date (using Calendar)
 			this.simulationLength = startMsg.simulationLength();
 			this.timeStep = startMsg.timeStep();
 			
@@ -33,7 +35,7 @@ public class Monitor implements IMonitorCallback,MessageListener{
 	}
 
 	@Override
-	public void notifyCurrentInterval(int currSimulationInterval, long date, long time) {
+	public void notifyCurrentInterval(long date, long time) {
 		
 		this.currentTimeInSimulation = currSimulationInterval * this.timeStep;
 		

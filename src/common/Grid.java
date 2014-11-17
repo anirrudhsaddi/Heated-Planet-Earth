@@ -6,9 +6,9 @@ import java.util.TreeMap;
 public class Grid implements IGrid {
 
 	// Used to transport the temps in the buffer
-	private final int sunPosition, time, width, height;
+	private final int sunPosition,  width, height;
 	private final float sunPositionDeg;
-	private final long dateTime;
+	private final long dateTime, currTime;
 	private final String simulationName;
 	
 	private float planetX, planetY;
@@ -18,12 +18,12 @@ public class Grid implements IGrid {
 	// backed by a Red/Black Tree, so we get pretty decent access times
 	private final Map<Integer, Float> grid;
 
-	public Grid(String simulationName, int sunPosition, float sunPositionDeg, int time, int width, int height, long dateTime) {
+	public Grid(String simulationName, int sunPosition, float sunPositionDeg, int width, int height, long currTime, long dateTime) {
 
 		this.simulationName = simulationName;
 		this.sunPosition = sunPosition;
 		this.sunPositionDeg = sunPositionDeg;
-		this.time = time;
+		this.currTime = currTime;
 		this.width = width;
 		this.height = height;
 		this.dateTime = dateTime;
@@ -36,7 +36,7 @@ public class Grid implements IGrid {
 		this.simulationName = toCopy.simulationName;
 		this.sunPosition = toCopy.sunPosition;
 		this.sunPositionDeg = toCopy.sunPositionDeg;
-		this.time = toCopy.time;
+		this.currTime = toCopy.currTime;
 		this.width = toCopy.width;
 		this.height = toCopy.height;
 		this.planetX = toCopy.planetX;
@@ -77,8 +77,8 @@ public class Grid implements IGrid {
 	}
 	
 	@Override
-	public int getCurrentTime() {
-		return this.time;
+	public long getCurrentTime() {
+		return this.currTime;
 	}
 
 	@Override

@@ -2,6 +2,6 @@ package common;
 
 public interface IMonitorCallback {
 	
-	public void notifyCurrentInterval(int currSimulationInterval, long date, long time);
+	public void notifyCurrentInterval(long date, long time);
 
 }

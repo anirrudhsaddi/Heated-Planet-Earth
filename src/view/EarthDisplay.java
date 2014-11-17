@@ -29,6 +29,9 @@ public class EarthDisplay extends JFrame implements IView {
 	private EarthImage earthImage;
 	private GridDisplay gridDisplay;
 	
+	private static final int MAX_TEMP 		= 550; // shot in the dark here..
+	private static final int MIN_TEMP 		= 0;
+	
 	private static final String COLORMAP = "thermal";
 	private static final float OPACITY = 0.6f;
 			
@@ -65,7 +68,7 @@ public class EarthDisplay extends JFrame implements IView {
 		int h = earthImage.getImageHeight();
 
 		// Add grid
-		gridDisplay = new GridDisplay(new ThermalVisualizer(COLORMAP, Earth.MIN_TEMP, Earth.MAX_TEMP, OPACITY), w, h);
+		gridDisplay = new GridDisplay(new ThermalVisualizer(COLORMAP, MIN_TEMP, MAX_TEMP, OPACITY), w, h);
 		display.add(gridDisplay, new Integer(GRID));
 		
 		this.setPreferredSize(new Dimension(w, h + 130));

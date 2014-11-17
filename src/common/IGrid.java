@@ -20,7 +20,7 @@ public interface IGrid {
 	
 	public float getPlanetY();	
 	
-	public int getCurrentTime();
+	public long getCurrentTime();
 	
 	public int getGridWidth();
 	

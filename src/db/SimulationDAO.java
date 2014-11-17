@@ -12,6 +12,7 @@ import messaging.Message;
 import messaging.Publisher;
 import messaging.events.DeliverMessage;
 import common.ComponentBase;
+import common.Grid;
 import common.IGrid;
 import common.ThreadManager;
 
@@ -53,7 +54,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	private static final String CREATE_LENGTH_REL_KEY				= "create_length_rel";
 	
 	private static final String CREATE_TEMP_REL 					= "MATCH (a: Simulation) WHERE a.name = \"?\" "
-																	+ "CREATE UNIQUE (a)-[r: HAS_TEMP { latitude : '?', longitude : '?', datetime : '?' }]->(b: Temperate {value: ?}) "
+																	+ "CREATE UNIQUE (a)-[r: HAS_TEMP { latitude: ?, longitude: ?, datetime: ? }]->(b: Temperate {value: ?}) "
 																	+ "RETURN a,r,b";
 	
 	private static final String CREATE_AXIS_REL 					= "MATCH (a: Simulation) WHERE a.name = \"?\" "
@@ -339,6 +340,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 			throw new SQLException("Failed to find a temperatures");
 		
 		// populate the base-line grid
+		IGrid grid = new Grid(name, 0, 0, foundDateTime, 0, 0, queryDateTime);
 		while(result.next()) {
 			
 		}

@@ -52,8 +52,8 @@ public class GridDisplay extends JPanel {
 			int w = this.getSize().width;
 			int h = this.getSize().height;
 			
-			float cellHeight = (float)h / grid.getGridHeight();
-			float cellWidth = (float)w / grid.getGridWidth();
+			float cellHeight = (float) h / grid.getGridHeight();
+			float cellWidth = (float) w / grid.getGridWidth();
 
 			for (int y = 0; y < grid.getGridHeight(); y++) {
 				for (int x = 0; x < grid.getGridWidth(); x++) {
@@ -62,8 +62,8 @@ public class GridDisplay extends JPanel {
 					
 					int celly = Math.round(y * cellHeight);
 					int cellx = Math.round(x * cellWidth);
-					int nextCelly = Math.round((y+1) * cellHeight);
-					int nextCellx = Math.round((x+1) * cellWidth);
+					int nextCelly = Math.round((y + 1) * cellHeight);
+					int nextCellx = Math.round((x + 1) * cellWidth);
 					int cellw = nextCellx - cellx;
 					int cellh = nextCelly - celly;
 
@@ -82,14 +82,16 @@ public class GridDisplay extends JPanel {
 				int celly = Math.round(y * cellHeight);
 				g.drawLine(0, celly, w, celly);
 			}
+			
 			for (int x = 0; x < grid.getGridWidth(); x++) {
 				int cellx = Math.round(x * cellWidth);
 				g.drawLine(cellx, 0, cellx, h);
 			}
+			
 			// Draw sun position
 			g.setColor(Color.YELLOW);
-			float pixPerDeg = w/360.0f;
-			float degFromLeft = grid.getSunPositionDeg()+180f;
+			float pixPerDeg = w / 360.0f;
+			float degFromLeft = grid.getSunPositionDeg() + 180f;
 			int sunx = Math.round(degFromLeft * pixPerDeg);
 			//g.drawLine(sunx, 0, sunx, h);
 			
@@ -104,7 +106,7 @@ public class GridDisplay extends JPanel {
 			g.drawOval(sunx, suny, 10, 10);
 			
 			//Draw planet orbit around earth
-			g.drawOval(0,0, (int)(300*2*Earth.a/2*Earth.b), 300);
+			g.drawOval(0,0, (int)(300 * 2 * a / 2 * b), 300);
 			g.drawOval(0,150, 10, 300);
 			//Draw planet position on ellipse
 			//g.drawOval((int)(300*Earth.a/grid.getPlanetX()),0, 10,10);

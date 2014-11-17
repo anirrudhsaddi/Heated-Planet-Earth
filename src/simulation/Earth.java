@@ -1,8 +1,10 @@
 package simulation;
 
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.TimeZone;
 
 import messaging.Publisher;
 import messaging.events.DeliverMessage;
@@ -16,15 +18,13 @@ import common.IMonitorCallback;
 
 public final class Earth implements IModel {
 
-	public static final double CIRCUMFERENCE 	= 4.003014 * Math.pow(10, 7);
-	public static final double SURFACE_AREA 	= 5.10072 * Math.pow(10, 14);
-
-	public static final int MAX_TEMP 		= 550; // shot in the dark here...
-	public static final int INITIAL_TEMP 	= 288;
-	public static final int MIN_TEMP 		= 0;
-	
+	private static final int INITIAL_TEMP 	= 288;
 	private static final int MAX_DEGREES 	= 180;
-	private static final int MAX_SPEED 		= 1440;
+	
+	// TODO I believe this has changed?
+	// private static final int MAX_SPEED 		= 1440;
+	
+	private static final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
 	private static final int[] increments = { 6, 9, 10, 12, 15, 18, 20, 30, 36, 45, 60, 90, 180 };
 	
@@ -37,36 +37,24 @@ public final class Earth implements IModel {
 	
 	private float axisTilt;
 	private float eccentricity;
-	private int currentTimeInSimulation;
 	
+	private int currentTimeInSimulation;
 	private int timeStep;
 	private int gs;
-
-	//P3 Heated Planet
-
-	public static final double T = 525974.4;									// Orbital period of Earth in minutes
 	
-	//public static final double E = 0.0167; 									// Eccentricity of the planet earth
-	public static final double E 				= 0.79; 						// EXPERIMENTAL VALUE TO SEE AN ACTUAL ELLIPSE
-	public static final double a 				= 1.496 * Math.pow(10, 11);		// Length of the semi-major axis of earth IN METERS
-	public static final double omega 			= 114;							// Argument of periapsis for the Earth:
-	public static final double tilt 			= 23.44;						// Obliquity(tilt) of the planet
-	public static int tauAN 					= 0;							// Time of the Equinox
-
-
-	//planet around sun animation
-	public static final double animationGreatestDimention 	= 150; 
-	public static final double factor 						= animationGreatestDimention/2*a;
-	public static final double b 							= a * (Math.sqrt(1-(E * E)));
-	public static final double foci = Math.sqrt((a*a)-(b*b));
+	private String simulationName;
 	
-	protected final IMonitorCallback monitor;
+	private final IMonitorCallback monitor;
 	
-	public Earth(IMonitorCallback monitor) {
+	public Earth(String simulationName, IMonitorCallback monitor) {
+		
+		if (simulationName == null)
+			throw new IllegalArgumentException("Invalid simulationName provided");
 		
 		if (monitor == null)
 			throw new IllegalArgumentException("Invalid monitor provided");
 		
+		this.simulationName = simulationName;
 		this.monitor = monitor;
 	}
 
@@ -161,15 +149,17 @@ public final class Earth implements IModel {
 		GridCell.setAverageArea(totalarea / (width * height));
 		
 		// TODO don't auto-start
-		System.out.println("Earth: Finished starting. Sending produce message now");
-		Publisher.getInstance().send(new ProduceMessage());
+		// Publisher.getInstance().send(new ProduceMessage());
 	}
 
 	public void generate() throws InterruptedException {
 		
 		// TODO update currSimulationInterval (one month)
 		// TODO make sure timeStep is scaled
-		this.monitor.notifyCurrentInterval(currentTimeInSimulation);
+		// TODO convert currTimeInSimulation to an actual long representation of the current date since epoch
+		// Until then, this will break
+		long currentDate = Long.MAX_VALUE;
+		this.monitor.notifyCurrentInterval(currentDate, 0);
 
 		// Don't attempt to generate if output queue is full...
 		if (Buffer.getBuffer().getRemainingCapacity() == 0) {
@@ -182,7 +172,7 @@ public final class Earth implements IModel {
 
 		currentStep++;
 
-		int t = timeStep * currentStep;
+		long t = timeStep * currentStep;
 		int rotationalAngle = 360 - ((t % MAX_SPEED) * 360 / MAX_SPEED);
 		sunPositionCell = ( (width * rotationalAngle) / 360 + (width / 2) ) % width;
 
@@ -191,7 +181,7 @@ public final class Earth implements IModel {
 			sunPositionDeg = sunPositionDeg - 360;
 		}
 
-		IGrid grid = new Grid(sunPositionCell, sunPositionDeg, t, width, height);
+		IGrid grid = new Grid(simulationName, sunPositionCell, sunPositionDeg, width, height, t, 0);
 
 		float suntotal = 0;
 		float calcdTemp = 0;
@@ -204,7 +194,7 @@ public final class Earth implements IModel {
 		prime.visited(true);
 		bfs.add(prime);
 
-		//P3 - Heated Planet
+		// P3 - Heated Planet
 		currentTimeInSimulation = currentStep * 200;
 
 		while (!bfs.isEmpty()) {
@@ -241,7 +231,6 @@ public final class Earth implements IModel {
 			c = calcd.poll();
 		}
 
-		System.out.println("Earth. Done Generating.");
 		// Buffer.getBuffer().add(grid);
 		Publisher.getInstance().send(new DeliverMessage(grid));
 	}
