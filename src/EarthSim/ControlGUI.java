@@ -44,7 +44,7 @@ public class ControlGUI extends JFrame implements ActionListener{
 
 	// setup overall app ui
 	setTitle("Heated Planet Diffusion Simulation");
-
+	
 	setSize(700, 400);
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -173,6 +173,7 @@ public class ControlGUI extends JFrame implements ActionListener{
 				
 				//do gui stuff to indicate start has occurred.
 				controlWidget.disableButtonsBasedOnAction("Start");
+				queryWidget.setFields("Disable");
 				
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Please correct input. All fields need numbers");
@@ -195,6 +196,7 @@ public class ControlGUI extends JFrame implements ActionListener{
 			Publisher.getInstance().send(new StopMessage());
 			
 			controlWidget.disableButtonsBasedOnAction("Stop");
+			queryWidget.setFields("Enable");
 		}
 	}
 }
