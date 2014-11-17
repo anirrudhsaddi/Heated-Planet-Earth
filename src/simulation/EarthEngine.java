@@ -28,7 +28,7 @@ public class EarthEngine extends ComponentBase {
 		if (msg instanceof StartMessage) {
 			
 			StartMessage start = (StartMessage) msg;
-			start(start.gs(), start.timeStep(), start.axisTilt(), start.eccentricity());
+			start(start.getSimulationName(), start.gs(), start.timeStep(), start.axisTilt(), start.eccentricity());
 
 		} else if (msg instanceof ProduceMessage) {
 			System.out.println("EarthEngine got a ProduceMessage");
@@ -58,9 +58,9 @@ public class EarthEngine extends ComponentBase {
 		}
 	}
 
-	private void start(int gs, int timeStep, float axisTilt, float eccentricity) {
+	private void start(String simulationName, int gs, int timeStep, float axisTilt, float eccentricity) {
 		
-		model.configure(gs, timeStep, axisTilt, eccentricity);
+		model.configure(simulationName, gs, timeStep, axisTilt, eccentricity);
 		model.start();
 	}
 }

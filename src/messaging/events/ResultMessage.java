@@ -1,17 +1,28 @@
 package messaging.events;
 
+import java.sql.ResultSet;
+
 import messaging.Message;
 
 public class ResultMessage implements Message {
 	
-	private Exception error;
+	private ResultSet resultSet;
+	private boolean needsCalculation;
 	
-	public ResultMessage(Exception error) {
+	public ResultMessage(ResultSet resultSet, boolean needsCalculation) {
 		
-		if (error == null)
-			throw new IllegalArgumentException("Invalid error provided");
+		if (resultSet == null)
+			throw new IllegalArgumentException("Invalid resultSet provided");
 		
-		this.error = error;
+		this.resultSet = resultSet;
+		this.needsCalculation = needsCalculation;
 	}
-
+	
+	public ResultSet getResultSet() {
+		return this.resultSet;
+	}
+	
+	public boolean needsCalculation() {
+		return this.needsCalculation;
+	}
 }

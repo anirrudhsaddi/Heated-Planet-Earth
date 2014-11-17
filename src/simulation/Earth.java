@@ -46,15 +46,11 @@ public final class Earth implements IModel {
 	
 	private final IMonitorCallback monitor;
 	
-	public Earth(String simulationName, IMonitorCallback monitor) {
-		
-		if (simulationName == null)
-			throw new IllegalArgumentException("Invalid simulationName provided");
+	public Earth(IMonitorCallback monitor) {
 		
 		if (monitor == null)
 			throw new IllegalArgumentException("Invalid monitor provided");
 		
-		this.simulationName = simulationName;
 		this.monitor = monitor;
 	}
 
@@ -62,8 +58,9 @@ public final class Earth implements IModel {
 		return prime;
 	}
 
-	public void configure(int gs, int timeStep, float axisTilt, float eccentricity) {
+	public void configure(String simulationName, int gs, int timeStep, float axisTilt, float eccentricity) {
 
+		this.simulationName = simulationName;
 		this.timeStep = timeStep;
 		this.axisTilt = axisTilt;
 		this.eccentricity = eccentricity;

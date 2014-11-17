@@ -2,9 +2,9 @@ package common;
 
 public interface IGrid {
 	
-	public void setTemperature(int x, int y, float temp);
+	public void setTemperature(int x, int y, double temp);
 	
-	public float getTemperature(int x, int y);
+	public double getTemperature(int x, int y);
 	
 	public float getSunPositionDeg();
 	

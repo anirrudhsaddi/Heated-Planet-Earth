@@ -4,6 +4,7 @@ import messaging.Message;
 
 public class StartMessage implements Message {
 	
+	private final String simulationName;
 	private final int gs;
 	private final int timeStep;
 	private final int simulationLength;
@@ -11,8 +12,9 @@ public class StartMessage implements Message {
 	private final float axisTilt;
 	private final float eccentricity;
 	
-	public StartMessage(int gs, int timeStep, float presentationInterval, int simulationLength, float axisTilt, float eccentricity) {
+	public StartMessage(String simulationName, int gs, int timeStep, float presentationInterval, int simulationLength, float axisTilt, float eccentricity) {
 		
+		this.simulationName			= simulationName;
 		this.gs 					= gs;
 		this.timeStep 				= timeStep;
 		this.simulationLength 		= simulationLength;
@@ -20,6 +22,10 @@ public class StartMessage implements Message {
 		this.axisTilt 				= axisTilt;
 		this.eccentricity 			= eccentricity;
 		
+	}
+	
+	public String getSimulationName() {
+		return this.simulationName;
 	}
 	
 	public int gs() {

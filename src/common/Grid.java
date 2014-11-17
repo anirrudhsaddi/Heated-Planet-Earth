@@ -16,7 +16,7 @@ public class Grid implements IGrid {
 
 	// We use a TreeMap to not consume a contiguous amount of memory. It's
 	// backed by a Red/Black Tree, so we get pretty decent access times
-	private final Map<Integer, Float> grid;
+	private final Map<Integer, Double> grid;
 
 	public Grid(String simulationName, int sunPosition, float sunPositionDeg, int width, int height, long currTime, long dateTime) {
 
@@ -28,7 +28,7 @@ public class Grid implements IGrid {
 		this.height = height;
 		this.dateTime = dateTime;
 
-		grid = new TreeMap<Integer, Float>();
+		grid = new TreeMap<Integer, Double>();
 	}
 	
 	public Grid(Grid toCopy) {
@@ -44,11 +44,11 @@ public class Grid implements IGrid {
 		this.sunLatitudeDeg = toCopy.sunLatitudeDeg;
 		this.dateTime = toCopy.dateTime;
 		
-		this.grid = new TreeMap<Integer, Float>(toCopy.grid);
+		this.grid = new TreeMap<Integer, Double>(toCopy.grid);
 	}
 
 	@Override
-	public void setTemperature(int x, int y, float temp) {
+	public void setTemperature(int x, int y, double temp) {
 		if (y > height || x > width || x < 0 || y < 0)
 			throw new IllegalArgumentException("index (" + x + ", " + y + ") out of bounds");
 		
@@ -56,7 +56,7 @@ public class Grid implements IGrid {
 	}
 
 	@Override
-	public float getTemperature(int x, int y) {
+	public double getTemperature(int x, int y) {
 		if (y >= height || x >= width || x < 0 || y < 0)
 			throw new IllegalArgumentException("index (" + x + ", " + y + ") out of bounds");
 		

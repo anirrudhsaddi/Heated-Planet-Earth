@@ -3,7 +3,10 @@ package db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -11,6 +14,7 @@ import java.util.concurrent.Future;
 import messaging.Message;
 import messaging.Publisher;
 import messaging.events.DeliverMessage;
+import messaging.events.ResultMessage;
 import common.ComponentBase;
 import common.Grid;
 import common.IGrid;
@@ -338,15 +342,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		result = conn.query(query);
 		if (!result.isBeforeFirst())
 			throw new SQLException("Failed to find a temperatures");
-		
-		// populate the base-line grid
-		IGrid grid = new Grid(name, 0, 0, foundDateTime, 0, 0, queryDateTime);
-		while(result.next()) {
-			
-		}
-		
-		// figure out if to calc or update
-		if (foundDateTime == queryDateTime)
+
+		Publisher.getInstance().send(new ResultMessage(result, (foundDateTime == queryDateTime)));
 	}
 
 	@Override
@@ -392,7 +389,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 				query.setInt(2, getLatitude(y, height));
 				query.setInt(3, getLongitude(x, width));
 				query.setLong(4, dateTime);
-				query.setFloat(5, grid.getTemperature(x, y));
+				query.setDouble(5, grid.getTemperature(x, y));
 			}
 		}
 	}

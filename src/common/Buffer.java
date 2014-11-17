@@ -99,7 +99,7 @@ public class Buffer implements IBuffer {
 			try {
 				add(((DeliverMessage) msg).getGrid());
 			} catch (InterruptedException e) {
-				Publisher.getInstance().send(new ResultMessage(e));
+				System.err.println("Failed to add IGrid: " + e);
 			}
 		} else {
 			System.err.printf("WARNING: No processor specified in class %s for message %s\n", this.getClass().getName(), msg.getClass().getName());

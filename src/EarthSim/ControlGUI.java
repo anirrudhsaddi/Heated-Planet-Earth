@@ -21,16 +21,18 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import common.Buffer;
-import common.Controller;
-import common.ThreadManager;
-import simulation.EarthEngine;
-import view.EarthDisplayEngine;
 import messaging.Publisher;
 import messaging.events.PauseMessage;
+import messaging.events.ProduceMessage;
 import messaging.events.ResumeMessage;
 import messaging.events.StartMessage;
 import messaging.events.StopMessage;
+import simulation.EarthEngine;
+import view.EarthDisplayEngine;
+
+import common.Buffer;
+import common.Monitor;
+import common.ThreadManager;
 
 
 public class ControlGUI extends JFrame implements ActionListener {
@@ -101,6 +103,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 	}
 	
 	private void lowerRightWindow() {
+		
 	    Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 	    int x = (int) (dimension.getWidth() - this.getWidth());
 	    int y = (int) (dimension.getHeight() - this.getHeight());
@@ -219,16 +222,20 @@ public class ControlGUI extends JFrame implements ActionListener {
 				if (eccentricity < MIN_ECCENTRICITY || eccentricity > MAX_ECCENTRICITY)
 					throw new IllegalArgumentException("Invalid eccentricity value");
 				
-				// TODO clear rather than create?
-				// Create the buffer
+				// Create and reset the buffer
 				Buffer.getBuffer().create(DEFAULT_BUFFFER_SIZE);
 				
-				// TODO set name?
 				//threadManager.add(new SimulationDAO(new SimulationNeo4j()));
-				threadManager.execute(new EarthEngine());
+				
+				// TODO set name
+				// TODO check name against the DAO
+				String simulationName = "";
+				
+				threadManager.execute(new EarthEngine(new Monitor()));
 				threadManager.execute(new EarthDisplayEngine());
 				
-				Publisher.getInstance().send(new StartMessage(gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity));
+				Publisher.getInstance().send(new StartMessage(simulationName, gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity));
+				Publisher.getInstance().send(new ProduceMessage());
 				
 				// do gui stuff to indicate start has occurred.
 				buttons.get("Start").setEnabled(false);
