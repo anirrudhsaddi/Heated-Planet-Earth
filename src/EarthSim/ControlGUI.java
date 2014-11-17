@@ -45,17 +45,17 @@ public class ControlGUI extends JFrame implements ActionListener{
 	// setup overall app ui
 	setTitle("Heated Planet Diffusion Simulation");
 
-	setSize(300, 400);
+	setSize(700, 400);
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-	setLayout(new BorderLayout());
+	getContentPane().setLayout(new BorderLayout());
 	setLocationRelativeTo(null);
 
 	lowerRightWindow(); // Set window location to lower right (so we don't hide dialogs)
 	setAlwaysOnTop(true);
 
-	add(settingsAndControls(), BorderLayout.WEST);
-	add(query(), BorderLayout.CENTER);
+	getContentPane().add(settingsAndControls(), BorderLayout.WEST);
+	getContentPane().add(query(), BorderLayout.CENTER);
     }
 
     private void lowerRightWindow() {
@@ -164,7 +164,10 @@ public class ControlGUI extends JFrame implements ActionListener{
 				//threadManager.add(new Controller());
 				threadManager.add(new ControlEngine());
 				threadManager.add(new EarthEngine());
-				threadManager.add(new EarthDisplayEngine());
+				
+				if (settingsWidget.GetDisplayAnimationStatus()){
+					threadManager.add(new EarthDisplayEngine());
+				}
 				
 				Publisher.getInstance().send(new StartMessage(gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity));
 				

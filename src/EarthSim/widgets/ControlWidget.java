@@ -25,7 +25,7 @@ private static final long serialVersionUID = 6146431536208036768L;
 		add(button("Pause",listener));
 		add(button("Resume",listener));
 		add(button("Stop",listener));
-
+		
 		buttons.get("Start").setEnabled(true);
 		buttons.get("Pause").setEnabled(false);
 		buttons.get("Resume").setEnabled(false);
