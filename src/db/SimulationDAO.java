@@ -3,10 +3,7 @@ package db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Hashtable;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -15,8 +12,8 @@ import messaging.Message;
 import messaging.Publisher;
 import messaging.events.DeliverMessage;
 import messaging.events.ResultMessage;
+
 import common.ComponentBase;
-import common.Grid;
 import common.IGrid;
 import common.ThreadManager;
 
@@ -113,18 +110,24 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 																	+ "WHERE n.name = \"?\" AND r.datetime <= ? "
 																	+ "WITH max(r.datetime) as datetime"
 																	+ "RETURN datetime";
+	
+	// Sampling and storage parameters
+	private final int precision, geoAccuracy, temporalAccuracy;
 
 	/**
 	 * Given a <code>IDBConnection</code>, create the Simulation <code>Data Access Object</code>
 	 * @param conn
 	 * @throws SQLException
 	 */
-	public SimulationDAO(final IDBConnection conn) throws SQLException {
+	public SimulationDAO(int precision, int geoAccuracy, int temporalAccuracy, final IDBConnection conn) throws SQLException {
 
 		if (conn == null)
-			throw new IllegalArgumentException("Invalid DB Connection object");
+			throw new IllegalArgumentException("Invalid DB Connection object provided");
 
 		this.conn = conn;
+		this.precision = precision;
+		this.geoAccuracy = geoAccuracy;
+		this.temporalAccuracy = temporalAccuracy;
 
 		this.conn.createPreparedStatement(MATCH_NODE_BY_NAME_KEY, MATCH_NODE_BY_NAME_QUERY);
 		this.conn.createPreparedStatement(MATCH_NODE_BY_DATA_KEY, MATCH_NODE_BY_DATA_QUERY);

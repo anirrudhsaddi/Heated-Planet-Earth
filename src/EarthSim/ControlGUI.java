@@ -29,7 +29,6 @@ import messaging.events.StartMessage;
 import messaging.events.StopMessage;
 import simulation.EarthEngine;
 import view.EarthDisplayEngine;
-
 import common.Buffer;
 import common.Monitor;
 import common.ThreadManager;
@@ -43,6 +42,15 @@ public class ControlGUI extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 6146431536208036768L;
 	
 	private static final int DEFAULT_BUFFFER_SIZE	= 10;
+	
+	private static final int PRECISION_MIN = 7;
+	private static final int PRECISION_MAX = 16;
+	
+	private static final int GEOACCURACY_MIN = 1;
+	private static final int GEOACCURACY_MAX = 100;
+	
+	private static final int TEMPORALACCURACY_MIN = 1;
+	private static final int TEMPORALACCURACY_MAX = 100;
 	
 	private static final int MIN_GRID_SPACING 		= 1;
 	private static final int DEFAULT_GRID_SPACING  	= 15;
@@ -76,6 +84,15 @@ public class ControlGUI extends JFrame implements ActionListener {
 	private ThreadManager threadManager = ThreadManager.getManager();
 	
 	public ControlGUI() {
+		
+//		if (precision < PRECISION_MIN || precision > PRECISION_MAX)
+//			throw new IllegalArgumentException("Invalid precision provided");
+//			
+//		if (geoAccuracy < GEOACCURACY_MIN || geoAccuracy > GEOACCURACY_MAX)
+//			throw new IllegalArgumentException("Invalid geoAccuracy provided");
+//			
+//		if (temporalAccuracy < TEMPORALACCURACY_MIN || temporalAccuracy > TEMPORALACCURACY_MAX)
+//			throw new IllegalArgumentException("Invalid temporalAccuracy provided");
 		
 		// START_DATE is epoch UTC (01/01/1970). Add 3 days to make it 01/04/1970 
 		START_DATE.add(Calendar.DAY_OF_YEAR, 3);
