@@ -8,23 +8,30 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+
 public final class SimulationNeo4j implements IDBConnection {
 	
 	// Connection parameters
 	private static final String JDBC_DRIVER = "org.neo4j.jdbc.Driver";  
 	private static final String DB_PATH		= "/db/";
-	private static final String NAME		= "simulation.db";
-	private static final String URL 		= "jdbc:neo4j:file:" + DB_PATH + NAME;
+	private static final String NAME		= "simulationDb";
+	private static final String URL 		= "jdbc:neo4j:" + NAME + "?debug=true";
 	private static final String USER 		= "simulation_user";
 	private static final String PASSWORD 	= "p3t22";									// TODO this could be a char array for security
 	
 	// Database connection object
+	private static GraphDatabaseService simulationDb;
 	private static Connection db = null;
 	
 	// Prepared Statement repository
 	private static final ConcurrentHashMap<String, PreparedStatement> SAVED_QUERIES = new ConcurrentHashMap<String, PreparedStatement>();
 	
 	static {
+		
+		simulationDb = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder(DB_PATH).newGraphDatabase();
+		registerShutdownHook(simulationDb);
 		
 		try {
 			Class.forName(JDBC_DRIVER);
@@ -58,6 +65,7 @@ public final class SimulationNeo4j implements IDBConnection {
 	public void close() {
 		try {
 			if (db != null || !db.isClosed()) db.close();
+			simulationDb.shutdown();
 		} catch (SQLException e) {
 			System.err.println("Failed to close database connection " + NAME + ": " + e);
 		}
@@ -76,5 +84,18 @@ public final class SimulationNeo4j implements IDBConnection {
 		
 		Statement stmt = db.createStatement();
 		return stmt.executeQuery(query);
+	}
+	
+	private static void registerShutdownHook(final GraphDatabaseService graphD ) {
+		
+	    // Registers a shutdown hook for the Neo4j instance so that it
+	    // shuts down nicely when the VM exits (even if you "Ctrl-C" the
+	    // running application).
+	    Runtime.getRuntime().addShutdownHook( new Thread() {
+	        @Override
+	        public void run() {
+	            graphDb.shutdown();
+	        }
+	    } );
 	}
 }
