@@ -86,7 +86,7 @@ public final class SimulationNeo4j implements IDBConnection {
 		return stmt.executeQuery(query);
 	}
 	
-	private static void registerShutdownHook(final GraphDatabaseService graphD ) {
+	private static void registerShutdownHook(final GraphDatabaseService db) {
 		
 	    // Registers a shutdown hook for the Neo4j instance so that it
 	    // shuts down nicely when the VM exits (even if you "Ctrl-C" the
@@ -94,7 +94,7 @@ public final class SimulationNeo4j implements IDBConnection {
 	    Runtime.getRuntime().addShutdownHook( new Thread() {
 	        @Override
 	        public void run() {
-	            graphDb.shutdown();
+	        	db.shutdown();
 	        }
 	    } );
 	}
