@@ -38,10 +38,15 @@ public class EarthEngine extends ComponentBase {
 			System.out.println("EarthEngine got a ProduceMessage");
 			generateData();
 		} else if (msg instanceof ResultMessage) {
+			
 			// TODO either error or IQueryResult containing the Grid to simulation from or display results 
 			// We should display the results as textual and graphical. 
 			// EarthDisplay has been updated to accept -1 as a "do not display color". When doing the calculation from the query result
 			// just need to set -1 if the grid is not in the requested area
+			
+			// We also need to provide a report on the query - including min/max/mean, etc.
+			
+			// How do we handle geo accuracy?????????????
 			throw new IllegalStateException("Support for ResultMessage has yet to be added. SimulationStatus needs to be updated. Earth needs to be updated");
 		} else {
 			System.err.printf("WARNING: No processor specified in class %s for message %s\n",

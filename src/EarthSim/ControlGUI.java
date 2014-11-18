@@ -77,6 +77,8 @@ public class ControlGUI extends JFrame implements ActionListener {
 	private static final float DEFAULT_ECCENTRICITY	= 0.0167f;
 	private static final float MAX_ECCENTRICITY 	= 1.0f;
 	
+	// TODO default geographic range is the entire planet
+	
 	private static final Calendar START_DATE		= Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 	
 	private HashMap<String, JTextField> inputs = new HashMap<String, JTextField>();
