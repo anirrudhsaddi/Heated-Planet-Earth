@@ -320,8 +320,15 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	}
 
 	@Override
-	public void findTemperaturesAt(String name, Calendar startDateTime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException, InterruptedException, ExecutionException {
+	public void findTemperaturesAt(String name, Calendar startDateTime, Calendar endDateTime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException, InterruptedException, ExecutionException {
 
+		/*
+		 *  If so, we then need to derive the end datetime from the simulation length (which is in months. we also have the start date by default (see ControlGui)).
+		 *   Using your engine, if data exists for that range, we need to error out and tell them so. 
+		 *   Otherwise, we need to run a simulation from the last recorded datetime (if there is one) to the end date. 
+		 *   This you can achieve by calling a findTemperatureAt with the endDate
+		 */
+		
 		ResultSet result;
 		long queryDateTime = startDateTime.getTimeInMillis();
 		
