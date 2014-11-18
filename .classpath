@@ -2,5 +2,20 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-cypher-compiler-2.1-2.1.5.jar"/>
+	<classpathentry kind="lib" path="/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-graph-algo-2.1.5.jar"/>
+	<classpathentry kind="lib" path="/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-graph-matching-2.1.5.jar"/>
+	<classpathentry kind="lib" path="/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-jmx-2.1.5.jar"/>
+	<classpathentry kind="lib" path="/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-kernel-2.1.5.jar"/>
+	<classpathentry kind="lib" path="/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-lucene-index-2.1.5.jar"/>
+	<classpathentry kind="lib" path="/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-primitive-collections-2.1.5.jar"/>
+	<classpathentry kind="lib" path="/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-shell-2.1.5.jar"/>
+	<classpathentry kind="lib" path="/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-udc-2.1.5.jar"/>
+	<classpathentry kind="lib" path="/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/opencsv-2.0.jar"/>
+	<classpathentry kind="lib" path="/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/org.apache.servicemix.bundles.jline-0.9.94_1.jar"/>
+	<classpathentry kind="lib" path="/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/parboiled-core-1.1.6.jar"/>
+	<classpathentry kind="lib" path="/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/parboiled-scala_2.10-1.1.6.jar"/>
+	<classpathentry kind="lib" path="/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/scala-library-2.10.4.jar"/>
+	<classpathentry kind="lib" path="/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/server-api-2.1.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
