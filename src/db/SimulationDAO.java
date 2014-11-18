@@ -25,6 +25,10 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	
 	// Define the DB constraints
 	private static final String CREATE_NODE_NAME_CONSTRAINT			= "CREATE CONSTRAINT ON (n: Simulation) ASSERT n.name IS UNIQUE";
+	
+	private static final String FIND_SIMULATIONS_KEY				= "find_simulation_names";
+			
+	private static final String FIND_SIMULATIONS_QUERY				= "MATCH (a: Simulation) RETURN a";
 
 	// Define the node creation statements
 	private static final String CREATE_SIMULATION_KEY				= "create_simulation_node";
@@ -128,6 +132,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		this.precision = precision;
 		this.geoAccuracy = geoAccuracy;
 		this.temporalAccuracy = temporalAccuracy;
+		
+		this.conn.createPreparedStatement(FIND_SIMULATIONS_KEY, FIND_SIMULATIONS_QUERY);
 
 		this.conn.createPreparedStatement(MATCH_NODE_BY_NAME_KEY, MATCH_NODE_BY_NAME_QUERY);
 		this.conn.createPreparedStatement(MATCH_NODE_BY_DATA_KEY, MATCH_NODE_BY_DATA_QUERY);
@@ -154,6 +160,15 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		Publisher.getInstance().subscribe(DeliverMessage.class, this);
 		
 		this.conn.query(CREATE_NODE_NAME_CONSTRAINT);
+	}
+	
+	@Override
+	public ResultSet findNamedSimulations() throws SQLException {
+		PreparedStatement query = conn.getPreparedStatement(FIND_SIMULATIONS_KEY);
+		ResultSet set = conn.query(query);
+		if (!set.isBeforeFirst())
+			throw new SQLException("No Simulations found");
+		return set;
 	}
 	
 	@Override
@@ -320,7 +335,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	}
 
 	@Override
-	public void findTemperaturesAt(String name, Calendar startDateTime, Calendar endDateTime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException, InterruptedException, ExecutionException {
+	public void findTemperaturesAt(String name, Calendar targetDateTime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException, InterruptedException, ExecutionException {
 
 		/*
 		 *  If so, we then need to derive the end datetime from the simulation length (which is in months. we also have the start date by default (see ControlGui)).
@@ -330,12 +345,12 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		 */
 		
 		ResultSet result;
-		long queryDateTime = startDateTime.getTimeInMillis();
+		long queryDateTime = targetDateTime.getTimeInMillis();
 		
 		// First, find the closest datetime-valued relationship
 		PreparedStatement query = conn.getPreparedStatement(GET_DATE_TIME_KEY);
 		query.setString(1, name);
-		query.setLong(2, startDateTime.getTimeInMillis());
+		query.setLong(2, targetDateTime.getTimeInMillis());
 		result = conn.query(query);
 		if (!result.isBeforeFirst())
 			throw new SQLException("Failed to find a date");

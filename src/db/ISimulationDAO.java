@@ -1,5 +1,6 @@
 package db;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
@@ -7,9 +8,7 @@ import java.util.concurrent.Future;
 
 public interface ISimulationDAO {
 	
-	public IQueryResult findNamedSimulations() throws SQLException;
-	
-	public boolean simulationDataExists(String name, Calendar startDateTime, Calendar endDateTime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException;
+	public ResultSet findNamedSimulations() throws SQLException;
 	
 	public boolean createSimulationNode(String name) throws SQLException;
 	
@@ -34,6 +33,6 @@ public interface ISimulationDAO {
 	
 	public Future<IQueryResult> findSimulationByData(int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float eccentricity) throws SQLException;
 	
-	public void findTemperaturesAt(String name, Calendar startDateTime, Calendar endDateTime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException, InterruptedException, ExecutionException;
+	public void findTemperaturesAt(String name, Calendar startDateTime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException, InterruptedException, ExecutionException;
 
 }
