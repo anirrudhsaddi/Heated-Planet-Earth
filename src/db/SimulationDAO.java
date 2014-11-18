@@ -117,6 +117,11 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	
 	// Sampling and storage parameters
 	private final int precision, geoAccuracy, temporalAccuracy;
+	
+	/*
+	 * TODO 
+	 * Note that there may be more than one saved simulation that matches the specified Physical Factors. In this case, the system should select the best available.????
+	 */
 
 	/**
 	 * Given a <code>IDBConnection</code>, create the Simulation <code>Data Access Object</code>
