@@ -6,8 +6,10 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-import simulation.Earth;
+import simulation.util.GridCell;
 import view.util.ColorGenerator;
+
+import common.Constants;
 import common.IGrid;
 
 public class GridDisplay extends JPanel {
@@ -22,6 +24,7 @@ public class GridDisplay extends JPanel {
 	private final ColorGenerator visualizer;
 	
 	public GridDisplay(ColorGenerator visualizer, int width, int height) {
+		
 		this.visualizer = visualizer;
 		
 		this.setBackground(new Color(0,0,0,0));
@@ -49,6 +52,7 @@ public class GridDisplay extends JPanel {
 		super.paintComponent(g);
 		
 		if (grid != null) {
+			
 			int w = this.getSize().width;
 			int h = this.getSize().height;
 			
@@ -93,7 +97,6 @@ public class GridDisplay extends JPanel {
 			float pixPerDeg = w / 360.0f;
 			float degFromLeft = grid.getSunPositionDeg() + 180f;
 			int sunx = Math.round(degFromLeft * pixPerDeg);
-			//g.drawLine(sunx, 0, sunx, h);
 			
 			//Draw sun position latitude
 			float degFromTop = grid.getSunLatitudeDeg();
@@ -101,36 +104,14 @@ public class GridDisplay extends JPanel {
 				degFromTop = 90f - degFromTop;
 			else
 				degFromTop = 90f + Math.abs(degFromTop);
+			
 			pixPerDeg = h/180.0f;
 			int suny = Math.round(degFromTop * pixPerDeg);
 			g.drawOval(sunx, suny, 10, 10);
 			
 			//Draw planet orbit around earth
-			g.drawOval(0,0, (int)(300 * 2 * a / 2 * b), 300);
+			g.drawOval(0,0, (int)(300 * 2 * Constants.a / 2 * GridCell.b), 300);
 			g.drawOval(0,150, 10, 300);
-			//Draw planet position on ellipse
-			//g.drawOval((int)(300*Earth.a/grid.getPlanetX()),0, 10,10);
-			//g.drawOval(0,(int)(300*Earth.a/grid.getPlanetY()), 10,10);
-			//g.drawOval((int)(w*grid.getPlanetX()/360) - w/2,(int)(h*grid.getPlanetY()/180) - h/2 , 10,10);
-			
-			/*pixPerDeg = (float) (h/(2*Earth.a));
-			int x = (int) grid.getPlanetX();
-			if(x > 0)
-				x = (int) (Earth.a + x);
-			else
-				x = (int) (Earth.a - x);
-			
-			int y = (int) grid.getPlanetY();
-			if(y > 0)
-				y = (int) (Earth.b - y);
-			else
-				y = (int) (Earth.b + Math.abs(y));
-			
-			x = Math.round(x * pixPerDeg);
-			y = Math.round(y * pixPerDeg);
-			g.drawOval(x, y, 10,10);*/
-			//System.out.println(grid.getPlanetX() + ", " + grid.getPlanetY());
-			
 
 		}
 	}

@@ -9,55 +9,61 @@ import common.ComponentBase;
 import common.IMonitorCallback;
 
 public class EarthEngine extends ComponentBase {
-	
+
 	private final Earth model;
-	
-	private int precision;
-	private int geoAccuracy; // percentage of the cells to store
-	private int temporalAccuracy; // percentage of the total number of calculations to save
-	
-	public EarthEngine(IMonitorCallback monitor) {
+
+	public EarthEngine(int precision, int geoAccuracy, int temporalAccuracy, IMonitorCallback monitor) {
 		
-		model = new Earth(monitor);
-		
+		model = new Earth(precision, geoAccuracy, temporalAccuracy, monitor);
+
 		Publisher.getInstance().subscribe(ProduceMessage.class, this);
 		Publisher.getInstance().subscribe(ResultMessage.class, this);
 	}
-	
+
 	@Override
 	public void performAction(Message msg) {
-		
-		//System.out.println("EarthEngine. performAction on msg " + msg);
-		
+
+		// System.out.println("EarthEngine. performAction on msg " + msg);
+
 		if (msg instanceof StartMessage) {
-			
+
 			StartMessage start = (StartMessage) msg;
-			start(start.getSimulationName(), start.gs(), start.timeStep(), start.axisTilt(), start.eccentricity());
+			start(start.getSimulationName(), start.gs(), start.timeStep(),
+					start.axisTilt(), start.eccentricity());
 
 		} else if (msg instanceof ProduceMessage) {
 			System.out.println("EarthEngine got a ProduceMessage");
 			generateData();
 		} else if (msg instanceof ResultMessage) {
-			
-			// TODO either error or IQueryResult containing the Grid to simulation from or display results 
-			// We should display the results as textual and graphical. 
-			// EarthDisplay has been updated to accept -1 as a "do not display color". When doing the calculation from the query result
-			// just need to set -1 if the grid is not in the requested area
-			
-			// We also need to provide a report on the query - including min/max/mean, etc.
-			
-			// How do we handle geo accuracy?????????????
-			throw new IllegalStateException("Support for ResultMessage has yet to be added. SimulationStatus needs to be updated. Earth needs to be updated");
+			processQueryResult();
 		} else {
-			System.err.printf("WARNING: No processor specified in class %s for message %s\n",
-					this.getClass().getName(), msg.getClass().getName());
+			System.err.printf("WARNING: No processor specified in class %s for message %s\n", this.getClass().getName(), msg.getClass().getName());
 		}
 	}
 
 	public void close() {
 		// destructor when done with class
 	}
-	
+
+	private void processQueryResult() {
+		
+		// TODO either error or IQueryResult containing the Grid to simulation
+		// from or display results
+		// We should display the results as textual and graphical.
+		// EarthDisplay has been updated to accept -1 as a
+		// "do not display color". When doing the calculation from the query
+		// result
+		// just need to set -1 if the grid is not in the requested area
+
+		// We also need to provide a report on the query - including
+		// min/max/mean, etc.
+
+		// How do we handle geo accuracy?????????????
+		
+		throw new IllegalStateException(
+				"Support for ResultMessage has yet to be added. SimulationStatus needs to be updated. Earth needs to be updated");
+	}
+
 	private void generateData() {
 		try {
 			model.generate();
@@ -68,7 +74,7 @@ public class EarthEngine extends ComponentBase {
 	}
 
 	private void start(String simulationName, int gs, int timeStep, float axisTilt, float eccentricity) {
-		
+
 		model.configure(simulationName, gs, timeStep, axisTilt, eccentricity);
 		model.start();
 	}

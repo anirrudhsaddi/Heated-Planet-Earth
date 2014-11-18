@@ -1,5 +1,6 @@
 package simulation;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -8,21 +9,14 @@ import java.util.TimeZone;
 
 import messaging.Publisher;
 import messaging.events.DeliverMessage;
-import messaging.events.ProduceMessage;
 import simulation.util.GridCell;
 import common.Buffer;
+import common.Constants;
 import common.Grid;
 import common.IGrid;
-import common.IModel;
 import common.IMonitorCallback;
 
-public final class Earth implements IModel {
-
-	private static final int INITIAL_TEMP 	= 288;
-	private static final int MAX_DEGREES 	= 180;
-	
-	// TODO I believe this has changed?
-	// private static final int MAX_SPEED 		= 1440;
+public final class Earth {
 	
 	private static final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
@@ -45,10 +39,19 @@ public final class Earth implements IModel {
 	private int timeStep;
 	private int gs;
 	
-	public Earth(IMonitorCallback monitor) {
+	// persistance variables
+	private int precision;
+	private int geoAccuracy;
+	private int temporalAccuracy;
+	
+	public Earth(int precision, int geoAccuracy, int temporalAccuracy, IMonitorCallback monitor) {
 		
 		if (monitor == null)
 			throw new IllegalArgumentException("Invalid monitor provided");
+		
+		this.precision = precision;
+		this.geoAccuracy = geoAccuracy;
+		this.temporalAccuracy = temporalAccuracy;
 		
 		this.monitor = monitor;
 	}
@@ -66,7 +69,7 @@ public final class Earth implements IModel {
 		this.currentTimeInSimulation = 0;
 
 		// The following could be done better - if we have time, we should do so
-		if (MAX_DEGREES % gs != 0) {
+		if (Constants.MAX_DEGREES % gs != 0) {
 			for (int i = 0; i < increments.length; i++) {
 				if (gs > increments[i])
 					this.gs = increments[i];
@@ -79,17 +82,18 @@ public final class Earth implements IModel {
 
 		int x = 0, y = 0;
 
-		width = (2 * MAX_DEGREES / this.gs); // rows
-		height = (MAX_DEGREES / this.gs); // cols
+		width = (2 * Constants.MAX_DEGREES / this.gs); // rows
+		height = (Constants.MAX_DEGREES / this.gs); // cols
 
 		// do a reset
 		sunPositionCell = (width / 2) % width;
 		currentStep = 0;
 
-		if (prime != null)	
-			prime.setTemp(INITIAL_TEMP);
-		else
-			prime = new GridCell(INITIAL_TEMP, x, y, this.getLatitude(y), this.getLongitude(x), this.gs);
+		if (prime != null) {
+			prime.setGridProps(x, y, this.getLatitude(y), this.getLongitude(x), this.gs, this.axisTilt, this.eccentricity);
+			prime.setTemp(Constants.INITIAL_TEMP);
+		} else
+			prime = new GridCell(Constants.INITIAL_TEMP, x, y, this.getLatitude(y), this.getLongitude(x), this.gs, this.axisTilt, this.eccentricity);
 
 		prime.setTop(null);
 
@@ -169,8 +173,8 @@ public final class Earth implements IModel {
 		currentStep++;
 
 		long t = timeStep * currentStep;
-		int rotationalAngle = 360 - ((t % MAX_SPEED) * 360 / MAX_SPEED);
-		sunPositionCell = ( (width * rotationalAngle) / 360 + (width / 2) ) % width;
+		long rotationalAngle = 360 - ((t % Constants.MAX_SPEED) * 360 / Constants.MAX_SPEED);
+		sunPositionCell = (int) (((width * rotationalAngle) / 360 + (width / 2) ) % width);
 
 		float sunPositionDeg = rotationalAngle;
 		if (sunPositionDeg > 180) {
@@ -229,6 +233,24 @@ public final class Earth implements IModel {
 
 		// Buffer.getBuffer().add(grid);
 		Publisher.getInstance().send(new DeliverMessage(grid));
+		
+		// Determine if we need to persist this grid and, if so, send Message/payload
+		persistGrid(grid);
+	}
+	
+	private void persistGrid(IGrid grid) {
+		
+		BigDecimal valueToStore;
+		
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				valueToStore = new BigDecimal(grid.getTemperature(x, y));
+				double adjustedTemp = valueToStore.setScale(this.precision, BigDecimal.ROUND_HALF_UP).doubleValue();
+			}
+		}
+		
+		throw new IllegalStateException("Need to determine if we should store this based on geoAccuracy and temporalAccuracy");
+		// Publisher.getInstance().send(new PersistMessage(<treemap>?));
 	}
 
 	private void createRow(GridCell curr, GridCell next, GridCell bottom,
@@ -253,10 +275,10 @@ public final class Earth implements IModel {
 
 		if (curr.getLeft() != null) {
 			GridCell l = curr.getLeft();
-			l.setTemp(INITIAL_TEMP);
-			l.setGridProps(x, y, this.getLatitude(y), this.getLongitude(x), this.gs);
+			l.setTemp(Constants.INITIAL_TEMP);
+			l.setGridProps(x, y, this.getLatitude(y), this.getLongitude(x), this.gs, this.axisTilt, this.eccentricity);
 		} else {
-			next = new GridCell(null, bottom, null, curr, INITIAL_TEMP, x, y, this.getLatitude(y), this.getLongitude(x), this.gs);
+			next = new GridCell(null, bottom, null, curr, Constants.INITIAL_TEMP, x, y, this.getLatitude(y), this.getLongitude(x), this.gs, this.axisTilt, this.eccentricity);
 			curr.setLeft(next);
 			if (bottom != null) {
 				bottom.setTop(next);
@@ -268,10 +290,10 @@ public final class Earth implements IModel {
 
 		if (bottom.getTop() != null) {
 			curr = bottom.getTop();
-			curr.setTemp(INITIAL_TEMP);
-			curr.setGridProps(0, y, this.getLatitude(y), this.getLongitude(0), this.gs);
+			curr.setTemp(Constants.INITIAL_TEMP);
+			curr.setGridProps(0, y, this.getLatitude(y), this.getLongitude(0), this.gs, this.axisTilt, this.eccentricity);
 		} else {
-			curr = new GridCell(null, bottom, null, null, INITIAL_TEMP, 0, y, this.getLatitude(y), this.getLongitude(0), this.gs);
+			curr = new GridCell(null, bottom, null, null, Constants.INITIAL_TEMP, 0, y, this.getLatitude(y), this.getLongitude(0), this.gs, this.axisTilt, this.eccentricity);
 			bottom.setTop(curr);
 		}
 	}

@@ -12,9 +12,8 @@ import view.widgets.GridDisplay;
 import view.widgets.SimulationStatus;
 
 import common.IGrid;
-import common.IView;
 
-public class EarthDisplay extends JFrame implements IView {
+public class EarthDisplay extends JFrame {
 
 	/**
 	 * 

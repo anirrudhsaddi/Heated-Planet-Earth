@@ -8,9 +8,7 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.TimeZone;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -29,7 +27,9 @@ import messaging.events.StartMessage;
 import messaging.events.StopMessage;
 import simulation.EarthEngine;
 import view.EarthDisplayEngine;
+
 import common.Buffer;
+import common.Constants;
 import common.Monitor;
 import common.ThreadManager;
 
@@ -41,68 +41,38 @@ public class ControlGUI extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 6146431536208036768L;
 	
-	private static final int DEFAULT_BUFFFER_SIZE	= 10;
-	
-	private static final int PRECISION_MIN 			= 0;
-	private static final int PRECISION_DEFAULT 		= 7;
-	private static final int PRECISION_MAX 			= 16;
-	
-	private static final int GEOACCURACY_MIN 		= 1;
-	private static final int GEOACCURACY_MAX 		= 100;
-	
-	private static final int TEMPORALACCURACY_MIN 	= 1;
-	private static final int TEMPORALACCURACY_MAX 	= 100;
-	
-	private static final int MIN_GRID_SPACING 		= 1;
-	private static final int DEFAULT_GRID_SPACING  	= 15;
-	private static final int MAX_GRID_SPACING 		= 180;
-	
-	private static final int MIN_TIME_STEP 			= 1;
-	private static final int DEFAULT_TIME_STEP		= 1440;
-	private static final int MAX_TIME_STEP			= 525600;
-	
-	private static final int MIN_SIM_LEN			= 1;
-	private static final int DEFAULT_SIM_LEN		= 12;
-	private static final int MAX_SIM_LEN			= 1200;
-	
-	private static final float MIN_PRESENTATION		= 1f;
-	private static final float DEFAULT_PRESENTATION	= 1f;
-	private static final float MAX_PRESENTATION		= Float.MAX_VALUE;
-	
-	private final static float MIN_AXIS_TILT 		= -180.0f;
-	private final static float DEFAULT_AXIS_TILT	= 23.44f;
-	private final static float MAX_AXIS_TILT 		= 180f;
-	
-	private static final float MIN_ECCENTRICITY 	= 0f;
-	private static final float DEFAULT_ECCENTRICITY	= 0.0167f;
-	private static final float MAX_ECCENTRICITY 	= 1.0f;
-	
-	// TODO default geographic range is the entire planet
-	
-	private static final Calendar START_DATE		= Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-	
 	private HashMap<String, JTextField> inputs = new HashMap<String, JTextField>();
 	private HashMap<String, JButton> buttons = new HashMap<String, JButton>();
 
 	private ThreadManager threadManager = ThreadManager.getManager();
 	
-	public ControlGUI() {
+	private final int precision;
+	private final int geoAccuracy;
+	private final int temporalAccuracy;
+	
+	public ControlGUI(int precision, int geoAccuracy, int temporalAccuracy) {
 		
-//		if (precision < PRECISION_MIN || precision > PRECISION_MAX)
-//			throw new IllegalArgumentException("Invalid precision provided");
-//			
-//		if (geoAccuracy < GEOACCURACY_MIN || geoAccuracy > GEOACCURACY_MAX)
-//			throw new IllegalArgumentException("Invalid geoAccuracy provided");
-//			
-//		if (temporalAccuracy < TEMPORALACCURACY_MIN || temporalAccuracy > TEMPORALACCURACY_MAX)
-//			throw new IllegalArgumentException("Invalid temporalAccuracy provided");
+		if (precision < Constants.PRECISION_MIN || precision > Constants.PRECISION_MAX)
+			throw new IllegalArgumentException("Invalid precision provided");
+			
+		if (geoAccuracy < Constants.GEOACCURACY_MIN || geoAccuracy > Constants.GEOACCURACY_MAX)
+			throw new IllegalArgumentException("Invalid geoAccuracy provided");
+			
+		if (temporalAccuracy < Constants.TEMPORALACCURACY_MIN || temporalAccuracy > Constants.TEMPORALACCURACY_MAX)
+			throw new IllegalArgumentException("Invalid temporalAccuracy provided");
+		
+		throw new IllegalStateException("The TODOs in here need to be finished, including Demo's params");
+		
+		// this.precision = precision;
+		// this.geoAccuracy = geoAccuracy;
+		// this.temporalAccuracy = temporalAccuracy;
 		
 		// START_DATE is epoch UTC (01/01/1970). Add 3 days to make it 01/04/1970 
-		START_DATE.add(Calendar.DAY_OF_YEAR, 3);
+		// Constants.START_DATE.add(Calendar.DAY_OF_YEAR, 3);
 
 		// make widgets
-		setupWindow();
-		pack();
+		// setupWindow();
+		// pack();
 	}
 
 	private void setupWindow() {
@@ -149,12 +119,12 @@ public class ControlGUI extends JFrame implements ActionListener {
 		settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.PAGE_AXIS));
 		settingsPanel.setAlignmentY(Component.TOP_ALIGNMENT);
 		
-		settingsPanel.add(inputField("Grid Spacing", Integer.toString(DEFAULT_GRID_SPACING)));
-		settingsPanel.add(inputField("Simulation Time Step",Integer.toString(DEFAULT_TIME_STEP)));
-		settingsPanel.add(inputField("Presentation Rate",Float.toString(DEFAULT_PRESENTATION)));
-		settingsPanel.add(inputField("Simulation Length", Integer.toString(DEFAULT_SIM_LEN)));
-		settingsPanel.add(inputField("Axis Tilt",Float.toString(DEFAULT_AXIS_TILT)));
-		settingsPanel.add(inputField("Orbital Eccentricity",Float.toString(DEFAULT_ECCENTRICITY)));
+		settingsPanel.add(inputField("Grid Spacing", Integer.toString(Constants.DEFAULT_GRID_SPACING)));
+		settingsPanel.add(inputField("Simulation Time Step",Integer.toString(Constants.DEFAULT_TIME_STEP)));
+		settingsPanel.add(inputField("Presentation Rate",Float.toString(Constants.DEFAULT_PRESENTATION)));
+		settingsPanel.add(inputField("Simulation Length", Integer.toString(Constants.DEFAULT_SIM_LEN)));
+		settingsPanel.add(inputField("Axis Tilt",Float.toString(Constants.DEFAULT_AXIS_TILT)));
+		settingsPanel.add(inputField("Orbital Eccentricity",Float.toString(Constants.DEFAULT_ECCENTRICITY)));
 		
 		return settingsPanel;
 	}
@@ -224,26 +194,26 @@ public class ControlGUI extends JFrame implements ActionListener {
 				final float axisTilt = Float.parseFloat(inputs.get("Axis Tilt").getText());
 				final float eccentricity = Float.parseFloat(inputs.get("Orbital Eccentricity").getText());
 				
-				if (gs < MIN_GRID_SPACING || gs > MAX_GRID_SPACING)
+				if (gs < Constants.MIN_GRID_SPACING || gs > Constants.MAX_GRID_SPACING)
 					throw new IllegalArgumentException("Invalid grid spacing");
 
-				if (timeStep < MIN_TIME_STEP || timeStep > MAX_TIME_STEP)
+				if (timeStep < Constants.MIN_TIME_STEP || timeStep > Constants.MAX_TIME_STEP)
 					throw new IllegalArgumentException("Invalid time step");
 
-				if (simulationLength < MIN_SIM_LEN || simulationLength > MAX_SIM_LEN)
+				if (simulationLength < Constants.MIN_SIM_LEN || simulationLength > Constants.MAX_SIM_LEN)
 					throw new IllegalArgumentException("Invalid simulation length");
 
-				if (presentationRate < MIN_PRESENTATION || presentationRate > MAX_PRESENTATION)
+				if (presentationRate < Constants.MIN_PRESENTATION || presentationRate > Constants.MAX_PRESENTATION)
 					throw new IllegalArgumentException("Invalid presentation interval");
 				
-				if (axisTilt < MIN_AXIS_TILT || axisTilt > MAX_AXIS_TILT)
+				if (axisTilt < Constants.MIN_AXIS_TILT || axisTilt > Constants.MAX_AXIS_TILT)
 					throw new IllegalArgumentException("Invalid axisTilt value");
 				
-				if (eccentricity < MIN_ECCENTRICITY || eccentricity > MAX_ECCENTRICITY)
+				if (eccentricity < Constants.MIN_ECCENTRICITY || eccentricity > Constants.MAX_ECCENTRICITY)
 					throw new IllegalArgumentException("Invalid eccentricity value");
 				
 				// Create and reset the buffer
-				Buffer.getBuffer().create(DEFAULT_BUFFFER_SIZE);
+				Buffer.getBuffer().create(Constants.DEFAULT_BUFFFER_SIZE);
 				
 				//threadManager.add(new SimulationDAO(new SimulationNeo4j()));
 				
@@ -251,7 +221,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 				// TODO check name against the DAO
 				String simulationName = "";
 				
-				threadManager.execute(new EarthEngine(new Monitor()));
+				threadManager.execute(new EarthEngine(this.precision, this.geoAccuracy, this.temporalAccuracy, new Monitor()));
 				threadManager.execute(new EarthDisplayEngine());
 				
 				Publisher.getInstance().send(new StartMessage(simulationName, gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity));

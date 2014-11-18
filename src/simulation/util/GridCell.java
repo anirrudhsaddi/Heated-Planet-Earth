@@ -4,70 +4,64 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import simulation.Earth;
+import common.Constants;
 
 public final class GridCell implements EarthCell<GridCell> {
-	
-	private static final double CIRCUMFERENCE 	= 4.003014 * Math.pow(10, 7);
-	private static final double SURFACE_AREA 	= 5.10072 * Math.pow(10, 14);
 
 	// gs: grid spacing
-	private int x, y, latitude, longitude, gs;
+	private int x;
+	private int y;
+	private int gs;
+	private int latitude;
+	private int longitude;
 	
 	// average temperature
 	private static float avgsuntemp;
 	private static float avgArea;
 
 	private boolean visited;
-	private float currTemp, newTemp, tSun;
+	
+	// Cell properties: surface area, perimeter
+	private float lv;
+	private float lb;
+	private float lt;
+	private float surfarea;
+	private float pm;
+	
+	// P1
+	private float currTemp;
+	private float newTemp;
+	private float tSun;
+	private float axisTilt;
+	private float eccentricity;
 
 	private GridCell top = null, bottom = null, left = null, right = null;
-
-	// Cell properties: surface area, perimeter
-	private float lv, lb, lt, surfarea, pm;
 	
-	private static final double T 				= 525974.4;						// Orbital period of Earth in minutes
-	private static final double a 				= 1.496 * Math.pow(10, 11);		// Length of the semi-major axis of earth IN METERS
-	private static final double omega 			= 114;							// Argument of periapsis for the Earth:
-	private static int tauAN 					= 0;							// Time of the Equinox
+	public static double foci 	= 0;
+	public static double b		= 0;
+	
+	// Time of the Equinox
+	private static int tauAN;
 
-	// planet around sun animation
-	private static final double animationGreatestDimention 	= 150; 
-	private static final double factor;
-	private static final double b;
-	private static final double foci;
-
-	public GridCell(float temp, int x, int y, int latitude, int longitude, int gs) {
+	public GridCell(float temp, int x, int y, int latitude, int longitude, int gs, float axisTilt, float eccentricity) {
 
 		if (temp > Float.MAX_VALUE) throw new IllegalArgumentException("Invalid temp provided");
 		if (x > Integer.MAX_VALUE || x < Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid 'x' provided");
 		if (y > Integer.MAX_VALUE || y < Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid 'y' provided");
 
-		this.setGridProps(x, y, latitude, longitude, gs);
-
+		this.setGridProps(x, y, latitude, longitude, gs, axisTilt, eccentricity);
+		
 		this.setTemp(temp);
-		this.visited = false;
-		
-		// P2 Heated Planet: Set time of equinox
-		this.setTimeOfEquinox();
-		
-		// P3
-		foci = Math.sqrt((a * a) - (b * b));
-		factor = animationGreatestDimention / 2 * a;
-		b = a * (Math.sqrt(1 - (E * E)));
 	}
 
-	public GridCell(GridCell top, GridCell bottom, GridCell left, GridCell right, float temp, int x, int y, int latitude, int longitude, int gs) {
+	public GridCell(GridCell top, GridCell bottom, GridCell left, GridCell right, float temp, int x, int y, int latitude, int longitude, int gs, float axisTilt, float eccentricity) {
 		
-		this(temp, x, y, latitude, longitude, gs);
+		this(temp, x, y, latitude, longitude, gs, axisTilt, eccentricity);
 
 		this.setTop(top);
 		this.setBottom(bottom);
 		this.setLeft(left);
 		this.setRight(right);
-		
-		//P2 Heated Planet: Set time of equinox
-		this.setTimeOfEquinox();
 	}
 
 	@Override
@@ -131,36 +125,28 @@ public final class GridCell implements EarthCell<GridCell> {
 	}
 
 	@Override
-	public void setGridProps(int x, int y, int latitude, int longitude, int gs) {
+	public void setGridProps(int x, int y, int latitude, int longitude, int gs, float axisTilt, float eccentricity) {
 
-		this.setX(x);
-		this.setY(y);
-		this.setLatitude(latitude);
-		this.setLongitude(longitude);
-		this.setGridSpacing(gs);
+		this.x = x;
+		this.y = y;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.gs = gs;
+		this.axisTilt = axisTilt;
+		this.eccentricity = eccentricity;
 
 		// calc lengths, area, etc.
 		this.calSurfaceArea(latitude, gs);
-	}
-
-	@Override
-	public void setLatitude(int latitude) {
-		this.latitude = latitude;
-	}
-
-	@Override
-	public void setLongitude(int longitude) {
-		this.longitude = longitude;
-	}
-
-	@Override
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	@Override
-	public void setY(int y) {
-		this. y = y;
+		
+		this.visited = false;
+		
+		// P2 Heated Planet: Set time of equinox
+		this.setTimeOfEquinox();
+		
+		// P3
+		tauAN = 0;
+		b = Constants.a * (Math.sqrt(1 - (this.eccentricity * this.eccentricity)));
+		foci = Math.sqrt((Constants.a * Constants.a) - (b * b));
 	}
 	
 	// TODO add to interface
@@ -197,11 +183,6 @@ public final class GridCell implements EarthCell<GridCell> {
 	}
 
 	@Override
-	public void setGridSpacing(int gs) {
-		this.gs = gs;
-	}
-
-	@Override
 	public int getGridSpacing() {
 		return this.gs;
 	}
@@ -225,7 +206,7 @@ public final class GridCell implements EarthCell<GridCell> {
 	public double getSunLatitudeOnEarth(int currentTimeInSimulation) {
 		
 		//return (Earth.tilt * Math.sin((getRotationalAngle(currentTime))));
-		return (tilt * Math.sin((getRotationalAngle(currentTimeInSimulation))));
+		return (this.axisTilt * Math.sin((getRotationalAngle(currentTimeInSimulation))));
 	}
 	
 	// TODD Add to interface
@@ -260,12 +241,12 @@ public final class GridCell implements EarthCell<GridCell> {
 	
 	@Override
 	public float getPlanetX(int currentTime) {
-		return (float) ((a * E)  + (a * Math.cos((getEccentricAnamoly(currentTime)))));
+		return (float) ((Constants.a * this.eccentricity)  + (Constants.a * Math.cos((getEccentricAnamoly(currentTime)))));
 	}
 
 	@Override
 	public float getPlanetY(int currentTime) {
-		double b = a * (Math.sqrt(1 - (E * E)));
+		double b = Constants.a * (Math.sqrt(1 - (this.eccentricity * this.eccentricity)));
 		return (float) (b * Math.sin((getEccentricAnamoly(currentTime))));
 	}
 	
@@ -292,7 +273,7 @@ public final class GridCell implements EarthCell<GridCell> {
 	private void calSurfaceArea(int latitude, int gs) {
 		
 		double p  = 1.0 * gs / 360;
-		this.lv   = (float) (CIRCUMFERENCE * p);
+		this.lv   = (float) (Constants.CIRCUMFERENCE * p);
 		this.lb   = (float) (Math.cos(Math.toRadians(latitude)) * this.lv);
 		this.lb   = this.lb > 0 ? this.lb: 0;
 		this.lt   = (float) (Math.cos(Math.toRadians(latitude + gs)) * this.lv);
@@ -315,7 +296,6 @@ public final class GridCell implements EarthCell<GridCell> {
 	private float calTcool() {
 		
 		float beta = (float) (this.surfarea / avgArea);  // actual grid area / average cell area
-		//return -1 * beta * avgsuntemp;
 		return -1 * beta * this.currTemp / 288 * avgsuntemp;
 	}
 	
@@ -329,7 +309,6 @@ public final class GridCell implements EarthCell<GridCell> {
 		if (this.bottom != null)
 			bottom_temp = this.lb / this.pm * this.bottom.getTemp();
 
-		//System.out.println(this.lt / this.pm + this.lb / this.pm + this.lv / this.pm * 2);
 		return  top_temp + bottom_temp + this.lv / this.pm * (this.left.getTemp() + this.right.getTemp());
 	}
 	
@@ -337,7 +316,7 @@ public final class GridCell implements EarthCell<GridCell> {
 	//P3 Heated Planet
 	
 	private double getMeanAnamoly(int currentTime) {
-		return (2 * Math.PI * currentTime / T);
+		return (2 * Math.PI * currentTime / Constants.T);
 	}
 	
 	private double getEccentricAnamoly(int currentTime) {
@@ -345,67 +324,61 @@ public final class GridCell implements EarthCell<GridCell> {
 	}
 	
 	private double equationSolverNewton(double meanAnamoly) {
-	    double del = 1e-5,xx = 0 ;
-	    double dx =0, x=0;
-	    if(E > 0.8)
-	    	x=Math.PI;
-	    else
-	    	x=meanAnamoly;
 		
-	    double del = 1e-5, xx = 0 ;
+	    double del = 1e-5,xx = 0 ;
 	    double dx = 0, x = Math.PI/2;
 	    int k = 0;
 	    
-	    //while (Math.abs(xx-x) > del && k<10 && functionOfX(meanAnamoly, x)!=0) {
+	    if (this.eccentricity > 0.8)
+	    	x=Math.PI;
+	    else
+	    	x=meanAnamoly;
+	    
 	    while (Math.abs(xx - x) > del && k<10 && functionOfX(meanAnamoly, x) != 0) {
 	      dx = functionOfX(meanAnamoly, x) / derivativeOfX(x);
 	      xx = x;
 	      x = x - dx;
 	      k++;
-	    
-	    //System.out.println("Iteration number: " + k);
-	    //System.out.println("Root obtained: " + x);
-	    //System.out.println("Estimated error: " + Math.abs(xx-x));
 	    }	    
 	    return x;
 	}
 	
 	// Method to provide function f(x)
-	private static double functionOfX(double meanAnamoly, double x) {
-	    return (meanAnamoly - x + (E * Math.sin((x))));
+	private double functionOfX(double meanAnamoly, double x) {
+	    return (meanAnamoly - x + (this.eccentricity * Math.sin((x))));
 	}
 
 	// Method to provide the derivative f'(x).
-	private static double derivativeOfX(double x) {
-	    return (-1 + E * Math.cos((x)));
+	private double derivativeOfX(double x) {
+	    return (-1 + this.eccentricity * Math.cos((x)));
 	}	
 	
 	private double trueAnamoly(int currentTime) {
 		
 		double eccentricAnamoly = getEccentricAnamoly(currentTime);
-		double numerator = Math.cos((eccentricAnamoly)) - E;
-		double denominator = 1 - (E * Math.cos((eccentricAnamoly)));
+		double numerator = Math.cos((eccentricAnamoly)) - this.eccentricity;
+		double denominator = 1 - (this.eccentricity * Math.cos((eccentricAnamoly)));
 		return (Math.acos((numerator/denominator)));
 	}
 	
 	private double distanceFromPlanet(int currentTime) {
 		
-		double numerator = 1 - (E * E);
-		double denominator = 1 + (E * Math.cos((trueAnamoly(currentTime))));
-		return (a * numerator / denominator);
+		double numerator = 1 - (this.eccentricity * this.eccentricity);
+		double denominator = 1 + (this.eccentricity * Math.cos((trueAnamoly(currentTime))));
+		return (Constants.a * numerator / denominator);
 	}
 	
 	private void setTimeOfEquinox() {
 		
 		int t = 0;
 		
-		for ( ; tauAN == 0 && t < T; t++) {
+		for ( ; tauAN == 0 && t < Constants.T; t++) {
 			
 			double trueAnamoly = trueAnamoly(t);
 			
 			//System.out.println("\n" + "trueAnamoly " + trueAnamoly);
 			// Try 10 as a limit to try first
-			if (Math.abs(Math.toRadians(omega)- trueAnamoly) <= 0.1) {
+			if (Math.abs(Math.toRadians(Constants.omega)- trueAnamoly) <= 0.1) {
 				tauAN = t;
 				break;
 			}
@@ -414,7 +387,17 @@ public final class GridCell implements EarthCell<GridCell> {
 	
 	private double getRotationalAngle(int currentTime) {
 		
-		double mod = (currentTime - tauAN) % T;
-		return (mod * 2 * Math.PI / T);
+		double mod = (currentTime - tauAN) % Constants.T;
+		return (mod * 2 * Math.PI / Constants.T);
+	}
+
+	@Override
+	public int getLatitude() {
+		return this.latitude;
+	}
+
+	@Override
+	public int getLongitude() {
+		return this.longitude;
 	}
 }

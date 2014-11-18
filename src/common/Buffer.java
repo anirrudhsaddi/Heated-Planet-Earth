@@ -8,7 +8,6 @@ import messaging.Message;
 import messaging.Publisher;
 import messaging.events.ConsumeMessage;
 import messaging.events.DeliverMessage;
-import messaging.events.ResultMessage;
 
 public class Buffer implements IBuffer {
 

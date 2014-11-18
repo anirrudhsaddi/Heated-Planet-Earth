@@ -4,12 +4,6 @@ package EarthSim;
 import javax.swing.SwingUtilities;
 
 public class Demo {
-	
-	private boolean ownSimThread = false, ownPresThread = false;
-
-	private boolean rset = false, tset = false;
-
-	private long bufferSize = 1;
 
 	public static void main(String[] args) {
 		Demo demo = new Demo();
@@ -28,49 +22,49 @@ public class Demo {
 		if (args.length > 5)
 			usage();
 
-		for (int i = 0; i < args.length; i++) {
+//		for (int i = 0; i < args.length; i++) {
 			
-			String arg = args[i];
+//			String arg = args[i];
 
-			if ("-s".equalsIgnoreCase(arg)) 
-				ownSimThread = true;
-			
-			else if ("-p".equalsIgnoreCase(arg)) 
-				ownPresThread = true;
-			
-			else if ("-r".equalsIgnoreCase(arg))
-				rset = true;
-			
-			else if ("-t".equalsIgnoreCase(arg))
-				tset = true;
-			
-			else if ("-b".equalsIgnoreCase(arg)) {
-				
-				if (i == -1 || i++ >= args.length) {
-					System.out.println("-b needs a value.");
-					usage();
-				}
-				
-				String bufSizeString = args[i];
-				
-				try {
-					bufferSize = Integer.parseInt(bufSizeString);
-					if(bufferSize <= 0) {
-						throw new NumberFormatException();
-					}
-				} catch (NumberFormatException nfe) {
-					System.out.println("Error reading -b value as a positive integer. Please retry.");
-					usage();
-				}
-				
-			} else
-				usage();
-		}
-
-		if (rset && tset) {
-			System.out.println("Cannot set both -r and -t.");
-			usage();
-		}
+//			if ("-s".equalsIgnoreCase(arg)) 
+//				ownSimThread = true;
+//			
+//			else if ("-p".equalsIgnoreCase(arg)) 
+//				ownPresThread = true;
+//			
+//			else if ("-r".equalsIgnoreCase(arg))
+//				rset = true;
+//			
+//			else if ("-t".equalsIgnoreCase(arg))
+//				tset = true;
+//			
+//			else if ("-b".equalsIgnoreCase(arg)) {
+//				
+//				if (i == -1 || i++ >= args.length) {
+//					System.out.println("-b needs a value.");
+//					usage();
+//				}
+//				
+//				String bufSizeString = args[i];
+//				
+//				try {
+//					bufferSize = Integer.parseInt(bufSizeString);
+//					if(bufferSize <= 0) {
+//						throw new NumberFormatException();
+//					}
+//				} catch (NumberFormatException nfe) {
+//					System.out.println("Error reading -b value as a positive integer. Please retry.");
+//					usage();
+//				}
+//				
+//			} else
+//				usage();
+//		}
+//
+//		if (rset && tset) {
+//			System.out.println("Cannot set both -r and -t.");
+//			usage();
+//		}
 	}
 
 	private void usage() {
@@ -98,10 +92,10 @@ public class Demo {
 
 	private void printSettings() {
 		
-		debug("Simulation on own thread\t:" + ownSimThread);
-		debug("Presentation on own thread\t:" + ownPresThread);
-		debug("Buffer Size\t\t\t:" + bufferSize);
-		debug("");
+//		debug("Simulation on own thread\t:" + ownSimThread);
+//		debug("Presentation on own thread\t:" + ownPresThread);
+//		debug("Buffer Size\t\t\t:" + bufferSize);
+//		debug("");
 	}
 
 	private void debug(String s) {

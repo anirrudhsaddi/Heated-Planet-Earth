@@ -8,7 +8,7 @@ import messaging.Message;
 import messaging.MessageListener;
 import messaging.events.StopMessage;
 
-public class ThreadManager extends ThreadPoolExecutor implements IThreadController, MessageListener {
+public class ThreadManager extends ThreadPoolExecutor implements MessageListener {
 	
 	private static final int CORE_POOL_SIZE = 10;
 	private static final int MAX_POOL_SIZE = Integer.MAX_VALUE;

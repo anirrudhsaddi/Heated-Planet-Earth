@@ -6,7 +6,7 @@ import messaging.Publisher;
 import messaging.events.StartMessage;
 import messaging.events.StopMessage;
 
-public class Monitor implements IMonitorCallback,MessageListener{
+public class Monitor implements IMonitorCallback, MessageListener{
 	
 	IMonitorCallback callback;
 	int currentTimeInSimulation;
