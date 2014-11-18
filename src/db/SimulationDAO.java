@@ -1,5 +1,6 @@
 package db;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +13,6 @@ import messaging.Message;
 import messaging.Publisher;
 import messaging.events.DeliverMessage;
 import messaging.events.ResultMessage;
-
 import common.ComponentBase;
 import common.IGrid;
 import common.ThreadManager;
@@ -378,9 +378,10 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 
 	private void offer(IGrid grid) throws SQLException {
 		
-		// TODO do we want to check to see if we should save this based on date?
-		long dateTime = grid.getDateTime();
+		// Determine if we store this or not based on the two accuracy values
 		
+		long dateTime = grid.getDateTime();
+		BigDecimal valueToStore;
 		
 		String name = grid.getSimulationName();
 		PreparedStatement query = conn.getPreparedStatement(CREATE_TIME_REL_KEY);
@@ -388,11 +389,12 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		int width = grid.getGridWidth(), height = grid.getGridHeight();
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++ ) {
+				valueToStore = new BigDecimal(grid.getTemperature(x, y));
 				query.setString(1, name);
 				query.setInt(2, getLatitude(y, height));
 				query.setInt(3, getLongitude(x, width));
 				query.setLong(4, dateTime);
-				query.setDouble(5, grid.getTemperature(x, y));
+				query.setDouble(5, valueToStore.setScale(this.precision, BigDecimal.ROUND_HALF_UP).doubleValue());
 			}
 		}
 	}

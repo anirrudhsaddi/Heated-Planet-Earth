@@ -43,14 +43,15 @@ public class ControlGUI extends JFrame implements ActionListener {
 	
 	private static final int DEFAULT_BUFFFER_SIZE	= 10;
 	
-	private static final int PRECISION_MIN = 7;
-	private static final int PRECISION_MAX = 16;
+	private static final int PRECISION_MIN 			= 0;
+	private static final int PRECISION_DEFAULT 		= 7;
+	private static final int PRECISION_MAX 			= 16;
 	
-	private static final int GEOACCURACY_MIN = 1;
-	private static final int GEOACCURACY_MAX = 100;
+	private static final int GEOACCURACY_MIN 		= 1;
+	private static final int GEOACCURACY_MAX 		= 100;
 	
-	private static final int TEMPORALACCURACY_MIN = 1;
-	private static final int TEMPORALACCURACY_MAX = 100;
+	private static final int TEMPORALACCURACY_MIN 	= 1;
+	private static final int TEMPORALACCURACY_MAX 	= 100;
 	
 	private static final int MIN_GRID_SPACING 		= 1;
 	private static final int DEFAULT_GRID_SPACING  	= 15;
