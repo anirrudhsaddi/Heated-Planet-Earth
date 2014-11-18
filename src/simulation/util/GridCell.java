@@ -221,7 +221,15 @@ public final class GridCell implements EarthCell<GridCell> {
 		this.newTemp = 0;
 	}
 	
+	@Override
+	public double getSunLatitudeOnEarth(int currentTimeInSimulation) {
+		
+		//return (Earth.tilt * Math.sin((getRotationalAngle(currentTime))));
+		return (tilt * Math.sin((getRotationalAngle(currentTimeInSimulation))));
+	}
+	
 	// TODD Add to interface
+	@Override
 	public float calTsun(int sunPosition, int currentTimeInSimulation) {
 		
 		int sunLongitude = getSunLocationOnEarth(sunPosition);
@@ -244,6 +252,42 @@ public final class GridCell implements EarthCell<GridCell> {
 		return (float) (278 * attenuation_lat * attenuation_longi/inverseDistanceRatio); 
 	
 	}
+	
+	@Override
+	public float getSurfarea() {
+		return this.surfarea;
+	}
+	
+	@Override
+	public float getPlanetX(int currentTime) {
+		return (float) ((a * E)  + (a * Math.cos((getEccentricAnamoly(currentTime)))));
+	}
+
+	@Override
+	public float getPlanetY(int currentTime) {
+		double b = a * (Math.sqrt(1 - (E * E)));
+		return (float) (b * Math.sin((getEccentricAnamoly(currentTime))));
+	}
+	
+	// Static methods
+	
+	public static void setAvgSuntemp(float avg){
+		avgsuntemp = avg;
+	}
+	
+	public static float getAvgSuntemp(){
+		return avgsuntemp;
+	}
+	
+	public static void setAverageArea(float avgarea) {
+		avgArea = avgarea;
+	}
+	
+	public static float getAverageArea() {
+		return avgArea;
+	}
+	
+	// Private methods
 	
 	private void calSurfaceArea(int latitude, int gs) {
 		
@@ -268,33 +312,14 @@ public final class GridCell implements EarthCell<GridCell> {
 		return j < (cols / 2) ? -(j + 1) * this.gs : (360) - (j + 1) * this.gs;
 	}
 
-	public float calTcool() {
+	private float calTcool() {
+		
 		float beta = (float) (this.surfarea / avgArea);  // actual grid area / average cell area
 		//return -1 * beta * avgsuntemp;
 		return -1 * beta * this.currTemp / 288 * avgsuntemp;
 	}
 	
-	public static void setAvgSuntemp(float avg){
-		avgsuntemp = avg;
-	}
-	
-	public static float getAvgSuntemp(){
-		return avgsuntemp;
-	}
-	
-	public float getSurfarea() {
-		return this.surfarea;
-	}
-	
-	public static void setAverageArea(float avgarea) {
-		avgArea = avgarea;
-	}
-	
-	public static float getAverageArea() {
-		return avgArea;
-	}
-	
-	public float calTneighbors() {
+	private float calTneighbors() {
 
 		float top_temp = 0, bottom_temp = 0;
 
@@ -310,15 +335,16 @@ public final class GridCell implements EarthCell<GridCell> {
 	
 	//=================================================
 	//P3 Heated Planet
-	public double getMeanAnamoly(int currentTime) {
+	
+	private double getMeanAnamoly(int currentTime) {
 		return (2 * Math.PI * currentTime / T);
 	}
 	
-	public double getEccentricAnamoly(int currentTime) {
+	private double getEccentricAnamoly(int currentTime) {
 		return equationSolverNewton(getMeanAnamoly(currentTime));
 	}
 	
-	public double equationSolverNewton(double meanAnamoly) {
+	private double equationSolverNewton(double meanAnamoly) {
 	    double del = 1e-5,xx = 0 ;
 	    double dx =0, x=0;
 	    if(E > 0.8)
@@ -345,38 +371,31 @@ public final class GridCell implements EarthCell<GridCell> {
 	}
 	
 	// Method to provide function f(x)
-	public static double functionOfX(double meanAnamoly, double x) {
+	private static double functionOfX(double meanAnamoly, double x) {
 	    return (meanAnamoly - x + (E * Math.sin((x))));
 	}
 
 	// Method to provide the derivative f'(x).
-	public static double derivativeOfX(double x) {
+	private static double derivativeOfX(double x) {
 	    return (-1 + E * Math.cos((x)));
 	}	
 	
-	public double trueAnamoly(int currentTime) {
+	private double trueAnamoly(int currentTime) {
+		
 		double eccentricAnamoly = getEccentricAnamoly(currentTime);
 		double numerator = Math.cos((eccentricAnamoly)) - E;
 		double denominator = 1 - (E * Math.cos((eccentricAnamoly)));
 		return (Math.acos((numerator/denominator)));
 	}
 	
-	public double distanceFromPlanet(int currentTime) {
+	private double distanceFromPlanet(int currentTime) {
+		
 		double numerator = 1 - (E * E);
 		double denominator = 1 + (E * Math.cos((trueAnamoly(currentTime))));
 		return (a * numerator / denominator);
 	}
 	
-	public float getPlanetX(int currentTime) {
-		return (float) ((.a * E)  + (a * Math.cos((getEccentricAnamoly(currentTime)))));
-	}
-
-	public float getPlanetY(int currentTime) {
-		double b = a * (Math.sqrt(1 - (E * E)));
-		return (float) (b * Math.sin((getEccentricAnamoly(currentTime))));
-	}
-	
-	public void setTimeOfEquinox() {
+	private void setTimeOfEquinox() {
 		
 		int t = 0;
 		
@@ -393,15 +412,9 @@ public final class GridCell implements EarthCell<GridCell> {
 		}
 	}
 	
-	public double getRotationalAngle(int currentTime) {
+	private double getRotationalAngle(int currentTime) {
+		
 		double mod = (currentTime - tauAN) % T;
 		return (mod * 2 * Math.PI / T);
 	}
-		
-	public double getSunLatitudeOnEarth(int currentTimeInSimulation) {
-		//return (Earth.tilt * Math.sin((getRotationalAngle(currentTime))));
-		return (tilt * Math.sin((getRotationalAngle(currentTimeInSimulation))));
-	}
 }
-
-

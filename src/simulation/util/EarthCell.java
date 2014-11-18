@@ -20,4 +20,12 @@ public void setLatitude(int lat);
 
 	public int getGridSpacing();
 
+	public float getPlanetX(int currentTime);
+
+	public float getPlanetY(int currentTime);
+	
+	public float getSurfarea();
+
+	public double getSunLatitudeOnEarth(int currentTimeInSimulation);
+
 }
