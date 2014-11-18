@@ -28,23 +28,22 @@ public final class Earth implements IModel {
 
 	private static final int[] increments = { 6, 9, 10, 12, 15, 18, 20, 30, 36, 45, 60, 90, 180 };
 	
-	private int currentStep;
-	private int width;
-	private int height;
-	private int sunPositionCell;
-
-	private GridCell prime = null;
+	private final IMonitorCallback monitor;
+	
+	private GridCell prime;
+	
+	private String simulationName;
 	
 	private float axisTilt;
 	private float eccentricity;
 	
+	private int currentStep;
+	private int width;
+	private int height;
+	private int sunPositionCell;
 	private int currentTimeInSimulation;
 	private int timeStep;
 	private int gs;
-	
-	private String simulationName;
-	
-	private final IMonitorCallback monitor;
 	
 	public Earth(IMonitorCallback monitor) {
 		

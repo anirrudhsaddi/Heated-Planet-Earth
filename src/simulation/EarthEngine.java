@@ -12,6 +12,10 @@ public class EarthEngine extends ComponentBase {
 	
 	private final Earth model;
 	
+	private int precision;
+	private int geoAccuracy; // percentage of the cells to store
+	private int temporalAccuracy; // percentage of the total number of calculations to save
+	
 	public EarthEngine(IMonitorCallback monitor) {
 		
 		model = new Earth(monitor);
