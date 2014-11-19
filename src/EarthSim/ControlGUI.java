@@ -4,24 +4,15 @@ package EarthSim;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
-import EarthSim.widgets.ControlWidget;
-import EarthSim.widgets.QueryWidget;
-import EarthSim.widgets.SettingsWidget;
 import messaging.Publisher;
 import messaging.events.PauseMessage;
 import messaging.events.ProduceMessage;
@@ -30,6 +21,10 @@ import messaging.events.StartMessage;
 import messaging.events.StopMessage;
 import simulation.EarthEngine;
 import view.EarthDisplayEngine;
+import EarthSim.widgets.ControlWidget;
+import EarthSim.widgets.QueryWidget;
+import EarthSim.widgets.SettingsWidget;
+
 import common.Buffer;
 import common.Constants;
 import common.Monitor;
