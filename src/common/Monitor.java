@@ -37,10 +37,13 @@ public class Monitor implements IMonitorCallback, MessageListener{
 	@Override
 	public void notifyCurrentInterval(long date, long time) {
 		
-		this.currentTimeInSimulation = currSimulationInterval * this.timeStep;
+		
+		//Todo: talk to Brandon
+	/*	this.currentTimeInSimulation = currSimulationInterval * this.timeStep;
 		
 		if(this.currentTimeInSimulation >= simulationLength){
 			publisher.send(new StopMessage());
-		}
+			}*/
+		
 	}
 }
