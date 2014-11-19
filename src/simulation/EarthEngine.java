@@ -58,8 +58,6 @@ public class EarthEngine extends ComponentBase {
 		// We also need to provide a report on the query - including
 		// min/max/mean, etc.
 
-		// How do we handle geo accuracy?????????????
-
 		throw new IllegalStateException(
 				"Support for ResultMessage has yet to be added. SimulationStatus needs to be updated. Earth needs to be updated");
 	}
