@@ -1,5 +1,7 @@
 package common;
 
+import java.util.Calendar;
+
 import messaging.Message;
 import messaging.MessageListener;
 import messaging.Publisher;
@@ -9,11 +11,9 @@ import messaging.events.StopMessage;
 public class Monitor implements IMonitorCallback, MessageListener{
 	
 	IMonitorCallback callback;
-	int currentTimeInSimulation;
-	int simulationLength;	// in months
-	int timeStep;			// in minutes
-	
+	Calendar endDate;
 	Publisher publisher;
+	Calendar currentTime;
 	
 	public Monitor(){
 		
@@ -27,19 +27,19 @@ public class Monitor implements IMonitorCallback, MessageListener{
 			StartMessage startMsg = (StartMessage) msg;
 			
 			// TODO convert to long representation since epoch of the end date (using Calendar)
-			this.simulationLength = startMsg.simulationLength();
-			this.timeStep = startMsg.timeStep();
+			this.currentTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+			this.currentTime.add(Calendar.DAY_OF_YEAR, 3);
 			
-			this.currentTimeInSimulation = 0;
+			this.endDate = startMsg.endDate();
 		}
 	}
 
 	@Override
 	public void notifyCurrentInterval(long date, long time) {
 		
-		this.currentTimeInSimulation = currSimulationInterval * this.timeStep;
-		
-		if(this.currentTimeInSimulation >= simulationLength){
+		this.currentTime.setTimeInMillis(date + time);
+
+		if(this.currentTime.after(this.endDate)){
 			publisher.send(new StopMessage());
 		}
 	}
