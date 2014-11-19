@@ -44,13 +44,13 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 	private ThreadManager				threadManager		= ThreadManager.getManager();
 
-	private final QueryWidget			queryWidget;
-	private final ControlWidget			controlWidget;
-	private final SettingsWidget		settingsWidget;
+	private  QueryWidget				queryWidget;
+	private  ControlWidget				controlWidget;
+	private  SettingsWidget				settingsWidget;
 
-	private final int					precision;
-	private final int					geoAccuracy;
-	private final int					temporalAccuracy;
+	private final int				precision;
+	private final int				geoAccuracy;
+	private final int				temporalAccuracy;
 
 	public ControlGUI(int precision, int geoAccuracy, int temporalAccuracy) {
 
@@ -144,12 +144,6 @@ public class ControlGUI extends JFrame implements ActionListener {
 				// TODO check for stop and reset?
 				// TODO All simulations need to start at Jan 4th (epoch)
 
-				final int gs = Integer.parseInt(settingsWidget.get("Grid Spacing").getText());
-				final int timeStep = Integer.parseInt(settingsWidget.get("Simulation Time Step").getText());
-				final float presentationRate = Float.parseFloat(settingsWidgetget("Presentation Rate").getText());
-				final int simulationLength = Integer.parseInt(settingsWidgetget("Simulation Length").getText());
-				final float axisTilt = Float.parseFloat(settingsWidget.get("Axis Tilt").getText());
-				final float eccentricity = Float.parseFloat(settingsWidgetget("Orbital Eccentricity").getText());
 
 				if (gs < Constants.MIN_GRID_SPACING || gs > Constants.MAX_GRID_SPACING)
 					throw new IllegalArgumentException("Invalid grid spacing");

@@ -151,8 +151,8 @@ public class QueryWidget extends JPanel {
 	return inputPanel;
     }
 
-    public void setFields(String actionName){
-	if(actionName == "Disable") {
+    private void setFields(Boolean setFields){
+	if(setFields) {
 	    textFieldStartTime.setEnabled(false);
 	    textFieldEastLatitude.setEnabled(false);
 	    textFieldWestLatitude.setEnabled(false);
@@ -161,7 +161,7 @@ public class QueryWidget extends JPanel {
 	    textFieldEndTime.setEnabled(false);
 	}
 
-	else if(actionName == "Enable") {
+	else (setFields) {
 	    textFieldStartTime.setEnabled(true);
 	    textFieldEastLatitude.setEnabled(true);
 	    textFieldWestLatitude.setEnabled(true);
