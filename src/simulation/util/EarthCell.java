@@ -2,10 +2,6 @@ package simulation.util;
 
 public interface EarthCell<T> extends Cell<T> {
 	
-	public int getLatitude();
-	
-	public int getLongitude();
-	
 	public float calculateTemp(int time, int currentTimeInSimulation);
 	
 	public float calTsun(int sunPosition, int currentTimeInSimulation);

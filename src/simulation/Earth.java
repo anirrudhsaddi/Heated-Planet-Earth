@@ -9,6 +9,7 @@ import java.util.TimeZone;
 
 import messaging.Publisher;
 import messaging.events.DeliverMessage;
+import messaging.events.PersistMessage;
 import simulation.util.GridCell;
 import common.Buffer;
 import common.Constants;
@@ -147,9 +148,6 @@ public final class Earth {
 		// Set initial average temperature
 		GridCell.setAvgSuntemp(totaltemp / (width * height));
 		GridCell.setAverageArea(totalarea / (width * height));
-		
-		// TODO don't auto-start
-		// Publisher.getInstance().send(new ProduceMessage());
 	}
 
 	public void generate() throws InterruptedException {
@@ -162,11 +160,9 @@ public final class Earth {
 		this.monitor.notifyCurrentInterval(currentDate, 0);
 
 		// Don't attempt to generate if output queue is full...
-		if (Buffer.getBuffer().getRemainingCapacity() == 0) {
+		if (Buffer.getBuffer().getRemainingCapacity() == 0)
 			return;
-		}
 
-		//System.out.println("generating grid...");
 		Queue<GridCell> bfs = new LinkedList<GridCell>();
 		Queue<GridCell> calcd = new LinkedList<GridCell>();
 
@@ -184,12 +180,9 @@ public final class Earth {
 		IGrid grid = new Grid(simulationName, sunPositionCell, sunPositionDeg, width, height, t, 0);
 
 		float suntotal = 0;
-		float calcdTemp = 0;
 
-		calcdTemp = prime.calculateTemp(sunPositionCell, currentTimeInSimulation);
-		// suntotal = suntotal + prime.calTsun(sunPositionCell, currentTimeInSimulation);
 		suntotal = suntotal + prime.getTSun();
-		grid.setTemperature(prime.getX(), prime.getY(), calcdTemp);
+		grid.setTemperature(prime.getX(), prime.getY(), prime.calculateTemp(sunPositionCell, currentTimeInSimulation));
 
 		prime.visited(true);
 		bfs.add(prime);
@@ -209,8 +202,7 @@ public final class Earth {
 
 				child = itr.next();
 				child.visited(true);
-				calcdTemp = child.calculateTemp(sunPositionCell, currentTimeInSimulation);
-				grid.setTemperature(child.getX(), child.getY(), calcdTemp);
+				grid.setTemperature(child.getX(), child.getY(), child.calculateTemp(sunPositionCell, currentTimeInSimulation));
 				bfs.add(child);
 				
 				// suntotal += child.calTsun(sunPositionCell, currentTimeInSimulation);
@@ -240,17 +232,20 @@ public final class Earth {
 	
 	private void persistGrid(IGrid grid) {
 		
+		// Determine if to store
+		
 		BigDecimal valueToStore;
+		PersistMessage msg = new PersistMessage(simulationName, dateTime, width, height);
 		
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				valueToStore = new BigDecimal(grid.getTemperature(x, y));
-				double adjustedTemp = valueToStore.setScale(this.precision, BigDecimal.ROUND_HALF_UP).doubleValue();
+				msg.setTemperature(x, y, valueToStore.setScale(this.precision, BigDecimal.ROUND_HALF_UP).doubleValue());
 			}
 		}
 		
 		throw new IllegalStateException("Need to determine if we should store this based on geoAccuracy and temporalAccuracy");
-		// Publisher.getInstance().send(new PersistMessage(<treemap>?));
+		// Publisher.getInstance().send(msg);
 	}
 
 	private void createRow(GridCell curr, GridCell next, GridCell bottom,

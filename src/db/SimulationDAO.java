@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
 
 import messaging.Message;
 import messaging.Publisher;
-import messaging.events.DeliverMessage;
+import messaging.events.PersistMessage;
 import messaging.events.ResultMessage;
 import common.ComponentBase;
 import common.IGrid;
@@ -61,7 +61,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		this.conn.createPreparedStatement(Neo4jConstants.CREATE_PRESENTATIONAL_REL_KEY, Neo4jConstants.CREATE_PRESENTATIONAL_REL);
 		this.conn.createPreparedStatement(Neo4jConstants.CREATE_LENGTH_REL_KEY, Neo4jConstants.CREATE_LENGTH_REL);
 		
-		Publisher.getInstance().subscribe(DeliverMessage.class, this);
+		Publisher.getInstance().subscribe(PersistMessage.class, this);
 		
 		this.conn.query(Neo4jConstants.CREATE_NODE_NAME_CONSTRAINT);
 	}
@@ -286,9 +286,9 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	@Override
 	public void onMessage(Message msg) {
 
-		if (msg instanceof DeliverMessage)
+		if (msg instanceof PersistMessage)
 			try {
-				offer(((DeliverMessage) msg).getGrid());
+				offer(((PersistMessage) msg));
 			} catch (SQLException e) {
 				e.printStackTrace();
 				System.err.println("Unable to add Grid to Database");
@@ -303,23 +303,23 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	}
 
 	// TODO not an IGrid
-	private void offer() throws SQLException {
+	private void offer(PersistMessage msg) throws SQLException {
 		
 		// Determine if we store this or not based on the two accuracy values
 		
-		long dateTime = grid.getDateTime();
+		long dateTime = msg.getDateTime();
 		
-		String name = grid.getSimulationName();
+		String name = msg.getSimulationName();
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_TIME_REL_KEY);
 		
-		int width = grid.getGridWidth(), height = grid.getGridHeight();
+		int width = msg.getGridWidth(), height = msg.getGridHeight();
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++ ) {
 				query.setString(1, name);
 				query.setInt(2, getLatitude(y, height));
 				query.setInt(3, getLongitude(x, width));
 				query.setLong(4, dateTime);
-				query.setDouble(5, grid.getTemperature(x, y));
+				query.setDouble(5, msg.getTemperature(x, y));
 			}
 		}
 	}

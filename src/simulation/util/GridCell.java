@@ -218,17 +218,11 @@ public final class GridCell implements EarthCell<GridCell> {
 		
 		//P2 - Heated Planet : Find correct attenuation depending on the sun latitude
 		int sunLatitude = (int) getSunLatitudeOnEarth(currentTimeInSimulation);
-		
-		//System.out.println("\n" + "Sun Latitude is " + sunLatitude + " for Earth.currentTimeInSimulation " + Earth.currentTimeInSimulation);
 		float attenuation_lat = (float) Math.cos(Math.toRadians(Math.abs(sunLatitude - this.latitude)));
-		
-		//float attenuation_longi = (float) (( (Math.abs(sunLongitude - this.longitude) % 360 ) < 90 ) ? Math.cos(Math.toRadians(sunLongitude - this.longitude)) : 0);
 		float attenuation_longi = (float) Math.cos(Math.toRadians(sunLongitude - this.longitude));
 		attenuation_longi = attenuation_longi > 0 ? attenuation_longi : 0;
 		
-		//return 278 * attenuation_lat * attenuation_longi;
 		//P3 - Heated Planet : Sun's distance from planet, inverse square law
-		@SuppressWarnings("unused")
 		double inverseDistanceRatio = 0.5 * Math.pow(distanceFromPlanet(currentTimeInSimulation),2)/Math.pow(distanceFromPlanet(0),2);
 		return (float) (278 * attenuation_lat * attenuation_longi/inverseDistanceRatio); 
 	
@@ -389,15 +383,5 @@ public final class GridCell implements EarthCell<GridCell> {
 		
 		double mod = (currentTime - tauAN) % Constants.T;
 		return (mod * 2 * Math.PI / Constants.T);
-	}
-
-	@Override
-	public int getLatitude() {
-		return this.latitude;
-	}
-
-	@Override
-	public int getLongitude() {
-		return this.longitude;
 	}
 }
