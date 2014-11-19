@@ -12,7 +12,7 @@ import common.IGrid;
 
 public class EarthDisplayEngine extends ComponentBase {
 
-	private final EarthDisplay display;
+	private EarthDisplay display;
 
 	// Current IGrid this display is updating with
 	private IGrid grid;
@@ -47,8 +47,6 @@ public class EarthDisplayEngine extends ComponentBase {
 
 		super();
 
-		this.display = new EarthDisplay();
-
 		this.grid = null;
 
 		Publisher.getInstance().subscribe(DisplayMessage.class, this);
@@ -61,7 +59,7 @@ public class EarthDisplayEngine extends ComponentBase {
 		if (msg instanceof StartMessage) {
 
 			StartMessage start = (StartMessage) msg;
-			start(start.gs(), start.timeStep(), start.simulationLength(), start.axisTilt(), start.eccentricity(), start.presentationInterval());
+			start(start.gs(), start.timeStep(), start.simulationLength(), start.axisTilt(), start.eccentricity(), start.presentationInterval(), start.animate());
 			
 		} else if (msg instanceof DisplayMessage) {
 			display.update(((DisplayMessage) msg).getGrid());
@@ -115,10 +113,12 @@ public class EarthDisplayEngine extends ComponentBase {
 		display.close();
 	}
 
-	private void start(int gs, int timeStep, int simulationLength, float axisTilt, float eccentricity, float presentationInterval) {
+	private void start(int gs, int timeStep, int simulationLength, float axisTilt, float eccentricity, float presentationInterval, boolean animate) {
 		
 		this.presentationInterval = presentationInterval;
 
+
+		this.display = new EarthDisplay(animate);
 		display.display(gs, timeStep, simulationLength, axisTilt, eccentricity);
 		display.update(grid);
 	}

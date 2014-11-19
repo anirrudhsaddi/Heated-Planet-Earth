@@ -11,16 +11,18 @@ public class StartMessage implements Message {
 	private final float presentationInterval;
 	private final float axisTilt;
 	private final float eccentricity;
+	private final boolean animate;
 	
-	public StartMessage(String simulationName, int gs, int timeStep, float presentationInterval, int simulationLength, float axisTilt, float eccentricity) {
+	public StartMessage(String simulationName, int gs, int timeStep, float presentationInterval, int simulationLength, float axisTilt, float eccentricity, boolean animate) {
 		
 		this.simulationName			= simulationName;
-		this.gs 					= gs;
+		this.gs 				= gs;
 		this.timeStep 				= timeStep;
-		this.simulationLength 		= simulationLength;
-		this.presentationInterval 	= presentationInterval;
+		this.simulationLength 			= simulationLength;
+		this.presentationInterval 		= presentationInterval;
 		this.axisTilt 				= axisTilt;
 		this.eccentricity 			= eccentricity;
+		this.animate 				= animate ;
 		
 	}
 	
@@ -50,5 +52,9 @@ public class StartMessage implements Message {
 	
 	public float eccentricity() {
 		return new Float(this.eccentricity);
+	}
+	
+	public boolean animate() {
+	    return new Boolean(this.animate);
 	}
 }

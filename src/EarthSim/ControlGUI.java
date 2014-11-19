@@ -144,7 +144,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 				// TODO check for stop and reset?
 				// TODO All simulations need to start at Jan 4th (epoch)
 
-				final int gs = Integer.parseInt(settingsWidgetget("Grid Spacing").getText());
+				final int gs = Integer.parseInt(settingsWidget.get("Grid Spacing").getText());
 				final int timeStep = Integer.parseInt(settingsWidget.get("Simulation Time Step").getText());
 				final float presentationRate = Float.parseFloat(settingsWidgetget("Presentation Rate").getText());
 				final int simulationLength = Integer.parseInt(settingsWidgetget("Simulation Length").getText());
@@ -181,7 +181,9 @@ public class ControlGUI extends JFrame implements ActionListener {
 				threadManager.execute(new EarthEngine(this.precision, this.geoAccuracy, this.temporalAccuracy, new Monitor()));
 				threadManager.execute(new EarthDisplayEngine());
 
-				Publisher.getInstance().send(new StartMessage(simulationName, gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity));
+				Boolean animate = settingsWidget.GetDisplayAnimationStatus();
+				StartMessage msg = new StartMessage(simulationName, gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity, animate);
+				Publisher.getInstance().send(msg);
 				Publisher.getInstance().send(new ProduceMessage());
 
 				// do gui stuff to indicate start has occurred.
