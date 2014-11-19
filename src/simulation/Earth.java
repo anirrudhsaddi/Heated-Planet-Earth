@@ -45,6 +45,8 @@ public final class Earth {
 	private int precision;
 	private int totalDataToSave;
 	private int totalGridsToSave;
+	private int nth_data;
+	private int nth_grids;
 	
 	public Earth(IMonitorCallback monitor) {
 		
@@ -84,11 +86,17 @@ public final class Earth {
 		int totalGrids = width * height;
 		totalGridsToSave = totalGrids * (start.geoAccuracy() / 100);
 		
+		// Now calculate the number of 'buckets' (or every 'nth' piece)
+		nth_grids = totalGrids / totalGridsToSave;
+		
 		// Convert simulationLength into minutes and divide by the timeStep.
 		// This will give us the total number of generations we will do. 
 		// From there, get the number to save by applying the percentage
 		int totalGens = start.simulationLength() / this.timeStep;
 		totalDataToSave = totalGens * (start.temporalAccuracy() / 100);
+		
+		// Now calculate the number of 'buckets' (or every 'nth' piece)
+		nth_data = totalGens / totalDataToSave;
 	}
 
 	public void start() {
