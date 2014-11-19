@@ -10,101 +10,96 @@ import view.util.ThermalVisualizer;
 import view.widgets.EarthImage;
 import view.widgets.GridDisplay;
 import view.widgets.SimulationStatus;
-
+import common.Constants;
 import common.IGrid;
 
 public class EarthDisplay extends JFrame {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -309131746356718870L;
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= -309131746356718870L;
 
-    // core display
-    private final JLayeredPane display;
+	// core display
+	private final JLayeredPane	display;
 
-    // widgets
-    private SimulationStatus simStatus;
-    private EarthImage earthImage;
-    private GridDisplay gridDisplay;
+	// widgets
+	private SimulationStatus	simStatus;
+	private EarthImage			earthImage;
+	private GridDisplay			gridDisplay;
 
-    private static final int MAX_TEMP 		= 550; // shot in the dark here..
-    private static final int MIN_TEMP 		= 0;
+	private int					gs					= 0, timeStep = 0, simulationLength = 0;
 
-    private static final String COLORMAP = "thermal";
-    private static final float OPACITY = 0.6f;
+	private float				axisTilt			= 0, eccentricity = 0;
+	private boolean				animate;
 
-    private static final int EARTH = 0;
-    private static final int GRID = 1;
+	public EarthDisplay(boolean animate) {
 
-    private int gs = 0, timeStep = 0, simulationLength=0;
+		super("Earth Simulation");
 
-    private float axisTilt = 0 , eccentricity =0;
-    private boolean animate;
+		this.animate = animate;
+		EarthDisplay.setDefaultLookAndFeelDecorated(true);
 
-    public EarthDisplay(boolean animate) {
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setLayout(new BorderLayout());
+		this.setResizable(true);
 
-	super("Earth Simulation");
+		// Add sim settings
+		simStatus = new SimulationStatus();
+		this.add(simStatus, BorderLayout.SOUTH);
 
-	this.animate =  animate;
-	EarthDisplay.setDefaultLookAndFeelDecorated(true);
+		// Add the display region
+		display = new JLayeredPane();
+		this.add(display, BorderLayout.CENTER);
 
-	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	this.setLayout(new BorderLayout());
-	this.setResizable(true);
+		int w, h;
+		if (animate) {
 
-	// Add sim settings
-	simStatus = new SimulationStatus();
-	this.add(simStatus, BorderLayout.SOUTH);
+			// Add EarthImage
+			earthImage = new EarthImage();
+			display.add(earthImage, new Integer(Constants.EARTH));
 
-	// Add the display region
-	display = new JLayeredPane();
-	this.add(display, BorderLayout.CENTER);
+			w = earthImage.getImageWidth();
+			h = earthImage.getImageHeight();
+		} else {
+			w = 600;
+			h = 400;
+		}
 
-	int w, h ;
-	if(animate){
-	    // Add EarthImage
-	    earthImage = new EarthImage();
-	    display.add(earthImage, new Integer(EARTH));
+		// Add grid
+		gridDisplay = new GridDisplay(new ThermalVisualizer(Constants.COLORMAP, Constants.MIN_TEMP, Constants.MAX_TEMP, Constants.OPACITY), w, h);
+		display.add(gridDisplay, new Integer(Constants.GRID));
 
-	    w = earthImage.getImageWidth();
-	    h = earthImage.getImageHeight();
-	}else{
-	    w = 600;
-	    h = 400;
+		this.setPreferredSize(new Dimension(w, h + 130));
+
 	}
-	// Add grid
-	gridDisplay = new GridDisplay(new ThermalVisualizer(COLORMAP, MIN_TEMP, MAX_TEMP, OPACITY), w, h);
-	display.add(gridDisplay, new Integer(GRID));
 
-	this.setPreferredSize(new Dimension(w, h + 130));
+	public void display(int gs, int timeStep, int simulationLength, float axisTilt, float eccentricity) {
 
-    }
+		this.gs = gs;
+		this.timeStep = timeStep;
+		this.simulationLength = simulationLength;
+		this.axisTilt = axisTilt;
+		this.eccentricity = eccentricity;
 
-    public void display(int gs, int timeStep, int simulationLength, float axisTilt, float eccentricity) {
+		this.pack();
+		this.setVisible(true);
+		this.validate();
+	}
 
-	this.gs = gs;
-	this.timeStep = timeStep;
-	this.simulationLength = simulationLength;
-	this.axisTilt = axisTilt;
-	this.eccentricity = eccentricity;
+	public void close() {
+		this.dispose();
+	}
 
-
-	this.pack();
-	this.setVisible(true);
-	this.validate();
-    }
-
-    public void close() {
-	this.dispose();
-    }
-
-    public void update(IGrid grid) {
-	if (grid != null)
-	    simStatus.update(grid.getSunPositionDeg(), grid.getCurrentTime(), this.gs, this.timeStep , this.simulationLength, this.axisTilt, this.eccentricity);
-	else
-	    simStatus.update(0, 0, this.gs, this.timeStep, this.simulationLength, this.axisTilt, this.eccentricity);
-	if(animate)
-	    gridDisplay.update(grid);
-    }
+	public void update(IGrid grid) {
+		
+		if (grid != null)
+			simStatus.update(grid.getSunPositionDeg(), grid.getCurrentTime(), this.gs, this.timeStep,
+					this.simulationLength, this.axisTilt, this.eccentricity);
+		else
+			simStatus.update(0, 0, this.gs, this.timeStep, this.simulationLength, this.axisTilt, this.eccentricity);
+		
+		if (animate)
+			gridDisplay.update(grid);
+	}
 }

@@ -40,17 +40,17 @@ public class ControlGUI extends JFrame implements ActionListener {
 	/**
 	 * 
 	 */
-	private static final long			serialVersionUID	= 6146431536208036768L;
+	private static final long	serialVersionUID	= 6146431536208036768L;
 
-	private ThreadManager				threadManager		= ThreadManager.getManager();
+	private ThreadManager		threadManager		= ThreadManager.getManager();
 
-	private final QueryWidget			queryWidget;
-	private final ControlWidget			controlWidget;
-	private final SettingsWidget		settingsWidget;
+	private QueryWidget			queryWidget;
+	private ControlWidget		controlWidget;
+	private SettingsWidget		settingsWidget;
 
-	private final int					precision;
-	private final int					geoAccuracy;
-	private final int					temporalAccuracy;
+	private final int			precision;
+	private final int			geoAccuracy;
+	private final int			temporalAccuracy;
 
 	public ControlGUI(int precision, int geoAccuracy, int temporalAccuracy) {
 
@@ -146,10 +146,10 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 				final int gs = Integer.parseInt(settingsWidget.get("Grid Spacing").getText());
 				final int timeStep = Integer.parseInt(settingsWidget.get("Simulation Time Step").getText());
-				final float presentationRate = Float.parseFloat(settingsWidgetget("Presentation Rate").getText());
-				final int simulationLength = Integer.parseInt(settingsWidgetget("Simulation Length").getText());
+				final float presentationRate = Float.parseFloat(settingsWidget.get("Presentation Rate").getText());
+				final int simulationLength = Integer.parseInt(settingsWidget.get("Simulation Length").getText());
 				final float axisTilt = Float.parseFloat(settingsWidget.get("Axis Tilt").getText());
-				final float eccentricity = Float.parseFloat(settingsWidgetget("Orbital Eccentricity").getText());
+				final float eccentricity = Float.parseFloat(settingsWidget.get("Orbital Eccentricity").getText());
 
 				if (gs < Constants.MIN_GRID_SPACING || gs > Constants.MAX_GRID_SPACING)
 					throw new IllegalArgumentException("Invalid grid spacing");
@@ -178,11 +178,13 @@ public class ControlGUI extends JFrame implements ActionListener {
 				// TODO check name against the DAO
 				String simulationName = "";
 
-				threadManager.execute(new EarthEngine(this.precision, this.geoAccuracy, this.temporalAccuracy, new Monitor()));
+				threadManager.execute(new EarthEngine(this.precision, this.geoAccuracy, this.temporalAccuracy,
+						new Monitor()));
 				threadManager.execute(new EarthDisplayEngine());
 
 				Boolean animate = settingsWidget.GetDisplayAnimationStatus();
-				StartMessage msg = new StartMessage(simulationName, gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity, animate);
+				StartMessage msg = new StartMessage(simulationName, gs, timeStep, presentationRate, simulationLength,
+						axisTilt, eccentricity, animate);
 				Publisher.getInstance().send(msg);
 				Publisher.getInstance().send(new ProduceMessage());
 
@@ -199,7 +201,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 			Publisher.getInstance().send(new PauseMessage());
 			controlWidget.disableButtonsBasedOnAction(cmd);
-			
+
 		} else if ("Resume".equals(cmd)) {
 
 			Publisher.getInstance().send(new ResumeMessage());
@@ -210,7 +212,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 			Publisher.getInstance().send(new StopMessage());
 
 			controlWidget.disableButtonsBasedOnAction(cmd);
-		    queryWidget.setFields(true);
+			queryWidget.setFields(true);
 		}
 	}
 }
