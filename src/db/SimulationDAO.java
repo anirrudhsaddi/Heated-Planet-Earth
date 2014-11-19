@@ -271,8 +271,14 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		result = conn.query(query);
 		if (!result.isBeforeFirst())
 			throw new SQLException("Failed to find a temperatures");
+		
+		ResultMessage msg = new ResultMessage((foundDateTime == queryDateTime));
+		
+		while (result.next()) {
+			msg.setTemperature(Integer.parseInt(result.getString("longitude")), Integer.parseInt(result.getString("latitude")), Double.parseDouble(result.getString("temperature")));
+		}
 
-		Publisher.getInstance().send(new ResultMessage(result, (foundDateTime == queryDateTime)));
+		Publisher.getInstance().send(msg);
 	}
 
 	@Override

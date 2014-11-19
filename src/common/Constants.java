@@ -18,6 +18,8 @@ public interface Constants {
 	public static final int			INITIAL_TEMP			= 288;
 	public static final int			MAX_DEGREES				= 180;
 	public static final int			MAX_SPEED				= 525960;
+	
+	public static final int			MINUTES_IN_A_MONTH		= 43830;
 
 	public static final int			DEFAULT_BUFFFER_SIZE	= 10;
 

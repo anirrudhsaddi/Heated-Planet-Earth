@@ -7,7 +7,7 @@ public interface Neo4jConstants {
 
 	public static final String FIND_SIMULATIONS_KEY 				= "find_simulation_names";
 
-	public static final String FIND_SIMULATIONS_QUERY 				= "MATCH (a: Simulation) RETURN a";
+	public static final String FIND_SIMULATIONS_QUERY 				= "MATCH (a: Simulation) RETURN a.name";
 
 	// Define the node creation statements
 	public static final String CREATE_SIMULATION_KEY 				= "create_simulation_node";

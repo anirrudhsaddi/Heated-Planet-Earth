@@ -10,6 +10,7 @@ import java.util.TimeZone;
 import messaging.Publisher;
 import messaging.events.DeliverMessage;
 import messaging.events.PersistMessage;
+import messaging.events.StartMessage;
 import simulation.util.GridCell;
 import common.Buffer;
 import common.Constants;
@@ -19,7 +20,7 @@ import common.IMonitorCallback;
 
 public final class Earth {
 	
-	private static final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+	private static Calendar currentDate;
 
 	private static final int[] increments = { 6, 9, 10, 12, 15, 18, 20, 30, 36, 45, 60, 90, 180 };
 	
@@ -42,17 +43,15 @@ public final class Earth {
 	
 	// persistance variables
 	private int precision;
-	private int geoAccuracy;
-	private int temporalAccuracy;
+	private int totalDataToSave;
+	private int totalGridsToSave;
+	private int nth_data;
+	private int nth_grids;
 	
-	public Earth(int precision, int geoAccuracy, int temporalAccuracy, IMonitorCallback monitor) {
+	public Earth(IMonitorCallback monitor) {
 		
 		if (monitor == null)
 			throw new IllegalArgumentException("Invalid monitor provided");
-		
-		this.precision = precision;
-		this.geoAccuracy = geoAccuracy;
-		this.temporalAccuracy = temporalAccuracy;
 		
 		this.monitor = monitor;
 	}
@@ -61,15 +60,17 @@ public final class Earth {
 		return prime;
 	}
 
-	public void configure(String simulationName, int gs, int timeStep, float axisTilt, float eccentricity) {
+	public void configure(StartMessage start) {
 
-		this.simulationName = simulationName;
-		this.timeStep = timeStep;
-		this.axisTilt = axisTilt;
-		this.eccentricity = eccentricity;
+		this.simulationName = start.getSimulationName();
+		this.timeStep = start.timeStep();
+		this.axisTilt = start.axisTilt();
+		this.eccentricity = start.eccentricity();
+		this.precision = start.precision();
 		this.currentTimeInSimulation = 0;
 
 		// The following could be done better - if we have time, we should do so
+		int gs = start.gs();
 		if (Constants.MAX_DEGREES % gs != 0) {
 			for (int i = 0; i < increments.length; i++) {
 				if (gs > increments[i])
@@ -77,14 +78,30 @@ public final class Earth {
 			}
 		} else
 			this.gs = gs;
+		
+		width = (2 * Constants.MAX_DEGREES / this.gs); // rows
+		height = (Constants.MAX_DEGREES / this.gs); // cols
+		
+		// Using width, height, determine totalGridsToSave
+		int totalGrids = width * height;
+		totalGridsToSave = totalGrids * (start.geoAccuracy() / 100);
+		
+		// Now calculate the number of 'buckets' (or every 'nth' piece)
+		nth_grids = totalGrids / totalGridsToSave;
+		
+		// Convert simulationLength into minutes and divide by the timeStep.
+		// This will give us the total number of generations we will do. 
+		// From there, get the number to save by applying the percentage
+		int totalGens = start.simulationLength() / this.timeStep;
+		totalDataToSave = totalGens * (start.temporalAccuracy() / 100);
+		
+		// Now calculate the number of 'buckets' (or every 'nth' piece)
+		nth_data = totalGens / totalDataToSave;
 	}
 
 	public void start() {
 
 		int x = 0, y = 0;
-
-		width = (2 * Constants.MAX_DEGREES / this.gs); // rows
-		height = (Constants.MAX_DEGREES / this.gs); // cols
 
 		// do a reset
 		sunPositionCell = (width / 2) % width;
@@ -148,16 +165,13 @@ public final class Earth {
 		// Set initial average temperature
 		GridCell.setAvgSuntemp(totaltemp / (width * height));
 		GridCell.setAverageArea(totalarea / (width * height));
+		
+		currentDate = (Calendar) Constants.START_DATE.clone();
 	}
 
 	public void generate() throws InterruptedException {
 		
-		// TODO update currSimulationInterval (one month)
-		// TODO make sure timeStep is scaled
-		// TODO convert currTimeInSimulation to an actual long representation of the current date since epoch
-		// Until then, this will break
-		long currentDate = Long.MAX_VALUE;
-		this.monitor.notifyCurrentInterval(currentDate, 0);
+		this.monitor.notifyCurrentInterval(currentDate.getTimeInMillis());
 
 		// Don't attempt to generate if output queue is full...
 		if (Buffer.getBuffer().getRemainingCapacity() == 0)
@@ -168,8 +182,13 @@ public final class Earth {
 
 		currentStep++;
 
-		long t = timeStep * currentStep;
-		long rotationalAngle = 360 - ((t % Constants.MAX_SPEED) * 360 / Constants.MAX_SPEED);
+		long time = timeStep * currentStep;
+		currentDate.add(Calendar.MINUTE, timeStep);
+		if (time % Constants.MINUTES_IN_A_MONTH == 0) {
+			currentTimeInSimulation++;
+		}
+		
+		long rotationalAngle = 360 - ((time % Constants.MAX_SPEED) * 360 / Constants.MAX_SPEED);
 		sunPositionCell = (int) (((width * rotationalAngle) / 360 + (width / 2) ) % width);
 
 		float sunPositionDeg = rotationalAngle;
@@ -177,7 +196,7 @@ public final class Earth {
 			sunPositionDeg = sunPositionDeg - 360;
 		}
 
-		IGrid grid = new Grid(simulationName, sunPositionCell, sunPositionDeg, width, height, t, 0);
+		IGrid grid = new Grid(simulationName, sunPositionCell, sunPositionDeg, width, height, time, 0);
 
 		float suntotal = 0;
 
@@ -227,15 +246,16 @@ public final class Earth {
 		Publisher.getInstance().send(new DeliverMessage(grid));
 		
 		// Determine if we need to persist this grid and, if so, send Message/payload
-		persistGrid(grid);
+		// persistGrid(grid);
 	}
 	
 	private void persistGrid(IGrid grid) {
 		
 		// Determine if to store
 		
+		
 		BigDecimal valueToStore;
-		PersistMessage msg = new PersistMessage(simulationName, dateTime, width, height);
+		PersistMessage msg = new PersistMessage(simulationName, currentDate.getTimeInMillis(), width, height);
 		
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -244,8 +264,7 @@ public final class Earth {
 			}
 		}
 		
-		throw new IllegalStateException("Need to determine if we should store this based on geoAccuracy and temporalAccuracy");
-		// Publisher.getInstance().send(msg);
+		Publisher.getInstance().send(msg);
 	}
 
 	private void createRow(GridCell curr, GridCell next, GridCell bottom,
