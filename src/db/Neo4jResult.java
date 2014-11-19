@@ -34,6 +34,22 @@ public class Neo4jResult implements IQueryResult {
 		if (!result.isBeforeFirst())
 			return;
 		
+		result.first();
+		while(result.next()) {
+			
+			this.queryName = result.getString("o.name");
+			
+			this.gridSpacing = result.getInt("o.GridSpacing.value");
+			this.timeStep = result.getInt("o.TimeStep.value");
+			this.simulationLength = result.getInt("o.SimulationLength.value");
+			
+			this.presentationInterval = result.getFloat("o.PresentationInterval.value");
+			this.axisTilt = result.getFloat("o.AxislTilt.value");
+			this.eccentricity = result.getFloat("o.OrbitalEccentricity.value");
+			
+			//String value = result.getFloat("o.Temperature.value");
+		}
+		
 		populated = true;
 	}
 	
