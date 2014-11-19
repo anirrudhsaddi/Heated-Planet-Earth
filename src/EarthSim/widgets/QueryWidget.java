@@ -18,171 +18,177 @@ import javax.swing.event.ListSelectionListener;
 
 public class QueryWidget extends JPanel {
 
-    private static final long serialVersionUID = 1L;
+	private static final long	serialVersionUID	= 1L;
 
-    private ArrayList<String> simulationList = new ArrayList<String>();
-    GridLayout mainlayout = new GridLayout(3,0);
-    private JTextField textFieldEndTime, textFieldStartTime;
-    private JTextField textFieldNorthLongitude;
-    private JTextField textFieldSouthLongitude;
-    private JTextField textFieldWestLatitude;
-    private JTextField textFieldEastLatitude;
-    private JList<String> slBox;
-    private JCheckBox chckbxMinimumTemperature, chckbxMaximumTemperature, chckbxMeanTemperatureOverTime, chckbxMeanTemperatureOverRegion ;
+	private ArrayList<String>	simulationList		= new ArrayList<String>();
+	private GridLayout			mainlayout			= new GridLayout(3, 0);
 
-    public QueryWidget() {
-	setBorder(BorderFactory.createTitledBorder("Query"));
-	setLayout(new GridLayout());
-	setAlignmentY(Component.RIGHT_ALIGNMENT);
+	private JTextField			textFieldEndTime, textFieldStartTime;
+	private JTextField			textFieldNorthLongitude;
+	private JTextField			textFieldSouthLongitude;
+	private JTextField			textFieldWestLatitude;
+	private JTextField			textFieldEastLatitude;
+	private JList<String>		slBox;
+	private JCheckBox			chckbxMinimumTemperature, chckbxMaximumTemperature, chckbxMeanTemperatureOverTime,
+	chckbxMeanTemperatureOverRegion;
 
-	JScrollPane listScrollPane = new JScrollPane(list("Simulation List"));
-	listScrollPane.setPreferredSize(new Dimension(50,this.getHeight())); 
-	add(listScrollPane, BorderLayout.EAST);
-	add(inputFields());
+	public QueryWidget() {
 
-    }
+		setBorder(BorderFactory.createTitledBorder("Query"));
+		setLayout(new GridLayout());
+		setAlignmentY(Component.RIGHT_ALIGNMENT);
 
-    private JList<?> list(String string) {
-	for(int i =0;i<15;i++){
-	    simulationList.add(""+ i);
-	}
-	String[] array = new String[simulationList.size()];
-	for(int i = 0; i < array.length; i++) {
-	    array[i] = simulationList.get(i);
+		JScrollPane listScrollPane = new JScrollPane(list("Simulation List"));
+		listScrollPane.setPreferredSize(new Dimension(50, this.getHeight()));
+		add(listScrollPane, BorderLayout.EAST);
+		add(inputFields());
+
 	}
 
-	slBox = new JList<String>(array);
-	slBox.addListSelectionListener(new ListSelectionListener(){
+	private JList<?> list(String string) {
 
-	    @Override
-	    public void valueChanged(ListSelectionEvent arg0) {
-		String selection = (String) slBox.getSelectedValue();  
-		System.out.println("Selection in Jlist: " + selection);
-		setFields("Enable");
-	    }
+		for (int i = 0; i < 15; i++) {
+			simulationList.add("" + i);
+		}
 
-	});
-	return slBox;
-    }
+		String[] array = new String[simulationList.size()];
+		for (int i = 0; i < array.length; i++) {
+			array[i] = simulationList.get(i);
+		}
 
+		slBox = new JList<String>(array);
+		slBox.addListSelectionListener(new ListSelectionListener() {
 
-    private JPanel inputFields() {
-
-	JPanel inputPanel = new JPanel();
-	inputPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-	inputPanel.setLayout(null);
-
-	JLabel lblStartTime = new JLabel("Start Time");
-	lblStartTime.setBounds(10, 10, 130, 15);
-	inputPanel.add(lblStartTime);
-
-	textFieldStartTime = new JTextField();
-	textFieldStartTime.setBounds(145, 10, 114, 19);
-	textFieldStartTime.setEnabled(false);
-	textFieldStartTime.setColumns(10);
-	inputPanel.add(textFieldStartTime);
-
-	JLabel lblEndTime = new JLabel("End Time");
-	lblEndTime.setBounds(10, 35, 130, 15);
-	inputPanel.add(lblEndTime);
-
-	textFieldEndTime = new JTextField();
-	textFieldEndTime.setBounds(145, 35, 114, 19);
-	textFieldEndTime.setColumns(10);
-	textFieldEndTime.setEnabled(false);
-	inputPanel.add(textFieldEndTime);
-
-	JLabel lblNorthLongitude = new JLabel("North Longitude");
-	lblNorthLongitude.setBounds(10, 60, 130, 15);
-	inputPanel.add(lblNorthLongitude);
-
-	textFieldNorthLongitude = new JTextField();
-	textFieldNorthLongitude.setBounds(145, 60, 114, 19);
-	textFieldNorthLongitude.setEnabled(false);
-	textFieldNorthLongitude.setColumns(10);
-	inputPanel.add(textFieldNorthLongitude);
-
-	JLabel lblSouthLongitude = new JLabel("South Longitude");
-	lblSouthLongitude.setBounds(10, 85, 130, 15);
-	inputPanel.add(lblSouthLongitude);
-
-	textFieldSouthLongitude = new JTextField();
-	textFieldSouthLongitude.setColumns(10);
-	textFieldSouthLongitude.setBounds(145, 85, 114, 19);
-	textFieldSouthLongitude.setEnabled(false);
-	inputPanel.add(textFieldSouthLongitude);
-
-	JLabel lblWestLatitude = new JLabel("West Latitude");
-	lblWestLatitude.setBounds(10, 110, 114, 15);
-	inputPanel.add(lblWestLatitude);
-
-	textFieldWestLatitude = new JTextField();
-	textFieldWestLatitude.setBounds(145, 110, 114, 19);
-	textFieldWestLatitude.setEnabled(false);
-	textFieldWestLatitude.setColumns(10);
-	inputPanel.add(textFieldWestLatitude);
-
-	JLabel lblEastLatitude = new JLabel("East Latitude");
-	lblEastLatitude.setBounds(12, 135, 130, 15);
-	inputPanel.add(lblEastLatitude);
-
-	textFieldEastLatitude = new JTextField();
-	textFieldEastLatitude.setBounds(145, 135, 114, 19);
-	textFieldEastLatitude.setEnabled(false);
-	textFieldEastLatitude.setColumns(10);
-	inputPanel.add(textFieldEastLatitude);
-
-	chckbxMinimumTemperature = new JCheckBox("Minimum Temperature");
-	chckbxMinimumTemperature.setBounds(10, 172, 249, 20);
-	inputPanel.add(chckbxMinimumTemperature);
-
-	chckbxMaximumTemperature = new JCheckBox("Maximum Temperature");
-	chckbxMaximumTemperature.setBounds(10, 199, 249, 20);
-	inputPanel.add(chckbxMaximumTemperature);
-
-	chckbxMeanTemperatureOverTime = new JCheckBox("Mean Temperature over Time");
-	chckbxMeanTemperatureOverTime.setBounds(10, 223, 249, 23);
-	inputPanel.add(chckbxMeanTemperatureOverTime);
-
-	chckbxMeanTemperatureOverRegion = new JCheckBox("Mean Temperature over Region");
-	chckbxMeanTemperatureOverRegion.setBounds(10, 247, 249, 23);
-	inputPanel.add(chckbxMeanTemperatureOverRegion);
-
-	return inputPanel;
-    }
-
-    private void setFields(Boolean setFields){
-	if(setFields) {
-	    textFieldStartTime.setEnabled(false);
-	    textFieldEastLatitude.setEnabled(false);
-	    textFieldWestLatitude.setEnabled(false);
-	    textFieldSouthLongitude.setEnabled(false);
-	    textFieldNorthLongitude.setEnabled(false);
-	    textFieldEndTime.setEnabled(false);
+			@Override
+			public void valueChanged(ListSelectionEvent arg0) {
+				String selection = (String) slBox.getSelectedValue();
+				System.out.println("Selection in Jlist: " + selection);
+				setFields(true);
+			}
+		});
+		return slBox;
 	}
 
-	else (setFields) {
-	    textFieldStartTime.setEnabled(true);
-	    textFieldEastLatitude.setEnabled(true);
-	    textFieldWestLatitude.setEnabled(true);
-	    textFieldSouthLongitude.setEnabled(true);
-	    textFieldNorthLongitude.setEnabled(true);
-	    textFieldEndTime.setEnabled(true);
+	private JPanel inputFields() {
+
+		JPanel inputPanel = new JPanel();
+		inputPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		inputPanel.setLayout(null);
+
+		JLabel lblStartTime = new JLabel("Start Time");
+		lblStartTime.setBounds(10, 10, 130, 15);
+		inputPanel.add(lblStartTime);
+
+		textFieldStartTime = new JTextField();
+		textFieldStartTime.setBounds(145, 10, 114, 19);
+		textFieldStartTime.setEnabled(false);
+		textFieldStartTime.setColumns(10);
+		inputPanel.add(textFieldStartTime);
+
+		JLabel lblEndTime = new JLabel("End Time");
+		lblEndTime.setBounds(10, 35, 130, 15);
+		inputPanel.add(lblEndTime);
+
+		textFieldEndTime = new JTextField();
+		textFieldEndTime.setBounds(145, 35, 114, 19);
+		textFieldEndTime.setColumns(10);
+		textFieldEndTime.setEnabled(false);
+		inputPanel.add(textFieldEndTime);
+
+		JLabel lblNorthLongitude = new JLabel("North Longitude");
+		lblNorthLongitude.setBounds(10, 60, 130, 15);
+		inputPanel.add(lblNorthLongitude);
+
+		textFieldNorthLongitude = new JTextField();
+		textFieldNorthLongitude.setBounds(145, 60, 114, 19);
+		textFieldNorthLongitude.setEnabled(false);
+		textFieldNorthLongitude.setColumns(10);
+		inputPanel.add(textFieldNorthLongitude);
+
+		JLabel lblSouthLongitude = new JLabel("South Longitude");
+		lblSouthLongitude.setBounds(10, 85, 130, 15);
+		inputPanel.add(lblSouthLongitude);
+
+		textFieldSouthLongitude = new JTextField();
+		textFieldSouthLongitude.setColumns(10);
+		textFieldSouthLongitude.setBounds(145, 85, 114, 19);
+		textFieldSouthLongitude.setEnabled(false);
+		inputPanel.add(textFieldSouthLongitude);
+
+		JLabel lblWestLatitude = new JLabel("West Latitude");
+		lblWestLatitude.setBounds(10, 110, 114, 15);
+		inputPanel.add(lblWestLatitude);
+
+		textFieldWestLatitude = new JTextField();
+		textFieldWestLatitude.setBounds(145, 110, 114, 19);
+		textFieldWestLatitude.setEnabled(false);
+		textFieldWestLatitude.setColumns(10);
+		inputPanel.add(textFieldWestLatitude);
+
+		JLabel lblEastLatitude = new JLabel("East Latitude");
+		lblEastLatitude.setBounds(12, 135, 130, 15);
+		inputPanel.add(lblEastLatitude);
+
+		textFieldEastLatitude = new JTextField();
+		textFieldEastLatitude.setBounds(145, 135, 114, 19);
+		textFieldEastLatitude.setEnabled(false);
+		textFieldEastLatitude.setColumns(10);
+		inputPanel.add(textFieldEastLatitude);
+
+		chckbxMinimumTemperature = new JCheckBox("Minimum Temperature");
+		chckbxMinimumTemperature.setBounds(10, 172, 249, 20);
+		inputPanel.add(chckbxMinimumTemperature);
+
+		chckbxMaximumTemperature = new JCheckBox("Maximum Temperature");
+		chckbxMaximumTemperature.setBounds(10, 199, 249, 20);
+		inputPanel.add(chckbxMaximumTemperature);
+
+		chckbxMeanTemperatureOverTime = new JCheckBox("Mean Temperature over Time");
+		chckbxMeanTemperatureOverTime.setBounds(10, 223, 249, 23);
+		inputPanel.add(chckbxMeanTemperatureOverTime);
+
+		chckbxMeanTemperatureOverRegion = new JCheckBox("Mean Temperature over Region");
+		chckbxMeanTemperatureOverRegion.setBounds(10, 247, 249, 23);
+		inputPanel.add(chckbxMeanTemperatureOverRegion);
+
+		return inputPanel;
 	}
 
-    }
-    
-    public void getRequiredValues(){
-	
-	Boolean min,max,time,region;
-	
-	min = chckbxMinimumTemperature.isSelected();
-	max = chckbxMaximumTemperature.isSelected();
-	time = chckbxMeanTemperatureOverTime.isSelected();
-	region = chckbxMeanTemperatureOverRegion.isSelected();
-	
-	//Todo: Method to access database asking for these values to be computed.
-	
-    }
-    
+
+
+
+	public void setFields(boolean enabled) {
+
+		if (!enabled) {
+			textFieldStartTime.setEnabled(false);
+			textFieldEastLatitude.setEnabled(false);
+			textFieldWestLatitude.setEnabled(false);
+			textFieldSouthLongitude.setEnabled(false);
+			textFieldNorthLongitude.setEnabled(false);
+			textFieldEndTime.setEnabled(false);
+		} else if (!enabled) {
+			textFieldStartTime.setEnabled(true);
+			textFieldEastLatitude.setEnabled(true);
+			textFieldWestLatitude.setEnabled(true);
+			textFieldSouthLongitude.setEnabled(true);
+			textFieldNorthLongitude.setEnabled(true);
+			textFieldEndTime.setEnabled(true);
+		}
+
+	}
+
+	public void getRequiredValues() {
+
+		Boolean min, max, time, region;
+
+		min = chckbxMinimumTemperature.isSelected();
+		max = chckbxMaximumTemperature.isSelected();
+		time = chckbxMeanTemperatureOverTime.isSelected();
+		region = chckbxMeanTemperatureOverRegion.isSelected();
+
+		// Todo: Method to access database asking for these values to be
+		// computed.
+
+	}
+
 }

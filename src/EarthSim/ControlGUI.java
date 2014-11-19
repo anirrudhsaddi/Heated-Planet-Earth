@@ -40,9 +40,10 @@ public class ControlGUI extends JFrame implements ActionListener {
 	/**
 	 * 
 	 */
-	private static final long			serialVersionUID	= 6146431536208036768L;
+	private static final long	serialVersionUID	= 6146431536208036768L;
 
-	private ThreadManager				threadManager		= ThreadManager.getManager();
+	private ThreadManager		threadManager		= ThreadManager.getManager();
+
 
 	private  QueryWidget				queryWidget;
 	private  ControlWidget				controlWidget;
@@ -145,6 +146,13 @@ public class ControlGUI extends JFrame implements ActionListener {
 				// TODO All simulations need to start at Jan 4th (epoch)
 
 
+				final int gs = Integer.parseInt(settingsWidget.GetInputText("Grid Spacing"));
+				final int timeStep = Integer.parseInt(settingsWidget.GetInputText("Simulation Time Step"));
+				final float presentationRate = Float.parseFloat(settingsWidget.GetInputText("Presentation Rate"));
+				final int simulationLength = Integer.parseInt(settingsWidget.GetInputText("Simulation Length"));
+				final float axisTilt = Float.parseFloat(settingsWidget.GetInputText("Axis Tilt"));
+				final float eccentricity = Float.parseFloat(settingsWidget.GetInputText("Orbital Eccentricity"));
+
 				if (gs < Constants.MIN_GRID_SPACING || gs > Constants.MAX_GRID_SPACING)
 					throw new IllegalArgumentException("Invalid grid spacing");
 
@@ -172,11 +180,13 @@ public class ControlGUI extends JFrame implements ActionListener {
 				// TODO check name against the DAO
 				String simulationName = "";
 
-				threadManager.execute(new EarthEngine(this.precision, this.geoAccuracy, this.temporalAccuracy, new Monitor()));
+				threadManager.execute(new EarthEngine(this.precision, this.geoAccuracy, this.temporalAccuracy,
+						new Monitor()));
 				threadManager.execute(new EarthDisplayEngine());
 
 				Boolean animate = settingsWidget.GetDisplayAnimationStatus();
-				StartMessage msg = new StartMessage(simulationName, gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity, animate);
+				StartMessage msg = new StartMessage(simulationName, gs, timeStep, presentationRate, simulationLength,
+						axisTilt, eccentricity, animate);
 				Publisher.getInstance().send(msg);
 				Publisher.getInstance().send(new ProduceMessage());
 
@@ -193,7 +203,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 			Publisher.getInstance().send(new PauseMessage());
 			controlWidget.disableButtonsBasedOnAction(cmd);
-			
+
 		} else if ("Resume".equals(cmd)) {
 
 			Publisher.getInstance().send(new ResumeMessage());
@@ -204,7 +214,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 			Publisher.getInstance().send(new StopMessage());
 
 			controlWidget.disableButtonsBasedOnAction(cmd);
-		    queryWidget.setFields(true);
+			queryWidget.setFields(true);
 		}
 	}
 }
