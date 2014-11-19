@@ -205,7 +205,6 @@ public final class GridCell implements EarthCell<GridCell> {
 	@Override
 	public double getSunLatitudeOnEarth(int currentTimeInSimulation) {
 		
-		//return (Earth.tilt * Math.sin((getRotationalAngle(currentTime))));
 		return (this.axisTilt * Math.sin((getRotationalAngle(currentTimeInSimulation))));
 	}
 	
@@ -369,10 +368,7 @@ public final class GridCell implements EarthCell<GridCell> {
 		for ( ; tauAN == 0 && t < Constants.T; t++) {
 			
 			double trueAnamoly = trueAnamoly(t);
-			
-			//System.out.println("\n" + "trueAnamoly " + trueAnamoly);
-			// Try 10 as a limit to try first
-			if (Math.abs(Math.toRadians(Constants.omega)- trueAnamoly) <= 0.1) {
+			if (Math.abs(Math.toRadians(Constants.omega) - trueAnamoly) <= 0.1) {
 				tauAN = t;
 				break;
 			}

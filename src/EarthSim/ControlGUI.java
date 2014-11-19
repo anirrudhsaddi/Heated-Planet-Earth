@@ -151,7 +151,8 @@ public class ControlGUI extends JFrame implements ActionListener {
 				if (gs < Constants.MIN_GRID_SPACING || gs > Constants.MAX_GRID_SPACING)
 					throw new IllegalArgumentException("Invalid grid spacing");
 
-				if (timeStep < Constants.MIN_TIME_STEP || timeStep > Constants.MAX_TIME_STEP)
+				// We'll let the user provide Time Steps in base 2 intervals starting from 1
+				if (timeStep < Constants.MIN_TIME_STEP || timeStep > Constants.MAX_TIME_STEP || (simulationLength != 1 && simulationLength % 2 != 0))
 					throw new IllegalArgumentException("Invalid time step");
 
 				if (simulationLength < Constants.MIN_SIM_LEN || simulationLength > Constants.MAX_SIM_LEN)
@@ -175,13 +176,14 @@ public class ControlGUI extends JFrame implements ActionListener {
 				// TODO check name against the DAO
 				String simulationName = "";
 
-				threadManager.execute(new EarthEngine(this.precision, this.geoAccuracy, this.temporalAccuracy,
-						new Monitor()));
+				threadManager.execute(new EarthEngine(new Monitor()));
 				threadManager.execute(new EarthDisplayEngine());
 
 				Boolean animate = settingsWidget.GetDisplayAnimationStatus();
-				StartMessage msg = new StartMessage(simulationName, gs, timeStep, presentationRate, simulationLength,
-						axisTilt, eccentricity, animate);
+				
+				// TODO There has GOT to be a more elegant way of transporting start values...we want to keep it decoupled, so using the messages was good. But at this point, would
+				// using the constructors be better??
+				StartMessage msg = new StartMessage(simulationName, gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity, this.precision, this.geoAccuracy, this.temporalAccuracy, animate);
 				Publisher.getInstance().send(msg);
 				Publisher.getInstance().send(new ProduceMessage());
 
