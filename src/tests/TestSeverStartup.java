@@ -10,7 +10,11 @@ public class TestSeverStartup {
 
 	@Test
 	public void test() {
-		SimulationNeo4j db = new SimulationNeo4j();
-		assertNotNull(db);
+		try {
+			SimulationNeo4j db = new SimulationNeo4j();
+			assertNotNull(db);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

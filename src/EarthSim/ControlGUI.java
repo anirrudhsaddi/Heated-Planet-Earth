@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -24,7 +25,6 @@ import view.EarthDisplayEngine;
 import EarthSim.widgets.ControlWidget;
 import EarthSim.widgets.QueryWidget;
 import EarthSim.widgets.SettingsWidget;
-
 import common.Buffer;
 import common.Constants;
 import common.Monitor;
@@ -67,7 +67,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 		// START_DATE is epoch UTC (01/01/1970). Add 3 days to make it
 		// 01/04/1970
-		// Constants.START_DATE.add(Calendar.DAY_OF_YEAR, 3);
+		Constants.START_DATE.add(Calendar.DAY_OF_YEAR, 3);
 
 		// make widgets
 		 setupWindow();

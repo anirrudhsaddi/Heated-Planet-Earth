@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -16,9 +17,9 @@ public final class SimulationNeo4j implements IDBConnection {
 	// Connection parameters
 	private static final String JDBC_DRIVER = "org.neo4j.jdbc.Driver";  
 	private static final String CONFIG_PATH	= "db/config.properties";
-	private static final String DB_PATH		= "/db/";
+	private static final String DB_PATH		= "db/";
 	private static final String NAME		= "simulationDb";
-	private static final String URL 		= "jdbc:neo4j:" + NAME + "?debug=true";
+	private static final String URL 		= "jdbc:neo4j:instance:" + NAME;
 	
 	// Database connection object
 	private static GraphDatabaseService simulationDb;
@@ -42,8 +43,11 @@ public final class SimulationNeo4j implements IDBConnection {
 			throw new IllegalStateException("Unable to load the JDBC Driver: " + e);
 		}
 		
+		Properties props = new Properties();
+		props.put("simulationDb", simulationDb);
+		
 		try {
-			db = DriverManager.getConnection(URL);
+			db = DriverManager.getConnection(URL, props);
 		} catch (SQLException e) {
 			throw new IllegalStateException("Unable to create a connection to the database " + NAME + ": " + e);
 		}
