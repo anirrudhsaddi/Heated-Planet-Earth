@@ -2,28 +2,32 @@ package db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import common.IGrid;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Neo4jResult implements IQueryResult {
 	
-	private String queryName;
-	private int gridSpacing, timeStep, simulationLength;
-	private float presentationInterval, axisTilt, eccentricity;
-	private IGrid grid;
+	private List<String> queryName = new LinkedList<String>();
+	private List<Integer> gridSpacing = new LinkedList<Integer>();
+	private List<Integer>timeStep = new LinkedList<Integer>();
+	private List<Integer> simulationLength = new LinkedList<Integer>();
+	private List<Float> presentationInterval = new LinkedList<Float>();
+	private List<Float> axisTilt = new LinkedList<Float>();
+	private List<Float> eccentricity = new LinkedList<Float>();
 	private Exception error;
 	
 	private boolean populated = false;
 	
 	public Neo4jResult(String queryName, int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float eccentricity) {
 		
-		this.queryName = queryName;
-		this.gridSpacing = gridSpacing;
-		this.timeStep = timeStep;
-		this.simulationLength = simulationLength;
-		this.presentationInterval = presentationInterval;
-		this.axisTilt = axisTilt;
-		this.eccentricity = eccentricity;
+		this.queryName.add(queryName);
+		this.gridSpacing.add(gridSpacing);
+		this.timeStep.add(timeStep);
+		this.simulationLength.add(simulationLength);
+		this.presentationInterval.add(presentationInterval);
+		this.axisTilt.add(axisTilt);
+		this.eccentricity.add(eccentricity);
 		
 		populated = true;
 	}
@@ -37,17 +41,15 @@ public class Neo4jResult implements IQueryResult {
 		result.first();
 		while(result.next()) {
 			
-			this.queryName = result.getString("o.name");
+			this.queryName.add(result.getString("o.name"));
 			
-			this.gridSpacing = result.getInt("o.GridSpacing.value");
-			this.timeStep = result.getInt("o.TimeStep.value");
-			this.simulationLength = result.getInt("o.SimulationLength.value");
+			this.gridSpacing.add(result.getInt("o.GridSpacing.value"));
+			this.timeStep.add(result.getInt("o.TimeStep.value"));
+			this.simulationLength.add(result.getInt("o.SimulationLength.value"));
 			
-			this.presentationInterval = result.getFloat("o.PresentationInterval.value");
-			this.axisTilt = result.getFloat("o.AxislTilt.value");
-			this.eccentricity = result.getFloat("o.OrbitalEccentricity.value");
-			
-			//String value = result.getFloat("o.Temperature.value");
+			this.presentationInterval.add(result.getFloat("o.PresentationInterval.value"));
+			this.axisTilt.add(result.getFloat("o.AxislTilt.value"));
+			this.eccentricity.add(result.getFloat("o.OrbitalEccentricity.value"));
 		}
 		
 		populated = true;
@@ -63,43 +65,38 @@ public class Neo4jResult implements IQueryResult {
 	}
 
 	@Override
-	public String getQueryName() {
-		return queryName;
+	public Iterator<String> getQueryName() {
+		return queryName.iterator();
 	}
 
 	@Override
-	public int getGridSpacing() {
-		return gridSpacing;
+	public Iterator<Integer> getGridSpacing() {
+		return gridSpacing.iterator();
 	}
 
 	@Override
-	public int getTimeStep() {
-		return timeStep;
+	public Iterator<Integer> getTimeStep() {
+		return timeStep.iterator();
 	}
 
 	@Override
-	public int getSimulationLength() {
-		return simulationLength;
+	public Iterator<Integer> getSimulationLength() {
+		return simulationLength.iterator();
 	}
 
 	@Override
-	public float getPresentationInterval() {
-		return presentationInterval;
+	public Iterator<Float> getPresentationInterval() {
+		return presentationInterval.iterator();
 	}
 
 	@Override
-	public float getAxisTilt() {
-		return axisTilt;
+	public Iterator<Float> getAxisTilt() {
+		return axisTilt.iterator();
 	}
 
 	@Override
-	public float getEccentricity() {
-		return eccentricity;
-	}
-
-	@Override
-	public IGrid getGrid() {
-		return grid;
+	public Iterator<Float> getEccentricity() {
+		return eccentricity.iterator();
 	}
 
 	@Override

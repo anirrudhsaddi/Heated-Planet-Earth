@@ -12,7 +12,7 @@
 	<classpathentry kind="lib" path="resource/neo4j/neo4j-cypher-compiler-2.1-2.1.5.jar"/>
 	<classpathentry kind="lib" path="resource/neo4j/neo4j-graph-algo-2.1.5.jar"/>
 	<classpathentry kind="lib" path="resource/neo4j/neo4j-graph-matching-2.1.5.jar"/>
-	<classpathentry kind="lib" path="resource/neo4j/neo4j-jdbc-2.0.1-SNAPSHOT-jar-with-dependencies.jar"/>
+	<classpathentry kind="lib" path="resource/neo4j/neo4j-jdbc-2.0.1-SNAPSHOT-jar-with-dependencies.jar" sourcepath="resource/neo4j/neo4j-jdbc-2.0.1-SNAPSHOT-jar-with-dependencies.jar"/>
 	<classpathentry kind="lib" path="resource/neo4j/neo4j-jmx-2.1.5.jar"/>
 	<classpathentry kind="lib" path="resource/neo4j/neo4j-kernel-2.1.5.jar"/>
 	<classpathentry kind="lib" path="resource/neo4j/neo4j-lucene-index-2.1.5.jar"/>
@@ -25,5 +25,6 @@
 	<classpathentry kind="lib" path="resource/neo4j/parboiled-scala_2.10-1.1.6.jar"/>
 	<classpathentry kind="lib" path="resource/neo4j/scala-library-2.10.4.jar"/>
 	<classpathentry kind="lib" path="resource/neo4j/server-api-2.1.5.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

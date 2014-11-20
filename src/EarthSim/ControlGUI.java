@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -61,15 +62,15 @@ public class ControlGUI extends JFrame implements ActionListener {
 		if (temporalAccuracy < Constants.TEMPORALACCURACY_MIN || temporalAccuracy > Constants.TEMPORALACCURACY_MAX)
 			throw new IllegalArgumentException("Invalid temporalAccuracy provided");
 
-	//	throw new IllegalStateException("The TODOs in here need to be finished, including Demo's params");
-
 		 this.precision = precision;
 		 this.geoAccuracy = geoAccuracy;
 		 this.temporalAccuracy = temporalAccuracy;
 
 		// START_DATE is epoch UTC (01/01/1970). Add 3 days to make it
 		// 01/04/1970
-		// Constants.START_DATE.add(Calendar.DAY_OF_YEAR, 3);
+		Constants.START_DATE.add(Calendar.DAY_OF_YEAR, 3);
+		
+		// threadManager.add(new SimulationDAO(new SimulationNeo4j()));
 
 		// make widgets
 		 setupWindow();
@@ -81,7 +82,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 		// setup overall app ui
 		setTitle("Heated Planet Diffusion Simulation");
 
-		setSize(700, 400);
+		setSize(800, 800);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		getContentPane().setLayout(new BorderLayout());
