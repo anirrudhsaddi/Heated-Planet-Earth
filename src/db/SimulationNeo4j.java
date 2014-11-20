@@ -15,11 +15,10 @@ public final class SimulationNeo4j implements IDBConnection {
 	
 	// Connection parameters
 	private static final String JDBC_DRIVER = "org.neo4j.jdbc.Driver";  
+	private static final String CONFIG_PATH	= "db/config.properties";
 	private static final String DB_PATH		= "/db/";
 	private static final String NAME		= "simulationDb";
 	private static final String URL 		= "jdbc:neo4j:" + NAME + "?debug=true";
-	private static final String USER 		= "simulation_user";
-	private static final String PASSWORD 	= "p3t22";									// TODO this could be a char array for security
 	
 	// Database connection object
 	private static GraphDatabaseService simulationDb;
@@ -30,7 +29,11 @@ public final class SimulationNeo4j implements IDBConnection {
 	
 	static {
 		
-		simulationDb = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder(DB_PATH).newGraphDatabase();
+		simulationDb = new GraphDatabaseFactory()
+			.newEmbeddedDatabaseBuilder(DB_PATH)
+			.loadPropertiesFromFile(CONFIG_PATH)
+			.newGraphDatabase();
+		
 		registerShutdownHook(simulationDb);
 		
 		try {
