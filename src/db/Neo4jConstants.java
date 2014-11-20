@@ -108,14 +108,16 @@ public interface Neo4jConstants {
 			+ ":HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY|:HAS_AXIS "
 			+ "]->(o) "
 			+ "WHERE n.name = {1} "
-			+ "RETURN { name: n.name, result: o }";
+			+ "WITH { simulation: n.name, nodes: o } AS result "
+			+ "RETURN result";
 
 	public static final String MATCH_NODE_BY_DATA_QUERY = "MATCH (n:Simulation)-[ "
 			+ ":HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY:|HAS_AXIS "
 			+ "]->(o) "
-			+ "RETURN { name: n.name, "
-			+ "	result: filter(x IN o.values WHERE x = {1} OR x = {2} OR x = {3} OR x = {4} OR x = {5} )"
-			+ "}";
+			+ "WITH { simulation: n.name, "
+			+ "	nodes: filter(x IN o.values WHERE x = {1} OR x = {2} OR x = {3} OR x = {4} OR x = {5} )"
+			+ "} AS result "
+			+ "RETURN result";
 
 	public static final String GET_GRID_BY_DATE_TIME_QUERY = "MATCH (n:Simulation)-[ r:HAS_TEMP ]->(t:Temperature) "
 			+ "WHERE n.name = {1} AND r.datetime = {2} "
@@ -124,7 +126,7 @@ public interface Neo4jConstants {
 
 	public static final String GET_DATE_TIME_QUERY = "MATCH (n:Simulation)-[r:HAS_TEMPERATURE]-(t:Temperature) "
 			+ "WHERE n.name = {1} AND r.datetime <= {2} "
-			+ "WITH max(r.datetime) as datetime" 
-			+ "RETURN datetime";
+			+ "WITH max(r.datetime) as dateTime" 
+			+ "RETURN dateTime";
 
 }
