@@ -92,8 +92,9 @@ public final class Earth {
 		// Convert simulationLength into minutes and divide by the timeStep.
 		// This will give us the total number of generations we will do. 
 		// From there, get the number to save by applying the percentage
-		int totalGens = start.simulationLength() / this.timeStep;
+		int totalGens = (start.simulationLength() * 30 * 1440) / this.timeStep;  //simlength*30*1440
 		totalDataToSave = totalGens * (start.temporalAccuracy() / 100);
+		System.out.println("Sim length: " + start.simulationLength() +"\n Time step:" + this.timeStep);
 		
 		// Now calculate the number of 'buckets' (or every 'nth' piece)
 		nth_data = totalGens / totalDataToSave;

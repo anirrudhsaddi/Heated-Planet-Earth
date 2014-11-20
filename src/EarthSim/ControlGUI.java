@@ -59,19 +59,19 @@ public class ControlGUI extends JFrame implements ActionListener {
 		if (temporalAccuracy < Constants.TEMPORALACCURACY_MIN || temporalAccuracy > Constants.TEMPORALACCURACY_MAX)
 			throw new IllegalArgumentException("Invalid temporalAccuracy provided");
 
-		throw new IllegalStateException("The TODOs in here need to be finished, including Demo's params");
+	//	throw new IllegalStateException("The TODOs in here need to be finished, including Demo's params");
 
-		// this.precision = precision;
-		// this.geoAccuracy = geoAccuracy;
-		// this.temporalAccuracy = temporalAccuracy;
+		 this.precision = precision;
+		 this.geoAccuracy = geoAccuracy;
+		 this.temporalAccuracy = temporalAccuracy;
 
 		// START_DATE is epoch UTC (01/01/1970). Add 3 days to make it
 		// 01/04/1970
 		// Constants.START_DATE.add(Calendar.DAY_OF_YEAR, 3);
 
 		// make widgets
-		// setupWindow();
-		// pack();
+		 setupWindow();
+		 pack();
 	}
 
 	private void setupWindow() {
