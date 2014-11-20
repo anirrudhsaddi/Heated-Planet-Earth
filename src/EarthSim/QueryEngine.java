@@ -21,7 +21,7 @@ public class QueryEngine {
 	private double	nLat;
 
     //TODO: Create method to accept user input from QueryWidgets
-    private void getQueryValues(String simName, float axialTilt, float eccentricity, DateTime startTime, DateTime endTime, double wLat, double eLat, double nLat, double sLat ) {
+    public void getQueryValues(String simName, float axialTilt, float eccentricity, DateTime startTime, DateTime endTime, double wLat, double eLat, double nLat, double sLat ) {
 
         this.simName = simName;
         this.axialTilt = axialTilt;

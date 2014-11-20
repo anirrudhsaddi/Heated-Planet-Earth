@@ -13,6 +13,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.apache.james.mime4j.field.datetime.DateTime;
+
 import messaging.Publisher;
 import messaging.events.PauseMessage;
 import messaging.events.ProduceMessage;
@@ -24,7 +26,6 @@ import view.EarthDisplayEngine;
 import EarthSim.widgets.ControlWidget;
 import EarthSim.widgets.QueryWidget;
 import EarthSim.widgets.SettingsWidget;
-
 import common.Buffer;
 import common.Constants;
 import common.Monitor;
@@ -43,6 +44,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 	private  QueryWidget				queryWidget;
 	private  ControlWidget				controlWidget;
 	private  SettingsWidget				settingsWidget;
+	private QueryEngine					queryEngine;
 
 	private final int				precision;
 	private final int				geoAccuracy;
@@ -147,6 +149,14 @@ public class ControlGUI extends JFrame implements ActionListener {
 				final int simulationLength = Integer.parseInt(settingsWidget.GetInputText("Simulation Length"));
 				final float axisTilt = Float.parseFloat(settingsWidget.GetInputText("Axis Tilt"));
 				final float eccentricity = Float.parseFloat(settingsWidget.GetInputText("Orbital Eccentricity"));
+				
+				final String	simName = queryWidget.GetUserInputs("Simulation Name");
+				final DateTime	startTime = null;
+				final DateTime	endTime = null;
+				final double	wLat =  Double.parseDouble(queryWidget.GetUserInputs("West Longitude"));
+				final double	eLat =  Double.parseDouble(queryWidget.GetUserInputs("East Longitude"));
+				final double	sLat =  Double.parseDouble(queryWidget.GetUserInputs("South Latitude"));
+				final double	nLat =  Double.parseDouble(queryWidget.GetUserInputs("North Latitude")); 
 
 				if (gs < Constants.MIN_GRID_SPACING || gs > Constants.MAX_GRID_SPACING)
 					throw new IllegalArgumentException("Invalid grid spacing");
@@ -171,19 +181,24 @@ public class ControlGUI extends JFrame implements ActionListener {
 				Buffer.getBuffer().create(Constants.DEFAULT_BUFFFER_SIZE);
 
 				// threadManager.add(new SimulationDAO(new SimulationNeo4j()));
+				
+				
 
 				// TODO set name
 				// TODO check name against the DAO
-				String simulationName = "";
+				
+				queryEngine = new QueryEngine();
+				queryEngine.getQueryValues(simName, axisTilt, eccentricity, startTime, endTime, wLat, eLat, sLat, nLat );
 
 				threadManager.execute(new EarthEngine(new Monitor()));
 				threadManager.execute(new EarthDisplayEngine());
+				
 
 				Boolean animate = settingsWidget.GetDisplayAnimationStatus();
 				
 				// TODO There has GOT to be a more elegant way of transporting start values...we want to keep it decoupled, so using the messages was good. But at this point, would
 				// using the constructors be better??
-				StartMessage msg = new StartMessage(simulationName, gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity, this.precision, this.geoAccuracy, this.temporalAccuracy, animate);
+				StartMessage msg = new StartMessage(simName, gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity, this.precision, this.geoAccuracy, this.temporalAccuracy, animate);
 				Publisher.getInstance().send(msg);
 				Publisher.getInstance().send(new ProduceMessage());
 

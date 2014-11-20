@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -28,9 +29,10 @@ public class QueryWidget extends JPanel {
 	private JTextField			textFieldSouthLongitude;
 	private JTextField			textFieldWestLatitude;
 	private JTextField			textFieldEastLatitude;
-	private JList<String>		slBox;
-	private JCheckBox			chckbxMinimumTemperature, chckbxMaximumTemperature, chckbxMeanTemperatureOverTime,
-	chckbxMeanTemperatureOverRegion;
+	private JTextField			textFieldSimulationName;
+	private JList<?>			slBox;
+	private JCheckBox			chckbxMinimumTemperature, chckbxMaximumTemperature, chckbxMeanTemperatureOverTime, chckbxMeanTemperatureOverRegion;
+	private HashMap<String, JTextField>	inputs		= new HashMap<String, JTextField>();
 
 	public QueryWidget() {
 
@@ -84,6 +86,7 @@ public class QueryWidget extends JPanel {
 		textFieldStartTime.setEnabled(false);
 		textFieldStartTime.setColumns(10);
 		inputPanel.add(textFieldStartTime);
+		inputs.put("Start Time", textFieldStartTime);
 
 		JLabel lblEndTime = new JLabel("End Time");
 		lblEndTime.setBounds(10, 35, 130, 15);
@@ -94,6 +97,7 @@ public class QueryWidget extends JPanel {
 		textFieldEndTime.setColumns(10);
 		textFieldEndTime.setEnabled(false);
 		inputPanel.add(textFieldEndTime);
+		inputs.put("End Time", textFieldEndTime);
 
 		JLabel lblNorthLongitude = new JLabel("North Longitude");
 		lblNorthLongitude.setBounds(10, 60, 130, 15);
@@ -104,6 +108,7 @@ public class QueryWidget extends JPanel {
 		textFieldNorthLongitude.setEnabled(false);
 		textFieldNorthLongitude.setColumns(10);
 		inputPanel.add(textFieldNorthLongitude);
+		inputs.put("North Longitude", textFieldNorthLongitude);
 
 		JLabel lblSouthLongitude = new JLabel("South Longitude");
 		lblSouthLongitude.setBounds(10, 85, 130, 15);
@@ -114,6 +119,7 @@ public class QueryWidget extends JPanel {
 		textFieldSouthLongitude.setBounds(145, 85, 114, 19);
 		textFieldSouthLongitude.setEnabled(false);
 		inputPanel.add(textFieldSouthLongitude);
+		inputs.put("South Longitude", textFieldSouthLongitude);
 
 		JLabel lblWestLatitude = new JLabel("West Latitude");
 		lblWestLatitude.setBounds(10, 110, 114, 15);
@@ -124,6 +130,7 @@ public class QueryWidget extends JPanel {
 		textFieldWestLatitude.setEnabled(false);
 		textFieldWestLatitude.setColumns(10);
 		inputPanel.add(textFieldWestLatitude);
+		inputs.put("West Latitude", textFieldWestLatitude);
 
 		JLabel lblEastLatitude = new JLabel("East Latitude");
 		lblEastLatitude.setBounds(12, 135, 130, 15);
@@ -134,21 +141,33 @@ public class QueryWidget extends JPanel {
 		textFieldEastLatitude.setEnabled(false);
 		textFieldEastLatitude.setColumns(10);
 		inputPanel.add(textFieldEastLatitude);
+		inputs.put("East Latitude", textFieldEastLatitude);
+		
+		JLabel lblSimulationName = new JLabel("Simulation Name");
+		lblSimulationName.setBounds(12, 160, 130, 15);
+		inputPanel.add(lblSimulationName);
+		
+		textFieldSimulationName = new JTextField();
+		textFieldSimulationName.setBounds(145, 160, 114, 19);
+		textFieldSimulationName.setEnabled(false);
+		textFieldSimulationName.setColumns(10);
+		inputPanel.add(textFieldSimulationName);
+		inputs.put("Simulation Name", textFieldSimulationName);
 
 		chckbxMinimumTemperature = new JCheckBox("Minimum Temperature");
-		chckbxMinimumTemperature.setBounds(10, 172, 249, 20);
+		chckbxMinimumTemperature.setBounds(10, 185, 249, 20);
 		inputPanel.add(chckbxMinimumTemperature);
 
 		chckbxMaximumTemperature = new JCheckBox("Maximum Temperature");
-		chckbxMaximumTemperature.setBounds(10, 199, 249, 20);
+		chckbxMaximumTemperature.setBounds(10, 210, 249, 20);
 		inputPanel.add(chckbxMaximumTemperature);
 
 		chckbxMeanTemperatureOverTime = new JCheckBox("Mean Temperature over Time");
-		chckbxMeanTemperatureOverTime.setBounds(10, 223, 249, 23);
+		chckbxMeanTemperatureOverTime.setBounds(10, 235, 249, 23);
 		inputPanel.add(chckbxMeanTemperatureOverTime);
 
 		chckbxMeanTemperatureOverRegion = new JCheckBox("Mean Temperature over Region");
-		chckbxMeanTemperatureOverRegion.setBounds(10, 247, 249, 23);
+		chckbxMeanTemperatureOverRegion.setBounds(10, 260, 249, 23);
 		inputPanel.add(chckbxMeanTemperatureOverRegion);
 
 		return inputPanel;
@@ -189,6 +208,11 @@ public class QueryWidget extends JPanel {
 		// Todo: Method to access database asking for these values to be
 		// computed.
 
+	}
+	
+	public String GetUserInputs(String name){
+		return inputs.get(name).getText();
+		
 	}
 
 }
