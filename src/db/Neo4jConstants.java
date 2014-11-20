@@ -16,8 +16,8 @@ public interface Neo4jConstants {
 	public static final String FIND_SIMULATIONS_KEY 				= "find_simulation_names";
 
 	public static final String FIND_SIMULATIONS_QUERY 				= "MATCH (a: Simulation) "
-			+ "WITH a.name AS name "
-			+ "RETURN name";
+			+ "WITH a.name AS simulation "
+			+ "RETURN simulation";
 
 	// Define the node creation statements
 	public static final String CREATE_SIMULATION_KEY 				= "create_simulation_node";
@@ -64,39 +64,39 @@ public interface Neo4jConstants {
 	public static final String CREATE_LENGTH_REL_KEY 				= "create_length_rel";
 
 	public static final String CREATE_TEMP_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "MERGE (a)-[r: HAS_TEMP { latitude: {2}, longitude: {3}, datetime: {4} }]->(b: Temperate {value: {5} }) "
-			+ "WITH a AS simulation, r AS relationship, b AS temperature "
-			+ "RETURN simulation, relationship, temperature";
+			+ "CREATE UNIQUE (a)-[r: HAS_TEMP { latitude: {2}, longitude: {3}, datetime: {4} }]->(b: Temperate {value: {5} }) "
+			+ "WITH a.name AS simulation, r.latitude AS latitude, r.longitude AS longitude, r.datetime AS datetime, b AS temperature.value "
+			+ "RETURN simulation, latitude, longitude, datetime, temperature";
 
 	public static final String CREATE_AXIS_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "MERGE (a)-[r: HAS_AXIS]->(b: AxisTilt {value: {2} }) "
-			+ "WITH a AS simulation, r AS relationship, b AS axisTilt "
-			+ "RETURN simulation, relationship, axisTilt";
+			+ "CREATE UNIQUE (a)-[r: HAS_AXIS]->(b: AxisTilt {value: {2} }) "
+			+ "WITH a.name AS simulation, b.value AS axisTilt "
+			+ "RETURN simulation, axisTilt";
 
 	public static final String CREATE_ECCENTRICITY_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "MERGE (a)-[r: HAS_ECCENTRICITY]->(b: OrbitalEccentricity {value: {2} }) "
-			+ "WITH a AS simulation, r AS relation, b AS orbitalEccentricity "
-			+ "RETURN simulation, relationship, orbitalEccentricity";
+			+ "CREATE UNIQUE (a)-[r: HAS_ECCENTRICITY]->(b: OrbitalEccentricity {value: {2} }) "
+			+ "WITH a.name AS simulation, b.value AS orbitalEccentricity "
+			+ "RETURN simulation, orbitalEccentricity";
 
 	public static final String CREATE_GRID_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "MERGE (a)-[r: HAS_GRID]->(b: GridSpacing {value: {2} }) "
+			+ "CREATE UNIQUE (a)-[r: HAS_GRID]->(b: GridSpacing {value: {2} }) "
 			+ "WITH a AS simulation, r AS relation, b AS gridSpacing "
 			+ "RETURN simulation, relationship, gridSpacing";
 
 	public static final String CREATE_TIME_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "MERGE (a)-[r: HAS_TIME]->(b: TimeStep {value: {2} }) "
-			+ "WITH a AS simulation, r AS relationship, b as timeStep "
-			+ "RETURN simulation, relationship, timeStep";
+			+ "CREATE UNIQUE (a)-[r: HAS_TIME]->(b: TimeStep {value: {2} }) "
+			+ "WITH a.name AS simulation, b.value as timeStep "
+			+ "RETURN simulation, timeStep";
 
 	public static final String CREATE_PRESENTATIONAL_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "MERGE (a)-[r: HAS_PRESENTATION]->(b: PresentationInterval { value: {2} }) "
-			+ "WITH a AS simulation, r AS relationship, b AS presentationInterval "
-			+ "RETURN simulation, relationship, presentationInterval";
+			+ "CREATE UNIQUE (a)-[r: HAS_PRESENTATION]->(b: PresentationInterval { value: {2} }) "
+			+ "WITH a.name AS simulation, b.value AS presentationInterval "
+			+ "RETURN simulation, presentationInterval";
 
 	public static final String CREATE_LENGTH_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "MERGE (a)-[r: HAS_LENGTH]->(b: SimulationLength { value: {2} }) "
-			+ "WITH a AS simulation, r AS relationship, b AS simulationLength "
-			+ "RETURN simulation, relationship, simulationLength";
+			+ "CREATE UNIQUE (a)-[r: HAS_LENGTH]->(b: SimulationLength { value: {2} }) "
+			+ "WITH a.name AS simulation, b.value AS simulationLength "
+			+ "RETURN simulation, simulationLength";
 
 	// Define the Query Statements
 	public static final String MATCH_NODE_BY_NAME_KEY 		= "match_node_name";
@@ -120,7 +120,7 @@ public interface Neo4jConstants {
 	public static final String GET_GRID_BY_DATE_TIME_QUERY = "MATCH (n:Simulation)-[ r:HAS_TEMP ]->(t:Temperature) "
 			+ "WHERE n.name = {1} AND r.datetime = {2} "
 			+ "WITH r.latitude AS latitude, r.longitude AS longitude, t.value AS temperature "
-			+ "RETURN temperature, latitude, longitude ";
+			+ "RETURN latitude, longitude, temperature";
 
 	public static final String GET_DATE_TIME_QUERY = "MATCH (n:Simulation)-[r:HAS_TEMPERATURE]-(t:Temperature) "
 			+ "WHERE n.name = {1} AND r.datetime <= {2} "

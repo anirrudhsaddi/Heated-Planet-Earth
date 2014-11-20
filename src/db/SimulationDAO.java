@@ -90,11 +90,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst()) return false;
-		while(set.next()) {
-			System.out.println(set.getString("simulation"));
-		}
-		
-		return true;
+		set.next();
+		return name.equals(set.getString("simulation"));
 		
 	}
 	

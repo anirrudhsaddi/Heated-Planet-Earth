@@ -74,7 +74,7 @@ public class TestSeverStartup {
 				fail("ResultSet was empty - there should be 10 names");
 			
 			while(result.next()) {
-				System.out.println(result);
+				System.out.println(result.getString("simulation"));
 			}
 			
 		} catch (SQLException e) {
