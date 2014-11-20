@@ -59,8 +59,6 @@ public class ControlGUI extends JFrame implements ActionListener {
 		if (temporalAccuracy < Constants.TEMPORALACCURACY_MIN || temporalAccuracy > Constants.TEMPORALACCURACY_MAX)
 			throw new IllegalArgumentException("Invalid temporalAccuracy provided");
 
-	//	throw new IllegalStateException("The TODOs in here need to be finished, including Demo's params");
-
 		 this.precision = precision;
 		 this.geoAccuracy = geoAccuracy;
 		 this.temporalAccuracy = temporalAccuracy;
@@ -68,6 +66,8 @@ public class ControlGUI extends JFrame implements ActionListener {
 		// START_DATE is epoch UTC (01/01/1970). Add 3 days to make it
 		// 01/04/1970
 		Constants.START_DATE.add(Calendar.DAY_OF_YEAR, 3);
+		
+		// threadManager.add(new SimulationDAO(new SimulationNeo4j()));
 
 		// make widgets
 		 setupWindow();
@@ -169,8 +169,6 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 				// Create and reset the buffer
 				Buffer.getBuffer().create(Constants.DEFAULT_BUFFFER_SIZE);
-
-				// threadManager.add(new SimulationDAO(new SimulationNeo4j()));
 
 				// TODO set name
 				// TODO check name against the DAO
