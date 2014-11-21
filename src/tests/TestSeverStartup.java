@@ -1,6 +1,5 @@
 package tests;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -8,31 +7,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
-import db.IDBConnection;
+import util.TestConnection;
 import db.IQueryResult;
-import db.SimulationDAO;
-import db.SimulationNeo4j;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestSeverStartup {
 	
-	private static IDBConnection db;
-	private static SimulationDAO dao;
+	private static TestConnection t;
 
 	@Test
 	public void aTestDbStart() {
+
 		try {
-			db = new SimulationNeo4j();
-			assertNotNull(db);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			dao = new SimulationDAO(db);
+			t = new TestConnection();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail(e.toString());
@@ -44,37 +34,37 @@ public class TestSeverStartup {
 		
 		boolean ret = false;
 		try {
-			ret = dao.createOrMatchSimulationNode("test1");
+			ret = t.dao.createOrMatchSimulationNode("test1");
 			assertTrue(ret);
 			
-			ret = dao.createOrMatchSimulationNode("test2");
+			ret = t.dao.createOrMatchSimulationNode("test2");
 			assertTrue(ret);
 			
-			ret = dao.createOrMatchSimulationNode("test3");
+			ret = t.dao.createOrMatchSimulationNode("test3");
 			assertTrue(ret);
 			
-			ret = dao.createOrMatchSimulationNode("test4");
+			ret = t.dao.createOrMatchSimulationNode("test4");
 			assertTrue(ret);
 			
-			ret = dao.createOrMatchSimulationNode("test5");
+			ret = t.dao.createOrMatchSimulationNode("test5");
 			assertTrue(ret);
 			
-			ret = dao.createOrMatchSimulationNode("test6");
+			ret = t.dao.createOrMatchSimulationNode("test6");
 			assertTrue(ret);
 			
-			ret = dao.createOrMatchSimulationNode("test7");
+			ret = t.dao.createOrMatchSimulationNode("test7");
 			assertTrue(ret);
 			
-			ret = dao.createOrMatchSimulationNode("test8");
+			ret = t.dao.createOrMatchSimulationNode("test8");
 			assertTrue(ret);
 			
-			ret = dao.createOrMatchSimulationNode("test9");
+			ret = t.dao.createOrMatchSimulationNode("test9");
 			assertTrue(ret);
 			
-			ret = dao.createOrMatchSimulationNode("test10");
+			ret = t.dao.createOrMatchSimulationNode("test10");
 			assertTrue(ret);
 			
-			ResultSet result = dao.findNamedSimulations();
+			ResultSet result = t.dao.findNamedSimulations();
 			if (!result.isBeforeFirst())
 				fail("ResultSet was empty - there should be 10 names");
 			
@@ -92,7 +82,7 @@ public class TestSeverStartup {
 	public void cTestCreateAxisTiltRelationship() {
 		
 		try {
-			assertTrue(dao.createOrMatchAxisTiltRelationship("test1", 0.4f));
+			assertTrue(t.dao.createOrMatchAxisTiltRelationship("test1", 0.4f));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail(e.toString());
@@ -103,7 +93,7 @@ public class TestSeverStartup {
 	public void dTestCreateTimeStepRelationship() {
 		
 		try {
-			assertTrue(dao.createOrMatchTimeStepRelationship("test1", 1));
+			assertTrue(t.dao.createOrMatchTimeStepRelationship("test1", 1));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail(e.toString());
@@ -114,7 +104,7 @@ public class TestSeverStartup {
 	public void eTestCreateOrbitalEccentricityRelationship() {
 		
 		try {
-			assertTrue(dao.createOrMatchOrbitalEccentricityRelationship("test1", 0.67f));
+			assertTrue(t.dao.createOrMatchOrbitalEccentricityRelationship("test1", 0.67f));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail(e.toString());
@@ -125,7 +115,7 @@ public class TestSeverStartup {
 	public void fTestCreateGridSpacingRelationship() {
 		
 		try {
-			assertTrue(dao.createOrMatchGridSpacingRelationship("test1", 15));
+			assertTrue(t.dao.createOrMatchGridSpacingRelationship("test1", 15));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail(e.toString());
@@ -136,7 +126,7 @@ public class TestSeverStartup {
 	public void gTestCreatePresentationIntervalRelationship() {
 		
 		try {
-			assertTrue(dao.createOrMatchPresentationIntervalRelationship("test1", 2));
+			assertTrue(t.dao.createOrMatchPresentationIntervalRelationship("test1", 2));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail(e.toString());
@@ -147,7 +137,7 @@ public class TestSeverStartup {
 	public void hTestCreateSimulationLengthRelationship() {
 		
 		try {
-			assertTrue(dao.createOrMatchSimulationLengthRelationship("test1", 1200));
+			assertTrue(t.dao.createOrMatchSimulationLengthRelationship("test1", 1200));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail(e.toString());
@@ -158,7 +148,7 @@ public class TestSeverStartup {
 	public void iTestCreateTemperatureRelationship() {
 		
 		try {
-			assertTrue(dao.createOrMatchTemperatureRelationship("test1", 0, 0, 0f, 288));
+			assertTrue(t.dao.createOrMatchTemperatureRelationship("test1", 0, 0, 0f, 288));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail(e.toString());
@@ -169,7 +159,7 @@ public class TestSeverStartup {
 	public void jTestSetSimulationName() {
 		
 		try {
-			IQueryResult result = dao.setSimulationName("kungfu panda", 15, 30, 1200, 1f, 0.67f, 0.23f);
+			IQueryResult result = t.dao.setSimulationName("kungfu panda", 15, 30, 1200, 1f, 0.67f, 0.23f);
 			System.out.println(result);
 		} catch (SQLException e) {
 			e.printStackTrace();

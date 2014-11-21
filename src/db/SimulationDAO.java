@@ -346,6 +346,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.GET_DATE_TIME_KEY);
 		query.setString(1, name);
 		query.setLong(2, targetDateTime.getTimeInMillis());
+		
 		result = conn.query(query);
 		if (!result.isBeforeFirst() || result == null)
 			throw new SQLException("Failed to find a date");
@@ -355,7 +356,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		
 		// Now get all the temps
 		query = conn.getPreparedStatement(Neo4jConstants.GET_GRID_BY_DATE_TIME_KEY);
-		
 		query.setString(1, name);
 		query.setLong(2, foundDateTime);
 		
@@ -363,11 +363,10 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!result.isBeforeFirst() || result == null)
 			throw new SQLException("Failed to find a temperatures");
 		
-		ResultMessage msg = new ResultMessage((foundDateTime == queryDateTime));
+		ResultMessage msg = new ResultMessage(southLatitude, northLatitude, westLongitude, eastLongitude, (foundDateTime == queryDateTime));
 		
-		while (result.next()) {
-			msg.setTemperature(Integer.parseInt(result.getString("longitude")), Integer.parseInt(result.getString("latitude")), Double.parseDouble(result.getString("temperature")));
-		}
+		while (result.next())
+			msg.setTemperature(result.getInt("longitude"), result.getInt("latitude"), result.getInt("temperature"));
 
 		Publisher.getInstance().send(msg);
 	}

@@ -12,11 +12,36 @@ public class ResultMessage implements Message {
 	
 	private final Map<Integer, Double> grid;
 	
-	public ResultMessage(boolean needsCalculation) {
+	private final int southLatitude;
+	private final int northLatitude;
+	private final int westLongitude;
+	private final int eastLongitude;
+	
+	public ResultMessage(int southLatitude, int northLatitude, int westLongitude, int eastLongitude, boolean needsCalculation) {
 		
+		this.southLatitude = southLatitude;
+		this.northLatitude = northLatitude;
+		this.westLongitude = westLongitude;
+		this.eastLongitude = eastLongitude;
 		this.needsCalculation = needsCalculation;
 		
 		grid = new TreeMap<Integer, Double>();
+	}
+	
+	public int getSouthRegionBounds() {
+		return this.southLatitude;
+	}
+	
+	public int getNorthRegionBounds() {
+		return this.northLatitude;
+	}
+	
+	public int getWestRegionBounds() {
+		return this.westLongitude;
+	}
+	
+	public int getEastRegionBounds() {
+		return this.eastLongitude;
 	}
 	
 	public boolean needsCalculation() {

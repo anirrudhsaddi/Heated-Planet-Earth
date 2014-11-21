@@ -23,8 +23,6 @@ public class EarthEngine extends ComponentBase {
 	@Override
 	public void performAction(Message msg) {
 
-		// System.out.println("EarthEngine. performAction on msg " + msg);
-
 		if (msg instanceof StartMessage) {
 
 			model.configure(((StartMessage) msg));
@@ -34,7 +32,7 @@ public class EarthEngine extends ComponentBase {
 			System.out.println("EarthEngine got a ProduceMessage");
 			generateData();
 		} else if (msg instanceof ResultMessage) {
-			processQueryResult();
+			processQueryResult(((ResultMessage) msg));
 		} else {
 			System.err.printf("WARNING: No processor specified in class %s for message %s\n",
 					this.getClass().getName(), msg.getClass().getName());
@@ -45,18 +43,20 @@ public class EarthEngine extends ComponentBase {
 		// destructor when done with class
 	}
 
-	private void processQueryResult() {
+	private void processQueryResult(ResultMessage msg) {
 
-		// TODO either error or IQueryResult containing the Grid to simulation
-		// from or display results
+		// Instantiate and interpolate a grid from the ResultMessage
+		// If needsCalculation is True, kick off a simulation (Monitor will stop the simulation at the
+		// appropriate time); otherwise send the grid to EarthDisplay to display
+		
 		// We should display the results as textual and graphical.
-		// EarthDisplay has been updated to accept -1 as a
-		// "do not display color". When doing the calculation from the query
-		// result
-		// just need to set -1 if the grid is not in the requested area
+		// Look at the reqs - part of the output for queries is that textual data is required to be displayed
+		// for the query (min temp, max temp, mean temp, etc). We need to figure uout how to do this
+		
+		// Just need to set -1 if the grid is not in the requested area. We need to just to visually 
+		// indicate what region they queried
 
-		// We also need to provide a report on the query - including
-		// min/max/mean, etc.
+		// We also need to provide a report on the query - including min/max/mean, etc.
 
 		throw new IllegalStateException(
 				"Support for ResultMessage has yet to be added. SimulationStatus needs to be updated. Earth needs to be updated");
