@@ -37,7 +37,14 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		this.conn = conn;
 		
 		this.conn.createPreparedStatement(Neo4jConstants.FIND_SIMULATIONS_KEY, Neo4jConstants.FIND_SIMULATIONS_QUERY);
-
+		this.conn.createPreparedStatement(Neo4jConstants.FIND_TEMPERATURES_KEY, Neo4jConstants.FIND_TEMPERATURES_QUERY);
+		this.conn.createPreparedStatement(Neo4jConstants.FIND_TIME_STEP_KEY, Neo4jConstants.FIND_TIME_STEP_QUERY);
+		this.conn.createPreparedStatement(Neo4jConstants.FIND_SIMULATION_LENGTH_KEY, Neo4jConstants.FIND_SIMULATION_LENGTH_QUERY);
+		this.conn.createPreparedStatement(Neo4jConstants.FIND_AXIS_TILT_KEY, Neo4jConstants.FIND_AXIS_TILT_QUERY);
+		this.conn.createPreparedStatement(Neo4jConstants.FIND_ORBITAL_ECCENTRICITY_KEY, Neo4jConstants.FIND_ORBITAL_ECCENTRICITY_QUERY);
+		this.conn.createPreparedStatement(Neo4jConstants.FIND_GRID_SPACING_KEY, Neo4jConstants.FIND_GRID_SPACING_QUERY);
+		this.conn.createPreparedStatement(Neo4jConstants.FIND_PRESENTATION_INTERVAL_KEY, Neo4jConstants.FIND_PRESENTATION_INTERVAL_QUERY);
+		
 		this.conn.createPreparedStatement(Neo4jConstants.MATCH_NODE_BY_NAME_KEY, Neo4jConstants.MATCH_NODE_BY_NAME_QUERY);
 		this.conn.createPreparedStatement(Neo4jConstants.MATCH_NODE_BY_DATA_KEY, Neo4jConstants.MATCH_NODE_BY_DATA_QUERY);
 		this.conn.createPreparedStatement(Neo4jConstants.GET_GRID_BY_DATE_TIME_KEY, Neo4jConstants.GET_GRID_BY_DATE_TIME_QUERY);
@@ -77,151 +84,178 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.FIND_SIMULATIONS_KEY);
 		ResultSet set = conn.query(query);
-		if (!set.isBeforeFirst())
+		if (!set.isBeforeFirst() || set == null)
 			throw new SQLException("No Simulations found");
 		return set;
 	}
 	
 	@Override
-	public boolean createSimulationNode(String name) throws SQLException {
+	public boolean createOrMatchSimulationNode(String name) throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_SIMULATION_KEY);
 		query.setString(1, name);
 		
 		ResultSet set = conn.query(query);
-		if (!set.isBeforeFirst()) return false;
+		if (!set.isBeforeFirst() || set == null) return false;
 		set.next();
 		return name.equals(set.getString("simulation"));
 		
 	}
 	
 	@Override
-	public boolean createTemperatureRelationship(String name, int temperature) throws SQLException {
+	public boolean createOrMatchTemperatureRelationship(String name, int latitude, int longitude, float datetime, int temperature) throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_REL_KEY);
 		query.setString(1, name);
-		query.setInt(2, temperature);
+		query.setInt(2,  latitude);
+		query.setInt(3, longitude);
+		query.setFloat(4, datetime);
+		query.setInt(5, temperature);
 		
 		ResultSet set = conn.query(query);
-		if (!set.isBeforeFirst()) return false;
+		if (!set.isBeforeFirst() || set == null) return false;
 		set.next();
-		return name.equals(set.getString("temperature"));
+		boolean success = true;
+		success &= name.equals(set.getString("simulation"));
+		success &= latitude == set.getInt("latitude");
+		success &= longitude == set.getInt("longitude");
+		success &= datetime == set.getFloat("dateTime");
+		success &= temperature == set.getInt("temperature");
+		return success;
 	}
 	
 	@Override
-	public boolean createAxisTiltRelationship(String name, float axisTilt) throws SQLException {
+	public boolean createOrMatchAxisTiltRelationship(String name, float axisTilt) throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_AXIS_REL_KEY);
 		query.setString(1, name);
 		query.setFloat(2, axisTilt);
 		
 		ResultSet set = conn.query(query);
-		if (!set.isBeforeFirst()) return false;
+		if (!set.isBeforeFirst() || set == null) return false;
 		set.next();
-		return name.equals(set.getString("axisTilt"));
+		boolean success = true;
+		success &= name.equals(set.getString("simulation"));
+		success &= axisTilt == set.getFloat("axisTilt");
+		return success;
 	}
 	
 	@Override
-	public boolean createOrbitalEccentricityRelationship(String name, float eccentricity) throws SQLException {
+	public boolean createOrMatchOrbitalEccentricityRelationship(String name, float orbitalEccentricity) throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_ECCENTRICITY_REL_KEY);
 		query.setString(1, name);
-		query.setFloat(2, eccentricity);
+		query.setFloat(2, orbitalEccentricity);
 		
 		ResultSet set = conn.query(query);
-		if (!set.isBeforeFirst()) return false;
+		if (!set.isBeforeFirst() || set == null) return false;
 		set.next();
-		return name.equals(set.getString("orbitalEccentricity"));
+		boolean success = true;
+		success &= name.equals(set.getString("simulation"));
+		success &= orbitalEccentricity == set.getFloat("orbitalEccentricity");
+		return success;
 	}
 	
 	@Override
-	public boolean createGridSpacingRelationship(String name, int gridSpacing) throws SQLException {
+	public boolean createOrMatchGridSpacingRelationship(String name, int gridSpacing) throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_GRID_REL_KEY);
 		query.setString(1, name);
 		query.setInt(2, gridSpacing);
 		
 		ResultSet set = conn.query(query);
-		if (!set.isBeforeFirst()) return false;
+		if (!set.isBeforeFirst() || set == null) return false;
 		set.next();
-		return name.equals(set.getString("gridSpacing"));
+		boolean success = true;
+		success &= name.equals(set.getString("simulation"));
+		success &= gridSpacing == set.getInt("gridSpacing");
+		return success;
 	}
 	
 	@Override
-	public boolean createTimeStepRelationship(String name, int timeStep) throws SQLException {
+	public boolean createOrMatchTimeStepRelationship(String name, int timeStep) throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_TIME_REL_KEY);
 		query.setString(1, name);
 		query.setInt(2, timeStep);
 		
 		ResultSet set = conn.query(query);
-		if (!set.isBeforeFirst()) return false;
+		if (!set.isBeforeFirst() || set == null) return false;
 		set.next();
-		return name.equals(set.getString("timeStep"));
+		boolean success = true;
+		success &= name.equals(set.getString("simulation"));
+		success &= timeStep == set.getInt("timeStep");
+		return success;
 	}
 	
 	@Override
-	public boolean createPresentationIntervalRelationship(String name, float presentationInterval) throws SQLException {
+	public boolean createOrMatchPresentationIntervalRelationship(String name, float presentationInterval) throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_PRESENTATION_REL_KEY);
-		query.setString(0, name);
-		query.setFloat(1, presentationInterval);
+		query.setString(1, name);
+		query.setFloat(2, presentationInterval);
 		
 		ResultSet set = conn.query(query);
-		if (!set.isBeforeFirst()) return false;
+		if (!set.isBeforeFirst() || set == null) return false;
 		set.next();
-		return name.equals(set.getString("presentationInterval"));
+		boolean success = true;
+		success &= name.equals(set.getString("simulation"));
+		success &= presentationInterval == set.getFloat("presentationInterval");
+		return success;
 	}
 	
 	@Override
-	public boolean createSimulationLengthRelationship(String name, int simulationLength) throws SQLException {
+	public boolean createOrMatchSimulationLengthRelationship(String name, int simulationLength) throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_LENGTH_REL_KEY);
 		query.setString(1, name);
 		query.setInt(2, simulationLength);
 		
 		ResultSet set = conn.query(query);
-		if (!set.isBeforeFirst()) return false;
+		if (!set.isBeforeFirst() || set == null) return false;
 		set.next();
-		return name.equals(set.getString("simulationLength"));
+		boolean success = true;
+		success &= name.equals(set.getString("simulation"));
+		success &= simulationLength == set.getInt("simulationLength");
+		return success;
 	}
 	
 	@Override
-	public IQueryResult setSimulationName(String name, int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float eccentricity) throws Exception {
+	public IQueryResult setSimulationName(String name, int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float orbitalEccentricity) throws Exception {
 		
 		// First do findSimulationByName
-		Future<IQueryResult> f = findSimulationByData(gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, eccentricity);
+		Future<IQueryResult> f = findSimulationByData(gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, orbitalEccentricity);
 		
 		// Wait for the result back from the DB
 		IQueryResult result = f.get();
 		
 		// If the result is empty, then the simulation does not exist and we should create it (or it errored)
-		if (result.isEmpty()) {
+		if (result.isEmpty() || result == null) {
 			
 			if (result.isErrored()) throw result.getError();
 			
-			if (!createSimulationNode(name))
+			if (!result.getSimulationName().contains(name) && !createOrMatchSimulationNode(name))
 				throw new SQLException("Failed to create Node(Simulation {" + name + "})");
 			
-			if (!createGridSpacingRelationship(name, gridSpacing))
+			if (!result.getGridSpacing().contains(gridSpacing) && !createOrMatchGridSpacingRelationship(name, gridSpacing))
 				throw new SQLException("Failed to create Relationship Node(Simulation {" + name + "})-[:HAS_GRID]->Node(GridSpacing {" + gridSpacing + "})");
 			
-			if (!createTimeStepRelationship(name, timeStep))
+			if (!result.getTimeStep().contains(timeStep) && !createOrMatchTimeStepRelationship(name, timeStep))
 				throw new SQLException("Failed to create Relationship Node(Simulation {" + name + "})-[:HAS_TIME]->Node(TimeStep {" + timeStep + "})");
 			
-			if (!createSimulationLengthRelationship(name, simulationLength))
+			if (!result.getSimulationLength().contains(simulationLength) && !createOrMatchSimulationLengthRelationship(name, simulationLength))
 				throw new SQLException("Failed to create Relationship Node(Simulation {" + name + "})-[:HAS_LENGTH]->Node(SimulationLength {" + simulationLength + "})");
 			
-			if (!createPresentationIntervalRelationship(name, presentationInterval))
+			if (!result.getPresentationInterval().contains(presentationInterval) && !createOrMatchPresentationIntervalRelationship(name, presentationInterval))
 				throw new SQLException("Failed to create Relationship Node(Simulation {" + name + "})-[:HAS_PRESENTATION]->Node(PresentationInterval {" + presentationInterval + "})");
 			
-			if (!createAxisTiltRelationship(name, axisTilt))
+			if (!result.getAxisTilt().contains(axisTilt) && !createOrMatchAxisTiltRelationship(name, axisTilt))
 				throw new SQLException("Failed to create Relationship Node(Simulation {" + name + "})-[:HAS_AXIS]->Node(AxisTilt {" + axisTilt + "})");
 			
-			if (!createOrbitalEccentricityRelationship(name, eccentricity))
+			if (!result.getOrbitalEccentricity().contains(orbitalEccentricity) && !createOrMatchOrbitalEccentricityRelationship(name, orbitalEccentricity))
 				throw new SQLException("Failed to create Relationship Node(Simulation {" + name + "})-[:HAS_ECCENTRICITY]->Node(OrbitalEccentricity {" + gridSpacing + "})");
 			
-			return new Neo4jResult(name, gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, eccentricity);
+			return new Neo4jResult(name, gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, orbitalEccentricity);
 		} else 
 			return result;
 	}
@@ -245,7 +279,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		
 		query.setInt(1, gridSpacing);
 		query.setInt(2, timeStep);
-		query.setInt(3,  simulationLength);
+		query.setInt(3, simulationLength);
 		query.setFloat(4, presentationInterval);
 		query.setFloat(5, axisTilt);
 		query.setFloat(6, eccentricity);
@@ -271,11 +305,11 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		query.setString(1, name);
 		query.setLong(2, targetDateTime.getTimeInMillis());
 		result = conn.query(query);
-		if (!result.isBeforeFirst())
+		if (!result.isBeforeFirst() || result == null)
 			throw new SQLException("Failed to find a date");
 		
 		// This should be the closest date available to us
-		long foundDateTime = Long.parseLong(result.getString("datetime"));
+		long foundDateTime = Long.parseLong(result.getString("dateTime"));
 		
 		// Now get all the temps
 		query = conn.getPreparedStatement(Neo4jConstants.GET_GRID_BY_DATE_TIME_KEY);
@@ -284,7 +318,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		query.setLong(2, foundDateTime);
 		
 		result = conn.query(query);
-		if (!result.isBeforeFirst())
+		if (!result.isBeforeFirst() || result == null)
 			throw new SQLException("Failed to find a temperatures");
 		
 		ResultMessage msg = new ResultMessage((foundDateTime == queryDateTime));
@@ -341,12 +375,12 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 				query.setInt(3, getLongitude(x, width));
 				query.setLong(4, dateTime);
 				query.setDouble(5, msg.getTemperature(x, y));
+				
+				ResultSet result = query.executeQuery();
+				if (!result.isBeforeFirst() || result == null)
+					throw new SQLException("No results returned by GET_GRID_BY_DATE_TIME_QUERY");
 			}
 		}
-		
-		ResultSet result = query.executeQuery();
-		if (!result.isBeforeFirst())
-			throw new SQLException("No results returned by GET_GRID_BY_DATE_TIME_QUERY");
 	}
 
 	private class Query implements Callable<IQueryResult> {

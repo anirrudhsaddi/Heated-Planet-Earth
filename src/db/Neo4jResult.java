@@ -1,6 +1,7 @@
 package db;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -34,25 +35,36 @@ public class Neo4jResult implements IQueryResult {
 	
 	public Neo4jResult(final ResultSet result) throws SQLException {
 		
-		// populate from result. If result has stuff...
-		if (!result.isBeforeFirst())
+		// populate from result
+		if (!result.isBeforeFirst() || result == null)
 			return;
 		
-		result.first();
+		result.next();
+		System.out.println(result);
 		while(result.next()) {
 			
-			this.queryName.add(result.getString("o.name"));
-			
-			this.gridSpacing.add(result.getInt("o.GridSpacing.value"));
-			this.timeStep.add(result.getInt("o.TimeStep.value"));
-			this.simulationLength.add(result.getInt("o.SimulationLength.value"));
-			
-			this.presentationInterval.add(result.getFloat("o.PresentationInterval.value"));
-			this.axisTilt.add(result.getFloat("o.AxislTilt.value"));
-			this.eccentricity.add(result.getFloat("o.OrbitalEccentricity.value"));
+			this.queryName.add(checkColumnExists(result, "simulation") ? result.getString("simulation") : "");
+			this.gridSpacing.add(checkColumnExists(result, "gridSpacing") ? result.getInt("gridSpacing") : -1);
+			this.timeStep.add(checkColumnExists(result, "timeStep") ? result.getInt("timeStep") : -1);
+			this.simulationLength.add(checkColumnExists(result, "simulationLength") ? result.getInt("simulationLength") : -1);
+			this.presentationInterval.add(checkColumnExists(result, "presentationInterval") ? result.getFloat("presentationInterval") : -1);
+			this.axisTilt.add(checkColumnExists(result, "axislTilt") ? result.getFloat("axislTilt") : -1);
+			this.eccentricity.add(checkColumnExists(result, "orbitalEccentricity") ? result.getFloat("orbitalEccentricity") : -1);
 		}
 		
 		populated = true;
+	}
+	
+	private boolean checkColumnExists(ResultSet rs, String label) throws SQLException {
+		
+		ResultSetMetaData rsmd = rs.getMetaData();
+	    int columns = rsmd.getColumnCount();
+	    for (int x = 1; x <= columns; x++) {
+	    	if (label.equals(rsmd.getColumnName(x)))
+	    		return true;
+	    }
+	    
+	    return false;
 	}
 	
 	public Neo4jResult(final Exception result) {
@@ -65,38 +77,38 @@ public class Neo4jResult implements IQueryResult {
 	}
 
 	@Override
-	public Iterator<String> getQueryName() {
-		return queryName.iterator();
+	public List<String> getSimulationName() {
+		return queryName;
 	}
 
 	@Override
-	public Iterator<Integer> getGridSpacing() {
-		return gridSpacing.iterator();
+	public List<Integer> getGridSpacing() {
+		return gridSpacing;
 	}
 
 	@Override
-	public Iterator<Integer> getTimeStep() {
-		return timeStep.iterator();
+	public List<Integer> getTimeStep() {
+		return timeStep;
 	}
 
 	@Override
-	public Iterator<Integer> getSimulationLength() {
-		return simulationLength.iterator();
+	public List<Integer> getSimulationLength() {
+		return simulationLength;
 	}
 
 	@Override
-	public Iterator<Float> getPresentationInterval() {
-		return presentationInterval.iterator();
+	public List<Float> getPresentationInterval() {
+		return presentationInterval;
 	}
 
 	@Override
-	public Iterator<Float> getAxisTilt() {
-		return axisTilt.iterator();
+	public List<Float> getAxisTilt() {
+		return axisTilt;
 	}
 
 	@Override
-	public Iterator<Float> getEccentricity() {
-		return eccentricity.iterator();
+	public List<Float> getOrbitalEccentricity() {
+		return eccentricity;
 	}
 
 	@Override

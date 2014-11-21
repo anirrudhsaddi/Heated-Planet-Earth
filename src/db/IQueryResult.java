@@ -1,6 +1,6 @@
 package db;
 
-import java.util.Iterator;
+import java.util.List;
 
 public interface IQueryResult {
 	
@@ -10,18 +10,18 @@ public interface IQueryResult {
 	
 	public Exception getError();
 	
-	public Iterator<String> getQueryName();
+	public List<String> getSimulationName();
 	
-	public Iterator<Integer> getGridSpacing();
+	public List<Integer> getGridSpacing();
 	
-	public Iterator<Integer> getTimeStep();
+	public List<Integer> getTimeStep();
 	
-	public Iterator<Integer> getSimulationLength();
+	public List<Integer> getSimulationLength();
 	
-	public Iterator<Float> getPresentationInterval();
+	public List<Float> getPresentationInterval();
 	
-	public Iterator<Float> getAxisTilt();
+	public List<Float> getAxisTilt();
 	
-	public Iterator<Float> getEccentricity();
+	public List<Float> getOrbitalEccentricity();
 
 }

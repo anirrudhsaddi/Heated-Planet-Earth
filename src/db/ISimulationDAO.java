@@ -10,21 +10,21 @@ public interface ISimulationDAO {
 	
 	public ResultSet findNamedSimulations() throws SQLException;
 	
-	public boolean createSimulationNode(String name) throws SQLException;
+	public boolean createOrMatchSimulationNode(String name) throws SQLException;
 	
-	public boolean createTemperatureRelationship(String name, int temperature) throws SQLException;
+	public boolean createOrMatchTemperatureRelationship(String name, int latitude, int longitude, float datetime, int temperature) throws SQLException;
 	
-	public boolean createAxisTiltRelationship(String name, float axisTilt) throws SQLException;
+	public boolean createOrMatchAxisTiltRelationship(String name, float axisTilt) throws SQLException;
 	
-	public boolean createOrbitalEccentricityRelationship(String name, float eccentricity) throws SQLException;
+	public boolean createOrMatchOrbitalEccentricityRelationship(String name, float eccentricity) throws SQLException;
 	
-	public boolean createGridSpacingRelationship(String name, int gridSpacing) throws SQLException;
+	public boolean createOrMatchGridSpacingRelationship(String name, int gridSpacing) throws SQLException;
 	
-	public boolean createTimeStepRelationship(String name, int timeStep) throws SQLException;
+	public boolean createOrMatchTimeStepRelationship(String name, int timeStep) throws SQLException;
 	
-	public boolean createPresentationIntervalRelationship(String name, float presentationInterval) throws SQLException;
+	public boolean createOrMatchPresentationIntervalRelationship(String name, float presentationInterval) throws SQLException;
 	
-	public boolean createSimulationLengthRelationship(String name, int simulationLength) throws SQLException;
+	public boolean createOrMatchSimulationLengthRelationship(String name, int simulationLength) throws SQLException;
 	
 	// Only user for Starting a simulation
 	public IQueryResult setSimulationName(String name, int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float eccentricity) throws Exception;

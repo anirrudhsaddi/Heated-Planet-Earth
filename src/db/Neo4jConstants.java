@@ -14,10 +14,51 @@ public interface Neo4jConstants {
 	
 
 	public static final String FIND_SIMULATIONS_KEY 				= "find_simulation_names";
+	public static final String FIND_TEMPERATURES_KEY 				= "find_temperature_values";
+	public static final String FIND_TIME_STEP_KEY 					= "find_time_step_values";
+	public static final String FIND_SIMULATION_LENGTH_KEY 			= "find_simulation_length_values";
+	public static final String FIND_AXIS_TILT_KEY 					= "find_axis_tilt_values";
+	public static final String FIND_ORBITAL_ECCENTRICITY_KEY 		= "find_orbital_eccentricity_values";
+	public static final String FIND_GRID_SPACING_KEY 				= "find_grid_spacing_values";
+	public static final String FIND_PRESENTATION_INTERVAL_KEY 		= "find_presentation_interval_values";
 
 	public static final String FIND_SIMULATIONS_QUERY 				= "MATCH (a: Simulation) "
 			+ "WITH a.name AS simulation "
 			+ "RETURN simulation";
+	
+	public static final String FIND_TEMPERATURES_QUERY 				= "MATCH (a: Temperature) "
+			+ "WITH a.value AS temperature "
+			+ "RETURN temperature";
+	
+	public static final String FIND_TIME_STEP_QUERY 				= "MATCH (a: TimeStep) "
+			+ "WHERE a.value = {1} "
+			+ "WITH a.value AS timeStep "
+			+ "RETURN timeStep";
+	
+	public static final String FIND_SIMULATION_LENGTH_QUERY 		= "MATCH (a: SimulationLength) "
+			+ "WHERE a.value = {1} "
+			+ "WITH a.value AS simulationLength "
+			+ "RETURN simulationLength";
+	
+	public static final String FIND_AXIS_TILT_QUERY 				= "MATCH (a: AxisTilt) "
+			+ "WHERE a.value = {1} "
+			+ "WITH a.value AS axisTilt "
+			+ "RETURN axisTilt";
+	
+	public static final String FIND_ORBITAL_ECCENTRICITY_QUERY 		= "MATCH (a: OrbitalEccentricity) "
+			+ "WHERE a.value = {1} "
+			+ "WITH a.value AS orbitalEccentricity "
+			+ "RETURN orbitalEccentricity";
+	
+	public static final String FIND_GRID_SPACING_QUERY 				= "MATCH (a: GridSpacing) "
+			+ "WHERE a.value = {1} "
+			+ "WITH a.value AS gridSpacing "
+			+ "RETURN gridSpacing";
+	
+	public static final String FIND_PRESENTATION_INTERVAL_QUERY 	= "MATCH (a: PresentationInterval) "
+			+ "WHERE a.value = {1} "
+			+ "WITH a.value AS presentationInterval "
+			+ "RETURN presentationInterval";
 
 	// Define the node creation statements
 	public static final String CREATE_SIMULATION_KEY 				= "create_simulation_node";
@@ -64,37 +105,37 @@ public interface Neo4jConstants {
 	public static final String CREATE_LENGTH_REL_KEY 				= "create_length_rel";
 
 	public static final String CREATE_TEMP_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "CREATE UNIQUE (a)-[r: HAS_TEMP { latitude: {2}, longitude: {3}, datetime: {4} }]->(b: Temperate {value: {5} }) "
-			+ "WITH a.name AS simulation, r.latitude AS latitude, r.longitude AS longitude, r.datetime AS datetime, b AS temperature.value "
-			+ "RETURN simulation, latitude, longitude, datetime, temperature";
+			+ "MERGE (a)-[r: HAS_TEMP { latitude: {2}, longitude: {3}, datetime: {4} }]->(b: Temperate {value: {5} }) "
+			+ "WITH a.name AS simulation, r.latitude AS latitude, r.longitude AS longitude, r.datetime AS dateTime, b.value AS temperature "
+			+ "RETURN simulation, latitude, longitude, dateTime, temperature";
 
 	public static final String CREATE_AXIS_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "CREATE UNIQUE (a)-[r: HAS_AXIS]->(b: AxisTilt {value: {2} }) "
+			+ "MERGE (a)-[r: HAS_AXIS]->(b: AxisTilt {value: {2} }) "
 			+ "WITH a.name AS simulation, b.value AS axisTilt "
 			+ "RETURN simulation, axisTilt";
 
 	public static final String CREATE_ECCENTRICITY_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "CREATE UNIQUE (a)-[r: HAS_ECCENTRICITY]->(b: OrbitalEccentricity {value: {2} }) "
+			+ "MERGE (a)-[r: HAS_ECCENTRICITY]->(b: OrbitalEccentricity {value: {2} }) "
 			+ "WITH a.name AS simulation, b.value AS orbitalEccentricity "
 			+ "RETURN simulation, orbitalEccentricity";
 
 	public static final String CREATE_GRID_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "CREATE UNIQUE (a)-[r: HAS_GRID]->(b: GridSpacing {value: {2} }) "
-			+ "WITH a AS simulation, r AS relation, b AS gridSpacing "
-			+ "RETURN simulation, relationship, gridSpacing";
+			+ "MERGE (a)-[r: HAS_GRID]->(b: GridSpacing {value: {2} }) "
+			+ "WITH a.name AS simulation, b.value AS gridSpacing "
+			+ "RETURN simulation, gridSpacing";
 
 	public static final String CREATE_TIME_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "CREATE UNIQUE (a)-[r: HAS_TIME]->(b: TimeStep {value: {2} }) "
+			+ "MERGE (a)-[r: HAS_TIME]->(b: TimeStep {value: {2} }) "
 			+ "WITH a.name AS simulation, b.value as timeStep "
 			+ "RETURN simulation, timeStep";
 
 	public static final String CREATE_PRESENTATIONAL_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "CREATE UNIQUE (a)-[r: HAS_PRESENTATION]->(b: PresentationInterval { value: {2} }) "
+			+ "MERGE (a)-[r: HAS_PRESENTATION]->(b: PresentationInterval { value: {2} }) "
 			+ "WITH a.name AS simulation, b.value AS presentationInterval "
 			+ "RETURN simulation, presentationInterval";
 
 	public static final String CREATE_LENGTH_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "CREATE UNIQUE (a)-[r: HAS_LENGTH]->(b: SimulationLength { value: {2} }) "
+			+ "MERGE (a)-[r: HAS_LENGTH]->(b: SimulationLength { value: {2} }) "
 			+ "WITH a.name AS simulation, b.value AS simulationLength "
 			+ "RETURN simulation, simulationLength";
 
@@ -112,7 +153,7 @@ public interface Neo4jConstants {
 			+ "RETURN result";
 
 	public static final String MATCH_NODE_BY_DATA_QUERY = "MATCH (n:Simulation)-[ "
-			+ ":HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY:|HAS_AXIS "
+			+ ":HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY|:HAS_AXIS "
 			+ "]->(o) "
 			+ "WITH { simulation: n.name, "
 			+ "	nodes: filter(x IN o.values WHERE x = {1} OR x = {2} OR x = {3} OR x = {4} OR x = {5} )"

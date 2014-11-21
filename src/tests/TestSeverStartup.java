@@ -1,6 +1,8 @@
 package tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,7 +10,7 @@ import java.sql.SQLException;
 import org.junit.Test;
 
 import db.IDBConnection;
-import db.Neo4jConstants;
+import db.IQueryResult;
 import db.SimulationDAO;
 import db.SimulationNeo4j;
 
@@ -84,12 +86,92 @@ public class TestSeverStartup {
 	}
 	
 	@Test
-	public void testCreateAxisTiltNode() {
+	public void testCreateAxisTiltRelationship() {
 		
 		try {
-			boolean ret = dao.createAxisTiltRelationship("test1", 0.4f);
-			assertTrue(ret);
+			assertTrue(dao.createAxisTiltRelationship("test1", 0.4f));
 		} catch (SQLException e) {
+			e.printStackTrace();
+			fail(e.toString());
+		}
+	}
+	
+	@Test
+	public void testCreateTimeStepRelationship() {
+		
+		try {
+			assertTrue(dao.createTimeStepRelationship("test1", 1));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			fail(e.toString());
+		}
+	}
+	
+	@Test
+	public void testCreateOrbitalEccentricityRelationship() {
+		
+		try {
+			assertTrue(dao.createOrbitalEccentricityRelationship("test1", 0.67f));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			fail(e.toString());
+		}
+	}
+	
+	@Test
+	public void testCreateGridSpacingRelationship() {
+		
+		try {
+			assertTrue(dao.createGridSpacingRelationship("test1", 15));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			fail(e.toString());
+		}
+	}
+	
+	@Test
+	public void testCreatePresentationIntervalRelationship() {
+		
+		try {
+			assertTrue(dao.createPresentationIntervalRelationship("test1", 2));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			fail(e.toString());
+		}
+	}
+	
+	@Test
+	public void testCreateSimulationLengthRelationship() {
+		
+		try {
+			assertTrue(dao.createSimulationLengthRelationship("test1", 1200));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			fail(e.toString());
+		}
+	}
+	
+	@Test
+	public void testCreateTemperatureRelationship() {
+		
+		try {
+			assertTrue(dao.createTemperatureRelationship("test1", 0, 0, 0f, 288));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			fail(e.toString());
+		}
+	}
+	
+	@Test
+	public void testSetSimulationName() {
+		
+		try {
+			IQueryResult result = dao.setSimulationName("kungfu panda", 15, 30, 1200, 1f, 0.67f, 0.23f);
+			System.out.println(result);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			fail(e.toString());
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.toString());
 		}
