@@ -53,7 +53,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		this.conn.createPreparedStatement(Neo4jConstants.CREATE_SIMULATION_KEY, Neo4jConstants.CREATE_SIMULATION_NODE);
 		this.conn.createPreparedStatement(Neo4jConstants.CREATE_TEMP_KEY, Neo4jConstants.CREATE_TEMP_NODE);
 		this.conn.createPreparedStatement(Neo4jConstants.CREATE_AXIS_TILT_KEY, Neo4jConstants.CREATE_AXIS_TILT_NODE);
-		this.conn.createPreparedStatement(Neo4jConstants.CREATE_ECCENTRICITY_KEY, Neo4jConstants.CREATE_ECCENTRICITY_NODE);
+		this.conn.createPreparedStatement(Neo4jConstants.CREATE_ORBITAL_ECCENTRICITY_KEY, Neo4jConstants.CREATE_ORBITAL_ECCENTRICITY_NODE);
 		this.conn.createPreparedStatement(Neo4jConstants.CREATE_GRID_SPACING_KEY, Neo4jConstants.CREATE_GRID_SPACING_NODE);
 		this.conn.createPreparedStatement(Neo4jConstants.CREATE_TIME_STEP_KEY, Neo4jConstants.CREATE_TIME_STEP_NODE);
 		this.conn.createPreparedStatement(Neo4jConstants.CREATE_PRESENTATION_INTERVAL_KEY, Neo4jConstants.CREATE_PRESENTATION_INTERVAL_NODE);
@@ -105,14 +105,20 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	@Override
 	public boolean createOrMatchTemperatureRelationship(String name, int latitude, int longitude, float datetime, int temperature) throws SQLException {
 		
-		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_REL_KEY);
+		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_KEY);
+		query.setInt(1, temperature);
+		
+		ResultSet set = conn.query(query);
+		if (!set.isBeforeFirst() || set == null) return false;
+		
+		query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_REL_KEY);
 		query.setString(1, name);
 		query.setInt(2,  latitude);
 		query.setInt(3, longitude);
 		query.setFloat(4, datetime);
 		query.setInt(5, temperature);
 		
-		ResultSet set = conn.query(query);
+		set = conn.query(query);
 		if (!set.isBeforeFirst() || set == null) return false;
 		set.next();
 		boolean success = true;
@@ -127,11 +133,17 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	@Override
 	public boolean createOrMatchAxisTiltRelationship(String name, float axisTilt) throws SQLException {
 		
-		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_AXIS_REL_KEY);
+		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_AXIS_TILT_KEY);
+		query.setFloat(1, axisTilt);
+		
+		ResultSet set = conn.query(query);
+		if (!set.isBeforeFirst() || set == null) return false;
+		
+		query = conn.getPreparedStatement(Neo4jConstants.CREATE_AXIS_REL_KEY);
 		query.setString(1, name);
 		query.setFloat(2, axisTilt);
 		
-		ResultSet set = conn.query(query);
+		set = conn.query(query);
 		if (!set.isBeforeFirst() || set == null) return false;
 		set.next();
 		boolean success = true;
@@ -143,11 +155,17 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	@Override
 	public boolean createOrMatchOrbitalEccentricityRelationship(String name, float orbitalEccentricity) throws SQLException {
 		
-		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_ECCENTRICITY_REL_KEY);
+		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_ORBITAL_ECCENTRICITY_KEY);
+		query.setFloat(1, orbitalEccentricity);
+		
+		ResultSet set = conn.query(query);
+		if (!set.isBeforeFirst() || set == null) return false;
+		
+		query = conn.getPreparedStatement(Neo4jConstants.CREATE_ECCENTRICITY_REL_KEY);
 		query.setString(1, name);
 		query.setFloat(2, orbitalEccentricity);
 		
-		ResultSet set = conn.query(query);
+		set = conn.query(query);
 		if (!set.isBeforeFirst() || set == null) return false;
 		set.next();
 		boolean success = true;
@@ -159,11 +177,17 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	@Override
 	public boolean createOrMatchGridSpacingRelationship(String name, int gridSpacing) throws SQLException {
 		
-		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_GRID_REL_KEY);
+		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_GRID_SPACING_KEY);
+		query.setInt(1, gridSpacing);
+		
+		ResultSet set = conn.query(query);
+		if (!set.isBeforeFirst() || set == null) return false;
+		
+		query = conn.getPreparedStatement(Neo4jConstants.CREATE_GRID_REL_KEY);
 		query.setString(1, name);
 		query.setInt(2, gridSpacing);
 		
-		ResultSet set = conn.query(query);
+		set = conn.query(query);
 		if (!set.isBeforeFirst() || set == null) return false;
 		set.next();
 		boolean success = true;
@@ -175,11 +199,17 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	@Override
 	public boolean createOrMatchTimeStepRelationship(String name, int timeStep) throws SQLException {
 		
-		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_TIME_REL_KEY);
+		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_TIME_STEP_KEY);
+		query.setInt(1, timeStep);
+		
+		ResultSet set = conn.query(query);
+		if (!set.isBeforeFirst() || set == null) return false;
+		
+		query = conn.getPreparedStatement(Neo4jConstants.CREATE_TIME_REL_KEY);
 		query.setString(1, name);
 		query.setInt(2, timeStep);
 		
-		ResultSet set = conn.query(query);
+		set = conn.query(query);
 		if (!set.isBeforeFirst() || set == null) return false;
 		set.next();
 		boolean success = true;
@@ -191,11 +221,17 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	@Override
 	public boolean createOrMatchPresentationIntervalRelationship(String name, float presentationInterval) throws SQLException {
 		
-		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_PRESENTATION_REL_KEY);
+		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_PRESENTATION_INTERVAL_KEY);
+		query.setFloat(1, presentationInterval);
+		
+		ResultSet set = conn.query(query);
+		if (!set.isBeforeFirst() || set == null) return false;
+		
+		query = conn.getPreparedStatement(Neo4jConstants.CREATE_PRESENTATION_REL_KEY);
 		query.setString(1, name);
 		query.setFloat(2, presentationInterval);
 		
-		ResultSet set = conn.query(query);
+		set = conn.query(query);
 		if (!set.isBeforeFirst() || set == null) return false;
 		set.next();
 		boolean success = true;
@@ -207,11 +243,17 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	@Override
 	public boolean createOrMatchSimulationLengthRelationship(String name, int simulationLength) throws SQLException {
 		
-		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_LENGTH_REL_KEY);
+		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_SIMULATION_LENGTH_KEY);
+		query.setInt(1, simulationLength);
+		
+		ResultSet set = conn.query(query);
+		if (!set.isBeforeFirst() || set == null) return false;
+		
+		query = conn.getPreparedStatement(Neo4jConstants.CREATE_LENGTH_REL_KEY);
 		query.setString(1, name);
 		query.setInt(2, simulationLength);
 		
-		ResultSet set = conn.query(query);
+		set = conn.query(query);
 		if (!set.isBeforeFirst() || set == null) return false;
 		set.next();
 		boolean success = true;

@@ -64,7 +64,7 @@ public interface Neo4jConstants {
 	public static final String CREATE_SIMULATION_KEY 				= "create_simulation_node";
 	public static final String CREATE_TEMP_KEY 						= "create_temperature_node";
 	public static final String CREATE_AXIS_TILT_KEY 				= "create_axis_node";
-	public static final String CREATE_ECCENTRICITY_KEY 				= "create_eccentricity_node";
+	public static final String CREATE_ORBITAL_ECCENTRICITY_KEY 				= "create_eccentricity_node";
 	public static final String CREATE_GRID_SPACING_KEY				= "create_grid_spacing_node";
 	public static final String CREATE_TIME_STEP_KEY 				= "create_time_step_node";
 	public static final String CREATE_PRESENTATION_INTERVAL_KEY 	= "create_presentation_interval_node";
@@ -79,7 +79,7 @@ public interface Neo4jConstants {
 	public static final String CREATE_AXIS_TILT_NODE 				= "MERGE (n: AxisTilt { value : {1} }) "
 			+ "WITH n.value AS axisTilt "
 			+ "RETURN axisTilt";
-	public static final String CREATE_ECCENTRICITY_NODE 			= "MERGE (n: OrbitalEccentricity { value : {1} }) "
+	public static final String CREATE_ORBITAL_ECCENTRICITY_NODE 			= "MERGE (n: OrbitalEccentricity { value : {1} }) "
 			+ "WITH n.value AS orbitalEccentricity "
 			+ "RETURN orbitalEccentricity";
 	public static final String CREATE_GRID_SPACING_NODE 			= "MERGE (n: GridSpacing { value : {1} }) "
@@ -89,7 +89,7 @@ public interface Neo4jConstants {
 			+ "WITH n.value AS timeStep "
 			+ "RETURN timeStep";
 	public static final String CREATE_PRESENTATION_INTERVAL_NODE 	= "MERGE (n: PresentationInterval { value : {1} }) "
-			+ "WITH n.value AS presentationInterval" 
+			+ "WITH n.value AS presentationInterval " 
 			+ "RETURN presentationInterval";
 	public static final String CREATE_SIMULATION_LENGTH_NODE 		= "MERGE (n: SimulationLength { value : {1} }) "
 			+ "WITH n.value AS simulationLength "
@@ -104,38 +104,45 @@ public interface Neo4jConstants {
 	public static final String CREATE_PRESENTATION_REL_KEY 			= "create_presentation_rel";
 	public static final String CREATE_LENGTH_REL_KEY 				= "create_length_rel";
 
-	public static final String CREATE_TEMP_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "MERGE (a)-[r: HAS_TEMP { latitude: {2}, longitude: {3}, datetime: {4} }]->(b: Temperate {value: {5} }) "
+	public static final String CREATE_TEMP_REL = "MATCH (a: Simulation), (b: Temperature) "
+			+ "WHERE a.name = {1} AND b.value = {5} "
+			+ "MERGE (a)-[r: HAS_TEMP { latitude: {2}, longitude: {3}, datetime: {4} }]->(b) "
 			+ "WITH a.name AS simulation, r.latitude AS latitude, r.longitude AS longitude, r.datetime AS dateTime, b.value AS temperature "
 			+ "RETURN simulation, latitude, longitude, dateTime, temperature";
 
-	public static final String CREATE_AXIS_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "MERGE (a)-[r: HAS_AXIS]->(b: AxisTilt {value: {2} }) "
+	public static final String CREATE_AXIS_REL = "MATCH (a: Simulation), (b: AxisTilt) "
+			+ "WHERE a.name = {1} AND b.value = {2} "
+			+ "MERGE (a)-[r: HAS_AXIS]->(b) "
 			+ "WITH a.name AS simulation, b.value AS axisTilt "
 			+ "RETURN simulation, axisTilt";
 
-	public static final String CREATE_ECCENTRICITY_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "MERGE (a)-[r: HAS_ECCENTRICITY]->(b: OrbitalEccentricity {value: {2} }) "
+	public static final String CREATE_ECCENTRICITY_REL = "MATCH (a: Simulation), (b: OrbitalEccentricity) "
+			+ "WHERE a.name = {1} AND b.value = {2} "
+			+ "MERGE (a)-[r: HAS_ECCENTRICITY]->(b) "
 			+ "WITH a.name AS simulation, b.value AS orbitalEccentricity "
 			+ "RETURN simulation, orbitalEccentricity";
 
-	public static final String CREATE_GRID_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "MERGE (a)-[r: HAS_GRID]->(b: GridSpacing {value: {2} }) "
+	public static final String CREATE_GRID_REL = "MATCH (a: Simulation), (b: GridSpacing) "
+			+ "WHERE a.name = {1} AND b.value = {2} "
+			+ "MERGE (a)-[r: HAS_GRID]->(b) "
 			+ "WITH a.name AS simulation, b.value AS gridSpacing "
 			+ "RETURN simulation, gridSpacing";
 
-	public static final String CREATE_TIME_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "MERGE (a)-[r: HAS_TIME]->(b: TimeStep {value: {2} }) "
+	public static final String CREATE_TIME_REL = "MATCH (a: Simulation), (b: TimeStep) "
+			+ "WHERE a.name = {1} AND b.value = {2} "
+			+ "MERGE (a)-[r: HAS_TIME]->(b) "
 			+ "WITH a.name AS simulation, b.value as timeStep "
 			+ "RETURN simulation, timeStep";
 
-	public static final String CREATE_PRESENTATIONAL_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "MERGE (a)-[r: HAS_PRESENTATION]->(b: PresentationInterval { value: {2} }) "
+	public static final String CREATE_PRESENTATIONAL_REL = "MATCH (a: Simulation), (b: PresentationInterval)"
+			+ "WHERE a.name = {1} AND b.value = {2} "
+			+ "MERGE (a)-[r: HAS_PRESENTATION]->(b) "
 			+ "WITH a.name AS simulation, b.value AS presentationInterval "
 			+ "RETURN simulation, presentationInterval";
 
-	public static final String CREATE_LENGTH_REL = "MATCH (a: Simulation) WHERE a.name = {1} "
-			+ "MERGE (a)-[r: HAS_LENGTH]->(b: SimulationLength { value: {2} }) "
+	public static final String CREATE_LENGTH_REL = "MATCH (a: Simulation), (b: SimulationLength) "
+			+ "WHERE a.name = {1} AND b.value = {2} "
+			+ "MERGE (a)-[r: HAS_LENGTH]->(b) "
 			+ "WITH a.name AS simulation, b.value AS simulationLength "
 			+ "RETURN simulation, simulationLength";
 
