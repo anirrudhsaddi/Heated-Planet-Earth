@@ -104,7 +104,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst()) return false;
-		return true;
+		set.next();
+		return name.equals(set.getString("temperature"));
 	}
 	
 	@Override
@@ -116,7 +117,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst()) return false;
-		return true;
+		set.next();
+		return name.equals(set.getString("axisTilt"));
 	}
 	
 	@Override
@@ -128,7 +130,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst()) return false;
-		return true;
+		set.next();
+		return name.equals(set.getString("orbitalEccentricity"));
 	}
 	
 	@Override
@@ -140,7 +143,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst()) return false;
-		return true;
+		set.next();
+		return name.equals(set.getString("gridSpacing"));
 	}
 	
 	@Override
@@ -152,7 +156,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst()) return false;
-		return true;
+		set.next();
+		return name.equals(set.getString("timeStep"));
 	}
 	
 	@Override
@@ -164,7 +169,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst()) return false;
-		return true;
+		set.next();
+		return name.equals(set.getString("presentationInterval"));
 	}
 	
 	@Override
@@ -176,7 +182,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst()) return false;
-		return true;
+		set.next();
+		return name.equals(set.getString("simulationLength"));
 	}
 	
 	@Override
