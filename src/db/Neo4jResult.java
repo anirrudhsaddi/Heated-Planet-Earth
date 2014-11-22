@@ -3,9 +3,11 @@ package db;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class Neo4jResult implements IQueryResult {
 	
@@ -16,6 +18,7 @@ public class Neo4jResult implements IQueryResult {
 	private List<Float> presentationInterval = new LinkedList<Float>();
 	private List<Float> axisTilt = new LinkedList<Float>();
 	private List<Float> eccentricity = new LinkedList<Float>();
+	private List<List<String>> nodes = new LinkedList<List<String>>();
 	private Exception error;
 	
 	private boolean populated = false;
@@ -33,23 +36,29 @@ public class Neo4jResult implements IQueryResult {
 		populated = true;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Neo4jResult(final ResultSet result) throws SQLException {
-		
+
 		// populate from result
 		if (!result.isBeforeFirst() || result == null)
 			return;
 		
-		result.next();
-		System.out.println(result);
+		System.out.println("outside: " + result);
 		while(result.next()) {
+			
+			System.out.println("inside: " + result);
 			
 			this.queryName.add(checkColumnExists(result, "simulation") ? result.getString("simulation") : "");
 			this.gridSpacing.add(checkColumnExists(result, "gridSpacing") ? result.getInt("gridSpacing") : -1);
 			this.timeStep.add(checkColumnExists(result, "timeStep") ? result.getInt("timeStep") : -1);
 			this.simulationLength.add(checkColumnExists(result, "simulationLength") ? result.getInt("simulationLength") : -1);
 			this.presentationInterval.add(checkColumnExists(result, "presentationInterval") ? result.getFloat("presentationInterval") : -1);
-			this.axisTilt.add(checkColumnExists(result, "axislTilt") ? result.getFloat("axislTilt") : -1);
+			this.axisTilt.add(checkColumnExists(result, "axisTilt") ? result.getFloat("axisTilt") : -1);
 			this.eccentricity.add(checkColumnExists(result, "orbitalEccentricity") ? result.getFloat("orbitalEccentricity") : -1);
+			
+			if (checkColumnExists(result, "results")) {
+				this.nodes.add((List<String>) result.getObject("results"));
+			}
 		}
 		
 		populated = true;
@@ -109,6 +118,11 @@ public class Neo4jResult implements IQueryResult {
 	@Override
 	public List<Float> getOrbitalEccentricity() {
 		return eccentricity;
+	}
+	
+	@Override
+	public List<List<String>> getQueryList() {
+		return nodes;
 	}
 
 	@Override

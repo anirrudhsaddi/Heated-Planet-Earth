@@ -79,6 +79,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		this.conn.query(Neo4jConstants.CREATE_SIMULATION_LENGTH_CONSTRAINT);
 	}
 	
+	// Tested
 	@Override
 	public ResultSet findNamedSimulations() throws SQLException {
 		
@@ -89,6 +90,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		return set;
 	}
 	
+	// Tested
 	@Override
 	public boolean createOrMatchSimulationNode(String name) throws SQLException {
 		
@@ -102,6 +104,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		
 	}
 	
+	// Tested
 	@Override
 	public boolean createOrMatchTemperatureRelationship(String name, int latitude, int longitude, float datetime, int temperature) throws SQLException {
 		
@@ -130,6 +133,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		return success;
 	}
 	
+	// Tested
 	@Override
 	public boolean createOrMatchAxisTiltRelationship(String name, float axisTilt) throws SQLException {
 		
@@ -152,6 +156,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		return success;
 	}
 	
+	// Tested
 	@Override
 	public boolean createOrMatchOrbitalEccentricityRelationship(String name, float orbitalEccentricity) throws SQLException {
 		
@@ -174,6 +179,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		return success;
 	}
 	
+	// Tested
 	@Override
 	public boolean createOrMatchGridSpacingRelationship(String name, int gridSpacing) throws SQLException {
 		
@@ -196,6 +202,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		return success;
 	}
 	
+	// Tested
 	@Override
 	public boolean createOrMatchTimeStepRelationship(String name, int timeStep) throws SQLException {
 		
@@ -218,6 +225,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		return success;
 	}
 	
+	// Tested
 	@Override
 	public boolean createOrMatchPresentationIntervalRelationship(String name, float presentationInterval) throws SQLException {
 		
@@ -240,6 +248,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		return success;
 	}
 	
+	// Tested
 	@Override
 	public boolean createOrMatchSimulationLengthRelationship(String name, int simulationLength) throws SQLException {
 		
@@ -262,6 +271,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		return success;
 	}
 	
+	// Tested
 	@Override
 	public IQueryResult setSimulationName(String name, int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float orbitalEccentricity) throws Exception {
 		
@@ -302,6 +312,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 			return result;
 	}
 
+	// Tested
 	@Override
 	public Future<IQueryResult> findSimulationByName(String name) throws SQLException {
 
@@ -312,10 +323,11 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		return ThreadManager.getManager().submit(new Query(query));
 	}
 
+	// Tested
 	@Override
 	public Future<IQueryResult> findSimulationByData(int gridSpacing,
 			int timeStep, int simulationLength, float presentationInterval,
-			float axisTilt, float eccentricity) throws SQLException {
+			float axisTilt, float orbitalEccentricity) throws SQLException {
 
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.MATCH_NODE_BY_DATA_KEY);
 		
@@ -324,7 +336,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		query.setInt(3, simulationLength);
 		query.setFloat(4, presentationInterval);
 		query.setFloat(5, axisTilt);
-		query.setFloat(6, eccentricity);
+		query.setFloat(6, orbitalEccentricity);
 		
 		return ThreadManager.getManager().submit(new Query(query));
 	}
@@ -352,7 +364,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 			throw new SQLException("Failed to find a date");
 		
 		// This should be the closest date available to us
-		long foundDateTime = Long.parseLong(result.getString("dateTime"));
+		long foundDateTime = result.getLong("dateTime");
 		
 		// Now get all the temps
 		query = conn.getPreparedStatement(Neo4jConstants.GET_GRID_BY_DATE_TIME_KEY);
@@ -398,10 +410,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		// Do nothing
 	}
 
-	// TODO not an IGrid
 	private void offer(PersistMessage msg) throws SQLException {
-		
-		// Determine if we store this or not based on the two accuracy values
 		
 		long dateTime = msg.getDateTime();
 		

@@ -1,6 +1,7 @@
 package db;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IQueryResult {
 	
@@ -23,5 +24,7 @@ public interface IQueryResult {
 	public List<Float> getAxisTilt();
 	
 	public List<Float> getOrbitalEccentricity();
+	
+	public List<List<String>> getQueryList();
 
 }

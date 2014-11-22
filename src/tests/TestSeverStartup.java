@@ -3,7 +3,6 @@ package tests;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.junit.FixMethodOrder;
@@ -11,7 +10,6 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import util.TestConnection;
-import db.IQueryResult;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestSeverStartup {
@@ -63,14 +61,6 @@ public class TestSeverStartup {
 			
 			ret = t.dao.createOrMatchSimulationNode("test10");
 			assertTrue(ret);
-			
-			ResultSet result = t.dao.findNamedSimulations();
-			if (!result.isBeforeFirst())
-				fail("ResultSet was empty - there should be 10 names");
-			
-			while(result.next()) {
-				System.out.println(result.getString("simulation"));
-			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -150,21 +140,6 @@ public class TestSeverStartup {
 		try {
 			assertTrue(t.dao.createOrMatchTemperatureRelationship("test1", 0, 0, 0f, 288));
 		} catch (SQLException e) {
-			e.printStackTrace();
-			fail(e.toString());
-		}
-	}
-	
-	@Test
-	public void jTestSetSimulationName() {
-		
-		try {
-			IQueryResult result = t.dao.setSimulationName("kungfu panda", 15, 30, 1200, 1f, 0.67f, 0.23f);
-			System.out.println(result);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			fail(e.toString());
-		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.toString());
 		}

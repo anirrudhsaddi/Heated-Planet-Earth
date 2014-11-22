@@ -70,6 +70,7 @@ public final class SimulationNeo4j implements IDBConnection {
 	}
 	
 	public void close() {
+		
 		try {
 			if (db != null || !db.isClosed()) db.close();
 			simulationDb.shutdown();

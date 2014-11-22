@@ -152,20 +152,16 @@ public interface Neo4jConstants {
 	public static final String GET_GRID_BY_DATE_TIME_KEY 	= "match_area_by_date";
 	public static final String GET_DATE_TIME_KEY 			= "match_closest_datetime";
 
-	public static final String MATCH_NODE_BY_NAME_QUERY = "MATCH (n:Simulation)-[ "
-			+ ":HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY|:HAS_AXIS "
-			+ "]->(o) "
+	public static final String MATCH_NODE_BY_NAME_QUERY = "MATCH (n:Simulation)-[:HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY|:HAS_AXIS|:HAS_LENGTH]->(o) "
 			+ "WHERE n.name = {1} "
-			+ "WITH { simulation: n.name, nodes: o } AS result "
-			+ "RETURN result";
+			+ "WITH n.name as simulation, COLLECT( o.value) AS results "
+			+ "RETURN simulation, results";
 
-	public static final String MATCH_NODE_BY_DATA_QUERY = "MATCH (n:Simulation)-[ "
-			+ ":HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY|:HAS_AXIS "
-			+ "]->(o) "
-			+ "WITH { simulation: n.name, "
-			+ "	nodes: filter(x IN o.values WHERE x = {1} OR x = {2} OR x = {3} OR x = {4} OR x = {5} )"
-			+ "} AS result "
-			+ "RETURN result";
+	public static final String MATCH_NODE_BY_DATA_QUERY = "MATCH (n:Simulation)-[:HAS_GRID]->(a), (n:Simulation)-[:HAS_TIME]->(b), "
+			+ "(n:Simulation)-[:HAS_LENGTH]->(c), (n:Simulation)-[:HAS_PRESENTATION]->(d), (n:Simulation)-[:HAS_AXIS]->(e), (n:Simulation)-[:HAS_ECCENTRICITY]->(f) "
+			+ "WHERE a.value = {1} AND b.value = {2} AND c.value = {3} AND d.value = {4} AND e.value = {5} AND f.value = {6} "
+			+ "WITH n.name AS simulation, a.value AS gridSpacing, b.value AS timeStep, c.value AS simulationLength, d.value AS presentationInterval, e.value AS axisTilt, f.value AS orbitalEccentricity "
+			+ "RETURN simulation, gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, orbitalEccentricity";
 
 	public static final String GET_GRID_BY_DATE_TIME_QUERY = "MATCH (n:Simulation)-[ r:HAS_TEMP ]->(t:Temperature) "
 			+ "WHERE n.name = {1} AND r.datetime = {2} "
