@@ -1,6 +1,5 @@
 package db;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
@@ -8,7 +7,7 @@ import java.util.concurrent.Future;
 
 public interface ISimulationDAO {
 	
-	public ResultSet findNamedSimulations() throws SQLException;
+	public IQueryResult findNamedSimulations() throws SQLException;
 	
 	public boolean createOrMatchSimulationNode(String name) throws SQLException;
 	
