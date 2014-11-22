@@ -74,7 +74,7 @@ public class TestClientAccess {
 
 		try {
 
-			ResultSet result = t.dao.findNamedSimulations();
+			Resultset result = t.dao.findNamedSimulations();
 			if (!result.isBeforeFirst())
 				fail("ResultSet was empty");
 
