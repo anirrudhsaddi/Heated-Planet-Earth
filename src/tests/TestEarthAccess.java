@@ -19,7 +19,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import util.TestConnection;
-import db.IQueryResult;
 
 public class TestEarthAccess {
 
@@ -37,16 +36,7 @@ public class TestEarthAccess {
 
 		try {
 
-			IQueryResult result = t.dao.setSimulationName("kungfu panda", 15, 30, 1200, 1f, 0.67f, 0.23f);
-			
-			System.out.println("names: " + result.getSimulationName());
-			System.out.println("length: " + result.getSimulationLength());
-			System.out.println("timestep: " + result.getTimeStep());
-			System.out.println("axistilt: " + result.getAxisTilt());
-			System.out.println("orbitaleccentricity: " + result.getOrbitalEccentricity());
-			System.out.println("gridspacing: " + result.getGridSpacing());
-			System.out.println("presentation: " + result.getPresentationInterval());
-			System.out.println("list: " + result.getQueryList());
+			t.dao.setSimulationName("kungfu panda", 15, 30, 1200, 1f, 0.67f, 0.23f);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -117,14 +107,15 @@ public class TestEarthAccess {
 
 		@Override
 		public void onMessage(Message msg) {
+			
 			ResultMessage m = (ResultMessage) msg;
-			System.out.println(m.needsCalculation());
+			System.out.println("Needs Calculation? " + m.needsCalculation());
 			Iterator<Integer[]> coords = m.genCoordinates();
 			while(coords.hasNext()) {
 				Integer[] gend = coords.next();
 				int longitude = gend[0];
 				int latitude = gend[1];
-				System.out.println(m.getTemperature(longitude, latitude));
+				System.out.println("Found temperature: " + m.getTemperature(longitude, latitude));
 			}
 		}
 	}

@@ -180,14 +180,15 @@ public class TestClientAccess {
 
 		@Override
 		public void onMessage(Message msg) {
+			
 			ResultMessage m = (ResultMessage) msg;
-			System.out.println(m.needsCalculation());
+			System.out.println("Needs Calculation? " + m.needsCalculation());
 			Iterator<Integer[]> coords = m.genCoordinates();
 			while(coords.hasNext()) {
 				Integer[] gend = coords.next();
 				int longitude = gend[0];
 				int latitude = gend[1];
-				System.out.println(m.getTemperature(longitude, latitude));
+				System.out.println("temperature found: " + m.getTemperature(longitude, latitude));
 			}
 		}
 	}
