@@ -3,8 +3,10 @@ package tests;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.sql.SQLException;
 
+import org.junit.AfterClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -24,6 +26,21 @@ public class TestSeverStartup {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail(e.toString());
+		}
+	}
+	
+	@AfterClass
+	public static void cleanTestResources() {
+		
+		File file = new File("/neo4j/db/");
+		String[] listed;
+		
+		if (file.isDirectory()) {
+			listed = file.list();
+			for (int i = 0; i < listed.length; i++) {
+				File f = new File(file, listed[i]);
+				f.delete();
+			}
 		}
 	}
 	

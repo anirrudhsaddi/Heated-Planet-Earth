@@ -106,7 +106,7 @@ public interface Neo4jConstants {
 
 	public static final String CREATE_TEMP_REL = "MATCH (a: Simulation), (b: Temperature) "
 			+ "WHERE a.name = {1} AND b.value = {5} "
-			+ "MERGE (a)-[r: HAS_TEMP { latitude: {2}, longitude: {3}, datetime: {4} }]->(b) "
+			+ "MERGE (a)-[r: HAS_TEMP { longitude: {2}, latitude: {3}, datetime: {4} }]->(b) "
 			+ "WITH a.name AS simulation, r.latitude AS latitude, r.longitude AS longitude, r.datetime AS dateTime, b.value AS temperature "
 			+ "RETURN simulation, latitude, longitude, dateTime, temperature";
 

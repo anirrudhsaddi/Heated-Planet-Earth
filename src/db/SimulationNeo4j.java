@@ -16,8 +16,8 @@ public final class SimulationNeo4j implements IDBConnection {
 	
 	// Connection parameters
 	private static final String JDBC_DRIVER = "org.neo4j.jdbc.Driver";  
-	private static final String CONFIG_PATH	= "db/config/config.properties";
-	private static final String DB_PATH		= "db/";
+	private static final String CONFIG_PATH	= "neo4j/config/config.properties";
+	private static final String DB_PATH		= "neo4j/db/";
 	private static final String NAME		= "simulationDb";
 	private static final String URL 		= "jdbc:neo4j:instance:" + NAME;
 	

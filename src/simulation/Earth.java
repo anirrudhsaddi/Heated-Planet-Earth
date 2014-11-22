@@ -5,13 +5,13 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.TimeZone;
 
 import messaging.Publisher;
 import messaging.events.DeliverMessage;
 import messaging.events.PersistMessage;
 import messaging.events.StartMessage;
 import simulation.util.GridCell;
+
 import common.Buffer;
 import common.Constants;
 import common.Grid;
@@ -256,8 +256,9 @@ public final class Earth {
 		
 		
 		BigDecimal valueToStore;
-		PersistMessage msg = new PersistMessage(simulationName, currentDate.getTimeInMillis(), width, height);
+		PersistMessage msg = new PersistMessage(simulationName, currentDate.getTimeInMillis());
 		
+		// TODO this requires (longitude, latitude) coords, not (x, y)
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				valueToStore = new BigDecimal(grid.getTemperature(x, y));

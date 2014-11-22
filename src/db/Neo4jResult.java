@@ -3,11 +3,8 @@ package db;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class Neo4jResult implements IQueryResult {
 	
@@ -60,20 +57,6 @@ public class Neo4jResult implements IQueryResult {
 				this.nodes.add((List<String>) result.getObject("results"));
 			}
 		}
-		
-		populated = true;
-	}
-	
-	private boolean checkColumnExists(ResultSet rs, String label) throws SQLException {
-		
-		ResultSetMetaData rsmd = rs.getMetaData();
-	    int columns = rsmd.getColumnCount();
-	    for (int x = 1; x <= columns; x++) {
-	    	if (label.equals(rsmd.getColumnName(x)))
-	    		return true;
-	    }
-	    
-	    return false;
 	}
 	
 	public Neo4jResult(final Exception result) {
@@ -138,6 +121,18 @@ public class Neo4jResult implements IQueryResult {
 	@Override
 	public boolean isEmpty() {
 		return populated;
+	}
+	
+	private boolean checkColumnExists(ResultSet rs, String label) throws SQLException {
+		
+		ResultSetMetaData rsmd = rs.getMetaData();
+	    int columns = rsmd.getColumnCount();
+	    for (int x = 1; x <= columns; x++) {
+	    	if (label.equals(rsmd.getColumnName(x)))
+	    		return populated ? true : (populated = true);
+	    }
+	    
+	    return false;
 	}
 
 }

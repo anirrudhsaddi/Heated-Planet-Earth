@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -424,21 +425,36 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		long dateTime = msg.getDateTime();
 		
 		String name = msg.getSimulationName();
-		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_TIME_REL_KEY);
+		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_REL_KEY);
 		
-		int width = msg.getGridWidth(), height = msg.getGridHeight();
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++ ) {
-				query.setString(1, name);
-				query.setInt(2, getLatitude(y, height));
-				query.setInt(3, getLongitude(x, width));
-				query.setLong(4, dateTime);
-				query.setDouble(5, msg.getTemperature(x, y));
-				
-				ResultSet result = query.executeQuery();
-				if (!result.isBeforeFirst() || result == null)
-					throw new SQLException("No results returned by GET_GRID_BY_DATE_TIME_QUERY");
-			}
+		// TODO iterate instead
+		Iterator<Integer[]> gen = msg.genCoordinates();
+		while(gen.hasNext()) {
+			
+			Integer[] coords = gen.next();
+			System.out.println(coords[0]);
+			System.out.println(coords[1]);
+			int longitude = coords[0];
+			int latitude = coords[1];
+			System.out.println("longitude: " + longitude);
+			System.out.println("latitude: " + latitude);
+			
+			query.setString(1, name);
+			query.setInt(2, longitude);
+			query.setInt(2, latitude);
+			query.setLong(4, dateTime);
+			query.setDouble(5, msg.getTemperature(longitude, latitude));
+			
+			ResultSet result = query.executeQuery();
+			if (!result.isBeforeFirst() || result == null)
+				throw new SQLException("Failed to execute query");
+			result.next();
+			System.out.println(result);
+//			try {
+//				
+//			} catch (NullPointerException e) {
+//				throw new SQLException("Unable to persist temperature");
+//			}
 		}
 	}
 
@@ -462,13 +478,5 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 				return new Neo4jResult(e);
 			}
 		}
-	}
-	
-	private int getLatitude(int y, int height) {
-		return (y - (height / 2)) * (180 / height);
-	}
-
-	private int getLongitude(int x, int width) {
-		return x < (width / 2) ? -(x + 1) *  (2 * 180 / width) : (360) - (x + 1) * (2 * 180 / width);
 	}
 }

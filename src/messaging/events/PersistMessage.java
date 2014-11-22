@@ -1,5 +1,8 @@
 package messaging.events;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -9,18 +12,17 @@ public class PersistMessage implements Message {
 	
 	private final String simulationName;
 	private final long dateTime;
-	private final int width;
-	private final int height;
+	private final int width = 10;
 	
+	private List<Integer[]> coords;
 	private final Map<Integer, Double> grid;
 	
-	public PersistMessage(String simulationName, long dateTime, int width, int height) {
+	public PersistMessage(String simulationName, long dateTime) {
 		
 		this.simulationName = simulationName;
 		this.dateTime = dateTime;
-		this.width = width;
-		this.height = height;
 		
+		coords = new LinkedList<Integer[]>();
 		grid = new TreeMap<Integer, Double>();
 	}
 	
@@ -32,25 +34,19 @@ public class PersistMessage implements Message {
 		return this.simulationName;
 	}
 	
-	public int getGridWidth() {
-		return this.width;
+	public Iterator<Integer[]> genCoordinates() {
+		return coords.iterator();
 	}
 	
-	public int getGridHeight() {
-		return this.height;
-	}
-	
-	public void setTemperature(int x, int y, double temp) {
-		if (y > height || x > width || x < 0 || y < 0)
-			throw new IllegalArgumentException("index (" + x + ", " + y + ") out of bounds");
+	public void setTemperature(int longitude, int latitude, double temp) {
 		
-		grid.put(y * width + x, temp);
+		grid.put(latitude * width + longitude, temp);
+		
+		coords.add(new Integer[] {longitude, latitude});
 	}
 	
-	public double getTemperature(int x, int y) {
-		if (y >= height || x >= width || x < 0 || y < 0)
-			throw new IllegalArgumentException("index (" + x + ", " + y + ") out of bounds");
+	public double getTemperature(int longitude, int latitude) {
 		
-		return grid.get(y * width + x);
+		return grid.get(latitude * width + longitude);
 	}
 }

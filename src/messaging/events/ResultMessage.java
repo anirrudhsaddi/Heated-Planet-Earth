@@ -1,5 +1,8 @@
 package messaging.events;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -10,6 +13,7 @@ public class ResultMessage implements Message {
 	private int width = 10;
 	private boolean needsCalculation;
 	
+	private final List<Integer[]> coords;
 	private final Map<Integer, Double> grid;
 	
 	private final int southLatitude;
@@ -26,6 +30,7 @@ public class ResultMessage implements Message {
 		this.needsCalculation = needsCalculation;
 		
 		grid = new TreeMap<Integer, Double>();
+		coords = new LinkedList<Integer[]>();
 	}
 	
 	public int getSouthRegionBounds() {
@@ -48,20 +53,17 @@ public class ResultMessage implements Message {
 		return this.needsCalculation;
 	}
 	
-	public boolean hasTemperature(int longitude, int latitude) {
-		return grid.containsKey(latitude * width + longitude);
+	public Iterator<Integer[]> genCoordinates() {
+		return coords.iterator();
 	}
 	
 	public void setTemperature(int longitude, int latitude, double temp) {
-		if (longitude < 0 || latitude < 0)
-			throw new IllegalArgumentException("index (" +longitude + ", " +latitude+ ") out of bounds");
 		
 		grid.put(latitude * width + longitude, temp);
+		coords.add(new Integer[] {longitude, latitude});
 	}
 	
 	public double getTemperature(int longitude, int latitude) {
-		if (longitude < 0 || latitude < 0)
-			throw new IllegalArgumentException("index (" + longitude + ", " + latitude + ") out of bounds");
 		
 		return grid.get(latitude * width + longitude);
 	}
