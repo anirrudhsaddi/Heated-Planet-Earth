@@ -2,9 +2,9 @@ package simulation.util;
 
 public interface EarthCell<T> extends Cell<T> {
 	
-	public float calculateTemp(int time, int currentTimeInSimulation);
+	public double calculateTemp(int time, int currentTimeInSimulation);
 	
-	public float calTsun(int sunPosition, int currentTimeInSimulation);
+	public double calTsun(int sunPosition, int currentTimeInSimulation);
 
 	public void setGridProps(int x, int y, int latitude, int longitude, int gs, float axisTilt, float eccentricity);
 

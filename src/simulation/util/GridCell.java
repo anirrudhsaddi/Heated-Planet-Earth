@@ -16,7 +16,7 @@ public final class GridCell implements EarthCell<GridCell> {
 	private int longitude;
 	
 	// average temperature
-	private static float avgsuntemp;
+	private static double avgsuntemp;
 	private static float avgArea;
 
 	private boolean visited;
@@ -29,9 +29,9 @@ public final class GridCell implements EarthCell<GridCell> {
 	private float pm;
 	
 	// P1
-	private float currTemp;
-	private float newTemp;
-	private float tSun;
+	private double currTemp;
+	private double newTemp;
+	private double tSun;
 	private float axisTilt;
 	private float eccentricity;
 
@@ -113,7 +113,7 @@ public final class GridCell implements EarthCell<GridCell> {
 	}
 
 	@Override
-	public float getTemp() {
+	public double getTemp() {
 		return this.currTemp;
 	}
 
@@ -150,7 +150,7 @@ public final class GridCell implements EarthCell<GridCell> {
 	}
 	
 	// TODO add to interface
-	public float getTSun() {
+	public double getTSun() {
 		return this.tSun;
 	}
 
@@ -188,10 +188,10 @@ public final class GridCell implements EarthCell<GridCell> {
 	}
 	
 	@Override
-	public float calculateTemp(int sunPosition, int currentTimeInSimulation) {
+	public double calculateTemp(int sunPosition, int currentTimeInSimulation) {
 		
 		this.tSun = calTsun(sunPosition, currentTimeInSimulation);
-		float temp = this.currTemp + (calTneighbors() - this.currTemp) / 5 + (this.tSun + calTcool()) / 10;
+		double temp = this.currTemp + (calTneighbors() - this.currTemp) / 5 + (this.tSun + calTcool()) / 10;
 		this.newTemp = (temp > 0) ? temp : 0;    // avoid negative temperature
 		return this.newTemp; // new temp
 	}
@@ -210,7 +210,7 @@ public final class GridCell implements EarthCell<GridCell> {
 	
 	// TODD Add to interface
 	@Override
-	public float calTsun(int sunPosition, int currentTimeInSimulation) {
+	public double calTsun(int sunPosition, int currentTimeInSimulation) {
 		
 		int sunLongitude = getSunLocationOnEarth(sunPosition);
 		//float attenuation_lat   = (float) Math.cos(Math.toRadians(this.latitude  + 1.0 * this.gs / 2));
@@ -223,7 +223,7 @@ public final class GridCell implements EarthCell<GridCell> {
 		
 		//P3 - Heated Planet : Sun's distance from planet, inverse square law
 		double inverseDistanceRatio = 0.5 * Math.pow(distanceFromPlanet(currentTimeInSimulation),2)/Math.pow(distanceFromPlanet(0),2);
-		return (float) (278 * attenuation_lat * attenuation_longi/inverseDistanceRatio); 
+		return (double) (278 * attenuation_lat * attenuation_longi/inverseDistanceRatio); 
 	
 	}
 	
@@ -245,11 +245,11 @@ public final class GridCell implements EarthCell<GridCell> {
 	
 	// Static methods
 	
-	public static void setAvgSuntemp(float avg){
-		avgsuntemp = avg;
+	public static void setAvgSuntemp(double d){
+		avgsuntemp = d;
 	}
 	
-	public static float getAvgSuntemp(){
+	public static double getAvgSuntemp(){
 		return avgsuntemp;
 	}
 	
@@ -286,15 +286,15 @@ public final class GridCell implements EarthCell<GridCell> {
 		return j < (cols / 2) ? -(j + 1) * this.gs : (360) - (j + 1) * this.gs;
 	}
 
-	private float calTcool() {
+	private double calTcool() {
 		
-		float beta = (float) (this.surfarea / avgArea);  // actual grid area / average cell area
+		double beta = (double) (this.surfarea / avgArea);  // actual grid area / average cell area
 		return -1 * beta * this.currTemp / 288 * avgsuntemp;
 	}
 	
-	private float calTneighbors() {
+	private double calTneighbors() {
 
-		float top_temp = 0, bottom_temp = 0;
+		double top_temp = 0, bottom_temp = 0;
 
 		if (this.top != null)
 			top_temp = this.lt / this.pm * this.top.getTemp();

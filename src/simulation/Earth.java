@@ -199,7 +199,7 @@ public final class Earth {
 
 		IGrid grid = new Grid(simulationName, sunPositionCell, sunPositionDeg, width, height, time, 0);
 
-		float suntotal = 0;
+		double suntotal = 0;
 
 		suntotal = suntotal + prime.getTSun();
 		grid.setTemperature(prime.getX(), prime.getY(), prime.calculateTemp(sunPositionCell, currentTimeInSimulation));
