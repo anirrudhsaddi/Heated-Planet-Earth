@@ -23,7 +23,7 @@ import db.IQueryResult;
 
 public class TestEarthAccess {
 
-	private static TestConnection	t;
+	private static TestConnection t;
 
 	@BeforeClass
 	public static void initTestResources() {
@@ -36,8 +36,18 @@ public class TestEarthAccess {
 		}
 
 		try {
+
 			IQueryResult result = t.dao.setSimulationName("kungfu panda", 15, 30, 1200, 1f, 0.67f, 0.23f);
-			System.out.println(result);
+			
+			System.out.println("names: " + result.getSimulationName());
+			System.out.println("length: " + result.getSimulationLength());
+			System.out.println("timestep: " + result.getTimeStep());
+			System.out.println("axistilt: " + result.getAxisTilt());
+			System.out.println("orbitaleccentricity: " + result.getOrbitalEccentricity());
+			System.out.println("gridspacing: " + result.getGridSpacing());
+			System.out.println("presentation: " + result.getPresentationInterval());
+			System.out.println("list: " + result.getQueryList());
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail(e.toString());

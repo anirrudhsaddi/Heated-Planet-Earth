@@ -1,4 +1,4 @@
-package EarthSim.widgets;
+package PlanetSim.widgets;
 
 import java.awt.Component;
 import java.awt.event.ActionListener;

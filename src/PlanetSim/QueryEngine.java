@@ -1,8 +1,8 @@
-package EarthSim;
+package PlanetSim;
 
 import org.apache.james.mime4j.field.datetime.DateTime;
 
-import EarthSim.widgets.QueryWidget;
+import PlanetSim.widgets.QueryWidget;
 
 public class QueryEngine {
 

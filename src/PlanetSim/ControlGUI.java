@@ -1,5 +1,5 @@
 // GUI.java
-package EarthSim;
+package PlanetSim;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -24,9 +24,9 @@ import messaging.events.StartMessage;
 import messaging.events.StopMessage;
 import simulation.EarthEngine;
 import view.EarthDisplayEngine;
-import EarthSim.widgets.ControlWidget;
-import EarthSim.widgets.QueryWidget;
-import EarthSim.widgets.SettingsWidget;
+import PlanetSim.widgets.ControlWidget;
+import PlanetSim.widgets.QueryWidget;
+import PlanetSim.widgets.SettingsWidget;
 import common.Buffer;
 import common.Constants;
 import common.Monitor;

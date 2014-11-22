@@ -79,7 +79,7 @@ public interface Neo4jConstants {
 	public static final String CREATE_AXIS_TILT_NODE 				= "MERGE (n: AxisTilt { value : {1} }) "
 			+ "WITH n.value AS axisTilt "
 			+ "RETURN axisTilt";
-	public static final String CREATE_ORBITAL_ECCENTRICITY_NODE 			= "MERGE (n: OrbitalEccentricity { value : {1} }) "
+	public static final String CREATE_ORBITAL_ECCENTRICITY_NODE 	= "MERGE (n: OrbitalEccentricity { value : {1} }) "
 			+ "WITH n.value AS orbitalEccentricity "
 			+ "RETURN orbitalEccentricity";
 	public static final String CREATE_GRID_SPACING_NODE 			= "MERGE (n: GridSpacing { value : {1} }) "
@@ -154,7 +154,7 @@ public interface Neo4jConstants {
 
 	public static final String MATCH_NODE_BY_NAME_QUERY = "MATCH (n:Simulation)-[:HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY|:HAS_AXIS|:HAS_LENGTH]->(o) "
 			+ "WHERE n.name = {1} "
-			+ "WITH n.name as simulation, COLLECT( o.value) AS results "
+			+ "WITH n.name as simulation, COLLECT( o.value ) AS results "
 			+ "RETURN simulation, results";
 
 	public static final String MATCH_NODE_BY_DATA_QUERY = "MATCH (n:Simulation)-[:HAS_GRID]->(a), (n:Simulation)-[:HAS_TIME]->(b), "

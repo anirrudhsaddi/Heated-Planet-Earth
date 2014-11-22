@@ -1,5 +1,5 @@
 // Demo.java
-package EarthSim;
+package PlanetSim;
 
 import javax.swing.SwingUtilities;
 

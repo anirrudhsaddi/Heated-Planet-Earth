@@ -57,6 +57,7 @@ public class Neo4jResult implements IQueryResult {
 				this.nodes.add((List<String>) result.getObject("results"));
 			}
 		}
+		System.out.println("Done populating");
 	}
 	
 	public Neo4jResult(final Exception result) {
