@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,11 +18,13 @@ import javax.swing.JCheckBox;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import PlanetSim.QueryEngine;
+
 public class QueryWidget extends JPanel {
 
 	private static final long	serialVersionUID	= 1L;
+	private QueryEngine queryEngine;
 
-	private ArrayList<String>	simulationList		= new ArrayList<String>();
 	private GridLayout			mainlayout			= new GridLayout(3, 0);
 
 	private JTextField			textFieldEndTime, textFieldStartTime;
@@ -48,17 +51,15 @@ public class QueryWidget extends JPanel {
 	}
 
 	private JList<?> list(String string) {
-
-		for (int i = 0; i < 15; i++) {
-			simulationList.add("" + i);
+		
+		try {
+			queryEngine = new QueryEngine();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		slBox = queryEngine.getSimulationList();
 
-		String[] array = new String[simulationList.size()];
-		for (int i = 0; i < array.length; i++) {
-			array[i] = simulationList.get(i);
-		}
-
-		slBox = new JList<String>(array);
 		slBox.addListSelectionListener(new ListSelectionListener() {
 
 			@Override

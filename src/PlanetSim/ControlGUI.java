@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.Calendar;
 
 import javax.swing.BoxLayout;
@@ -197,7 +198,12 @@ public class ControlGUI extends JFrame implements ActionListener {
 				// TODO check name against the DAO
 				if(isquery){
 					
-					queryEngine = new QueryEngine(simName, axisTilt, eccentricity, startTime, endTime, wLat, eLat, sLat, nLat );
+					try {
+						queryEngine = new QueryEngine();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					
 					
 				}

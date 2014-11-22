@@ -8,6 +8,7 @@ import javax.swing.JList;
 import org.apache.james.mime4j.field.datetime.DateTime;
 
 import db.IDBConnection;
+import db.IQueryResult;
 import db.SimulationDAO;
 import db.SimulationNeo4j;
 import PlanetSim.widgets.QueryWidget;
@@ -60,33 +61,65 @@ public class QueryEngine {
 		
 	}
 	
-	public QueryEngine(String simName2, float axisTilt, float eccentricity2, DateTime startTime2, DateTime endTime2,
-			double wLat2, double eLat2, double sLat2, double nLat2) {
-		
-		this.simName = simName;
-		this.axialTilt = axialTilt;
-		this.eccentricity = eccentricity;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.wLat = wLat;
-		this.eLat = eLat;
-		this.sLat = sLat;
-		this.nLat = nLat;
-		
-		// TODO Auto-generated constructor stub
-	}
-
-	private JList<?> getSimulationList(){
+	public JList<?> getSimulationList(){
 		JList simList =  new JList();
-		ResultSet rs;
 		
-		rs = simDAO.findNamedSimulations();
-		while(rs.next())
-		{
-			
+		
+		IQueryResult rs =  null;
+		try {
+			rs = simDAO.findNamedSimulations();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
+		simList = (JList) rs.getSimulationName();
 		return simList;
 		
+	}
+
+	public void setConn(IDBConnection conn) {
+		this.conn = conn;
+	}
+
+	public void setQ(QueryWidget q) {
+		this.q = q;
+	}
+
+	public void setSimName(String simName) {
+		this.simName = simName;
+	}
+
+	public void setAxialTilt(float axialTilt) {
+		this.axialTilt = axialTilt;
+	}
+
+	public void setEccentricity(float eccentricity) {
+		this.eccentricity = eccentricity;
+	}
+
+	public void setStartTime(DateTime startTime) {
+		this.startTime = startTime;
+	}
+
+	public void setEndTime(DateTime endTime) {
+		this.endTime = endTime;
+	}
+
+	public void setwLat(double wLat) {
+		this.wLat = wLat;
+	}
+
+	public void seteLat(double eLat) {
+		this.eLat = eLat;
+	}
+
+	public void setsLat(double sLat) {
+		this.sLat = sLat;
+	}
+
+	public void setnLat(double nLat) {
+		this.nLat = nLat;
 	}
 
 	// TODO: validate input to make sure that are valid
