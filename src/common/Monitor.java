@@ -1,5 +1,6 @@
 package common;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import messaging.Message;
@@ -10,14 +11,11 @@ import messaging.events.StopMessage;
 
 public class Monitor implements IMonitorCallback, MessageListener{
 	
-	private int simulationLength;
-	private Publisher publisher;
+	public int simulationLength;	// in months
 	private Calendar currentTimeInSimulation;
 	
 	public Monitor(){
-		
-		Publisher publisher = Publisher.getInstance();
-		publisher.subscribe(StartMessage.class, this);
+		Publisher.getInstance().subscribe(StartMessage.class, this);
 	}
 	
 	public void onMessage(Message msg) {
@@ -41,13 +39,21 @@ public class Monitor implements IMonitorCallback, MessageListener{
 		// this should also cover the need for checking time with Queries without using special logic.
 		
 		Calendar endDate = (Calendar) Constants.START_DATE.clone();
-		endDate.add(Calendar.MINUTE, this.simulationLength);
+		endDate.add(Calendar.MONTH, this.simulationLength);
 		
 		this.currentTimeInSimulation = (Calendar) Constants.START_DATE.clone();
-		this.currentTimeInSimulation.add(Calendar.MILLISECOND, (int) dateTime);
+		this.currentTimeInSimulation.setTimeInMillis(dateTime);
+
+		// Test
+//		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy ");//HH:mm:ss
+//		String strdate = sdf.format(this.currentTimeInSimulation.getTime());
+//		System.out.println("Current Time " + strdate);
+//		strdate = sdf.format(endDate.getTime());
+//		System.out.println("End Time " + strdate + "\n");
+		//end test
 		
-		if(currentTimeInSimulation.after(endDate)){
-			publisher.send(new StopMessage());
+		if(this.currentTimeInSimulation.after(endDate)){
+			Publisher.getInstance().send(new StopMessage());
 		}
 	}
 }
