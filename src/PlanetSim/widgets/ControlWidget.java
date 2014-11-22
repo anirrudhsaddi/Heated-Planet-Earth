@@ -21,11 +21,13 @@ public class ControlWidget extends JPanel {
 		add(button("Pause", listener));
 		add(button("Resume", listener));
 		add(button("Stop", listener));
+		add(button("Query", listener));
 
 		buttons.get("Start").setEnabled(true);
 		buttons.get("Pause").setEnabled(false);
 		buttons.get("Resume").setEnabled(false);
 		buttons.get("Stop").setEnabled(false);
+		buttons.get("Query").setEnabled(true);
 
 	}
 
@@ -55,6 +57,13 @@ public class ControlWidget extends JPanel {
 			buttons.get("Pause").setEnabled(false);
 			buttons.get("Resume").setEnabled(false);
 			buttons.get("Stop").setEnabled(false);
+			buttons.get("Query").setEnabled(true);
+		}else if (actionName == "Query") {
+			buttons.get("Start").setEnabled(true);
+			buttons.get("Pause").setEnabled(false);
+			buttons.get("Resume").setEnabled(false);
+			buttons.get("Stop").setEnabled(false);
+			buttons.get("Query").setEnabled(false);
 		}
 
 	}

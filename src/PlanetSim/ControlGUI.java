@@ -4,6 +4,8 @@ package PlanetSim;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -50,6 +52,8 @@ public class ControlGUI extends JFrame implements ActionListener {
 	private final int				precision;
 	private final int				geoAccuracy;
 	private final int				temporalAccuracy;
+	private boolean 				isquery=false;
+	private JPanel 					queryPanel = new JPanel();
 
 	public ControlGUI(int precision, int geoAccuracy, int temporalAccuracy) {
 
@@ -82,18 +86,19 @@ public class ControlGUI extends JFrame implements ActionListener {
 		// setup overall app ui
 		setTitle("Heated Planet Diffusion Simulation");
 
-		setSize(800, 800);
+		setSize(900, 400);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		getContentPane().setLayout(new BorderLayout());
+		getContentPane().setLayout(new GridLayout());
 		setLocationRelativeTo(null);
 
 		lowerRightWindow(); // Set window location to lower right (so we don't
 							// hide dialogs)
 		setAlwaysOnTop(true);
 
-		getContentPane().add(settingsAndControls(), BorderLayout.WEST);
-		getContentPane().add(query(), BorderLayout.CENTER);
+		getContentPane().add(settingsAndControls());
+		getContentPane().add(query(isquery));
+		
 	}
 
 	private void lowerRightWindow() {
@@ -102,14 +107,16 @@ public class ControlGUI extends JFrame implements ActionListener {
 		int x = (int) (dimension.getWidth() - this.getWidth());
 		int y = (int) (dimension.getHeight() - this.getHeight());
 		this.setLocation(x, y);
+		
 	}
 
-	private JPanel query() {
+	private JPanel query(boolean isquery) {
 
-		JPanel queryPanel = new JPanel();
+		
 		queryPanel.setLayout(new BoxLayout(queryPanel, BoxLayout.PAGE_AXIS));
 		queryPanel.setAlignmentY(Component.TOP_ALIGNMENT);
-
+		queryPanel.setVisible(isquery);
+		
 		queryWidget = new QueryWidget();
 
 		queryPanel.add(queryWidget, BorderLayout.CENTER);
@@ -122,7 +129,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 		JPanel sncPanel = new JPanel();
 		sncPanel.setLayout(new BoxLayout(sncPanel, BoxLayout.PAGE_AXIS));
 		sncPanel.setAlignmentY(Component.TOP_ALIGNMENT);
-
+		
 		controlWidget = new ControlWidget(this);
 		settingsWidget = new SettingsWidget();
 		sncPanel.add(settingsWidget, BorderLayout.WEST);
@@ -187,14 +194,16 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 				// TODO set name
 				// TODO check name against the DAO
-				
-				queryEngine = new QueryEngine();
-				queryEngine.getQueryValues(simName, axisTilt, eccentricity, startTime, endTime, wLat, eLat, sLat, nLat );
+				if(isquery){
+					
+					queryEngine = new QueryEngine();
+					queryEngine.getQueryValues(simName, axisTilt, eccentricity, startTime, endTime, wLat, eLat, sLat, nLat );
+					
+				}
 
 				threadManager.execute(new EarthEngine(new Monitor()));
 				threadManager.execute(new EarthDisplayEngine());
 				
-
 				Boolean animate = settingsWidget.GetDisplayAnimationStatus();
 				
 				// TODO There has GOT to be a more elegant way of transporting start values...we want to keep it decoupled, so using the messages was good. But at this point, would
@@ -228,6 +237,13 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 			controlWidget.disableButtonsBasedOnAction(cmd);
 			queryWidget.setFields(true);
+
+		}else if("Query".equals(cmd)){
+			
+			System.out.println("Query button clicked");
+			isquery = true;
+			queryPanel.setVisible(isquery);
+			controlWidget.disableButtonsBasedOnAction(cmd);
 		}
 	}
 }
