@@ -142,7 +142,7 @@ public class QueryWidget extends JPanel {
 		textFieldEastLatitude.setColumns(10);
 		inputPanel.add(textFieldEastLatitude);
 		inputs.put("East Latitude", textFieldEastLatitude);
-		
+/*		
 		JLabel lblSimulationName = new JLabel("Simulation Name");
 		lblSimulationName.setBounds(12, 160, 130, 15);
 		inputPanel.add(lblSimulationName);
@@ -153,7 +153,7 @@ public class QueryWidget extends JPanel {
 		textFieldSimulationName.setColumns(10);
 		inputPanel.add(textFieldSimulationName);
 		inputs.put("Simulation Name", textFieldSimulationName);
-
+*/
 		chckbxMinimumTemperature = new JCheckBox("Minimum Temperature");
 		chckbxMinimumTemperature.setBounds(10, 185, 249, 20);
 		inputPanel.add(chckbxMinimumTemperature);

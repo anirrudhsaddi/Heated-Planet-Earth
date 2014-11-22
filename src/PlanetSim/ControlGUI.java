@@ -4,7 +4,6 @@ package PlanetSim;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -54,6 +53,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 	private final int				temporalAccuracy;
 	private boolean 				isquery=false;
 	private JPanel 					queryPanel = new JPanel();
+	private int 					count = 1;
 
 	public ControlGUI(int precision, int geoAccuracy, int temporalAccuracy) {
 
@@ -158,7 +158,8 @@ public class ControlGUI extends JFrame implements ActionListener {
 				final float axisTilt = Float.parseFloat(settingsWidget.GetInputText("Axis Tilt"));
 				final float eccentricity = Float.parseFloat(settingsWidget.GetInputText("Orbital Eccentricity"));
 				
-				final String	simName = queryWidget.GetUserInputs("Simulation Name");
+				final String	simName = gs + "-"+ timeStep + "-" + presentationRate + "-" + simulationLength + "-" + axisTilt + "-" + count;
+				count++;
 				final DateTime	startTime = null;
 				final DateTime	endTime = null;
 				final double	wLat =  Double.parseDouble(queryWidget.GetUserInputs("West Longitude"));
@@ -196,8 +197,8 @@ public class ControlGUI extends JFrame implements ActionListener {
 				// TODO check name against the DAO
 				if(isquery){
 					
-					queryEngine = new QueryEngine();
-					queryEngine.getQueryValues(simName, axisTilt, eccentricity, startTime, endTime, wLat, eLat, sLat, nLat );
+					queryEngine = new QueryEngine(simName, axisTilt, eccentricity, startTime, endTime, wLat, eLat, sLat, nLat );
+					
 					
 				}
 
