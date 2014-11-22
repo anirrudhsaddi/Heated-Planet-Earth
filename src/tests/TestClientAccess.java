@@ -74,13 +74,8 @@ public class TestClientAccess {
 
 		try {
 
-			ResultSet result = t.dao.findNamedSimulations();
-			if (!result.isBeforeFirst())
-				fail("ResultSet was empty");
-
-			while (result.next()) {
-				System.out.println(result.getString("simulation"));
-			}
+			IQueryResult result = t.dao.findNamedSimulations();
+			System.out.println(result.getSimulationName());
 
 		} catch (SQLException e) {
 			e.printStackTrace();
