@@ -259,10 +259,13 @@ public final class Earth {
 		PersistMessage msg = new PersistMessage(simulationName, currentDate.getTimeInMillis());
 		
 		// TODO this requires (longitude, latitude) coords, not (x, y)
+		int latitude,longitude;
 		for (int x = 0; x < width; x++) {
+			longitude = this.getLongitude(x);
 			for (int y = 0; y < height; y++) {
+				latitude = this.getLatitude(y);
 				valueToStore = new BigDecimal(grid.getTemperature(x, y));
-				msg.setTemperature(x, y, valueToStore.setScale(this.precision, BigDecimal.ROUND_HALF_UP).doubleValue());
+				msg.setTemperature(longitude, latitude, valueToStore.setScale(this.precision, BigDecimal.ROUND_HALF_UP).doubleValue());
 			}
 		}
 		
