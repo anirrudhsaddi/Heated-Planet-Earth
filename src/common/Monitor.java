@@ -10,12 +10,9 @@ import messaging.events.StopMessage;
 
 public class Monitor implements IMonitorCallback, MessageListener{
 	
-	IMonitorCallback callback;
-	int currentTimeInSimulation;
-	int simulationLength;	// in months
-	int timeStep;			// in minutes
-	
-	Publisher publisher;
+	private int simulationLength;
+	private Publisher publisher;
+	private Calendar currentTimeInSimulation;
 	
 	public Monitor(){
 		
@@ -43,8 +40,14 @@ public class Monitor implements IMonitorCallback, MessageListener{
 		// you can also check the current time. Since the startTime passed in from StartMessage will be 0 on normal simulations, and START_MESSAGE starts at midnight,
 		// this should also cover the need for checking time with Queries without using special logic.
 		
-//		if(this.currentTimeInSimulation >= simulationLength){
-//			publisher.send(new StopMessage());
-//		}
+		Calendar endDate = (Calendar) Constants.START_DATE.clone();
+		endDate.add(Calendar.MINUTE, this.simulationLength);
+		
+		this.currentTimeInSimulation = (Calendar) Constants.START_DATE.clone();
+		this.currentTimeInSimulation.add(Calendar.MILLISECOND, (int) dateTime);
+		
+		if(currentTimeInSimulation.after(endDate)){
+			publisher.send(new StopMessage());
+		}
 	}
 }
