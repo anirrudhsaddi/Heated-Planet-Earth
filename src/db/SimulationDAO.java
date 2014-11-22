@@ -83,13 +83,14 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	
 	// Tested
 	@Override
-	public ResultSet findNamedSimulations() throws SQLException {
+	public IQueryResult findNamedSimulations() throws SQLException {
 		
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.FIND_SIMULATIONS_KEY);
 		ResultSet set = conn.query(query);
 		if (!set.isBeforeFirst() || set == null)
 			throw new SQLException("No Simulations found");
-		return set;
+		
+		return new Neo4jResult(set);
 	}
 	
 	// Tested
