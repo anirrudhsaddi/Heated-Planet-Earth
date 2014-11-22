@@ -12,7 +12,7 @@ public interface ISimulationDAO {
 	
 	public boolean createOrMatchSimulationNode(String name) throws SQLException;
 	
-	public boolean createOrMatchTemperatureRelationship(String name, int latitude, int longitude, float datetime, int temperature) throws SQLException;
+	public boolean createOrMatchTemperatureRelationship(String name, int latitude, int longitude, long datetime, int temperature) throws SQLException;
 	
 	public boolean createOrMatchAxisTiltRelationship(String name, float axisTilt) throws SQLException;
 	

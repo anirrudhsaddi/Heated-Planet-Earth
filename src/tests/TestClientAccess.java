@@ -4,7 +4,13 @@ import static org.junit.Assert.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
+
+import messaging.Message;
+import messaging.MessageListener;
+import messaging.Publisher;
+import messaging.events.ResultMessage;
 
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -108,5 +114,64 @@ public class TestClientAccess {
 			e.printStackTrace();
 			fail(e.toString());
 		}
+	}
+	
+	@Test
+	public void fTestFindTemperature() {
+		
+		Calendar c = Calendar.getInstance();
+		new ResultMessageCatcher();
+		
+		try {
+			assertTrue(t.dao.createOrMatchTemperatureRelationship("kungfu panda", 0, 0, c.getTimeInMillis(), 288));
+			assertTrue(t.dao.createOrMatchTemperatureRelationship("kungfu panda", 1, 0, c.getTimeInMillis(), 288));
+			assertTrue(t.dao.createOrMatchTemperatureRelationship("kungfu panda", 2, 0, c.getTimeInMillis(), 288));
+			assertTrue(t.dao.createOrMatchTemperatureRelationship("kungfu panda", 0, 1, c.getTimeInMillis(), 288));
+			assertTrue(t.dao.createOrMatchTemperatureRelationship("kungfu panda", 0, 2, c.getTimeInMillis(), 288));
+			assertTrue(t.dao.createOrMatchTemperatureRelationship("kungfu panda", 1, 1, c.getTimeInMillis(), 288));
+			assertTrue(t.dao.createOrMatchTemperatureRelationship("kungfu panda", 1, 2, c.getTimeInMillis(), 288));
+			assertTrue(t.dao.createOrMatchTemperatureRelationship("kungfu panda", 2, 1, c.getTimeInMillis(), 288));
+			assertTrue(t.dao.createOrMatchTemperatureRelationship("kungfu panda", 2, 2, c.getTimeInMillis(), 288));
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			fail(e.toString());
+		}
+		
+		try {
+			
+			t.dao.findTemperaturesAt("kungfu panda", c, 2, 0, 2, 0);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			fail(e.toString());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			fail(e.toString());
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			fail(e.toString());
+		} 
+	}
+	
+	private class ResultMessageCatcher implements MessageListener {
+		
+		public ResultMessageCatcher() {
+			Publisher.getInstance().subscribe(ResultMessage.class, this);
+		}
+
+		@Override
+		public void onMessage(Message msg) {
+			ResultMessage m = (ResultMessage) msg;
+			System.out.println(m.needsCalculation());
+			for (int x = 0; x < 3; x++) {
+				for (int y = 0; y < 3; y++) {
+					if (m.hasTemperature(x, y))
+						System.out.println(m.getTemperature(x, y));
+				}
+			}
+			
+		}
+		
 	}
 }

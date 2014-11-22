@@ -163,14 +163,14 @@ public interface Neo4jConstants {
 			+ "WITH n.name AS simulation, a.value AS gridSpacing, b.value AS timeStep, c.value AS simulationLength, d.value AS presentationInterval, e.value AS axisTilt, f.value AS orbitalEccentricity "
 			+ "RETURN simulation, gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, orbitalEccentricity";
 
-	public static final String GET_GRID_BY_DATE_TIME_QUERY = "MATCH (n:Simulation)-[ r:HAS_TEMP ]->(t:Temperature) "
+	public static final String GET_GRID_BY_DATE_TIME_QUERY = "MATCH (n:Simulation)-[r:HAS_TEMP]->(t:Temperature) "
 			+ "WHERE n.name = {1} AND r.datetime = {2} "
 			+ "WITH r.latitude AS latitude, r.longitude AS longitude, t.value AS temperature "
 			+ "RETURN latitude, longitude, temperature";
 
-	public static final String GET_DATE_TIME_QUERY = "MATCH (n:Simulation)-[r:HAS_TEMPERATURE]-(t:Temperature) "
+	public static final String GET_DATE_TIME_QUERY = "MATCH (n:Simulation)-[r:HAS_TEMP]->(t:Temperature) "
 			+ "WHERE n.name = {1} AND r.datetime <= {2} "
-			+ "WITH max(r.datetime) as dateTime" 
+			+ "WITH max(r.datetime) as dateTime " 
 			+ "RETURN dateTime";
 
 }

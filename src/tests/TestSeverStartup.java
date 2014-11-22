@@ -138,7 +138,7 @@ public class TestSeverStartup {
 	public void iTestCreateTemperatureRelationship() {
 		
 		try {
-			assertTrue(t.dao.createOrMatchTemperatureRelationship("test1", 0, 0, 0f, 288));
+			assertTrue(t.dao.createOrMatchTemperatureRelationship("test1", 0, 0, 0l, 288));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			fail(e.toString());
