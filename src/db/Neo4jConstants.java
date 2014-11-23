@@ -175,7 +175,7 @@ public interface Neo4jConstants {
 			+ "RETURN dateTime";
 	
 	public static final String GET_GRID_BY_DATE_TIME_RANGE_QUERY = "MATCH (n:Simulation)-[r:HAS_TEMP]->(t:Temperature) "
-			+ "WHERE n.name = {1} AND r.datetime >= {2} OR r.datetime <= {3} "
+			+ "WHERE n.name = {1} AND r.datetime = {2} OR r.datetime = {3} OR (r.datetime < {3} AND r.datetime > {2})"
 			+ "WITH r.latitude AS latitude, r.longitude AS longitude, r.datetime AS dateTime, t.value AS temperature "
 			+ "RETURN latitude, longitude, dateTime, temperature";
 

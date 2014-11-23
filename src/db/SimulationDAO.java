@@ -389,7 +389,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 			query = conn.getPreparedStatement(Neo4jConstants.GET_GRID_BY_DATE_TIME_RANGE_KEY);
 			query.setString(1, name);
 			query.setLong(2, startDateTime);
-			query.setLong(2, endDateTime);
+			query.setLong(3, endDateTime);
 			
 			result = conn.query(query);
 			if (!result.isBeforeFirst() || result == null)
@@ -404,10 +404,16 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		} else {
 			
 			// Now get all the temps
+			if (query != null && !query.isClosed())
+				query.close();
+			
 			query = conn.getPreparedStatement(Neo4jConstants.GET_GRID_BY_DATE_TIME_KEY);
 			query.setString(1, name);
 			query.setLong(2, foundDateTime);
 			
+			if (result != null && !result.isClosed())
+				result.close();
+				
 			result = conn.query(query);
 			if (!result.isBeforeFirst() || result == null)
 				throw new SQLException("Failed to find temperatures for before the start date time");
