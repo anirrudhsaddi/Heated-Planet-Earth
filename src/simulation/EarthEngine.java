@@ -64,10 +64,10 @@ public class EarthEngine extends ComponentBase {
 		//Scenario 1 - no need of calculation, the data from DB is the perfect hit for what the user wants
 		if(msg.needsCalculation()==false) {
 			//populate msg.table here
-			msg.PopulateTable();			
+			model.PopulateTable(msg);			
 		} else if(msg.needsCalculation()==true) {
 			//Scenario 2 - calculate - interpolate, the data that the user wants
-			msg.InterpolateTable(); 
+			model.InterpolateTable(msg); 
 			//Scenario 3 - calculate - start a new simulation, the data the user wants is beyond the one stored in DB			
 			//Scenario 4 - calculate - start a new simulation with current data, the data the user wants is in between one stored in DB
 

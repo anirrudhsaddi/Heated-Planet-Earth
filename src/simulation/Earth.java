@@ -4,14 +4,17 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
+import java.util.TreeMap;
 
 import messaging.Publisher;
 import messaging.events.DeliverMessage;
 import messaging.events.PersistMessage;
+import messaging.events.ResultMessage;
 import messaging.events.StartMessage;
 import simulation.util.GridCell;
-
 import common.Buffer;
 import common.Constants;
 import common.Grid;
@@ -48,6 +51,15 @@ public final class Earth {
 	private int totalGridsToSave;
 	private int nth_data;
 	private int nth_grids;
+	
+	// The user query can be thought of as producing a table in which there are
+	// rows
+	// corresponding to the times at which computations are made and columns
+	// corresponding to the grid cells.
+	// table DS has integer as time(rows), List<GridCell> is list of grid
+	// cells(columns)
+	private final Map<Integer, List<GridCell>>	table = new TreeMap<Integer, List<GridCell>>();
+
 
 	public Earth(IMonitorCallback monitor) {
 
@@ -359,4 +371,133 @@ public final class Earth {
 	private int getLongitude(int x) {
 		return x < (width / 2) ? -(x + 1) * this.gs : (360) - (x + 1) * this.gs;
 	}
+	
+	public void PopulateTable(ResultMessage msg) {
+		int time = 0; // TODO: result message should give output in a range of
+						// time
+		List<GridCell> gridCells = new LinkedList<GridCell>();
+		for (int i = msg.getNorthRegionBounds(); i <= msg.getSouthRegionBounds(); i++) {
+			for (int j = msg.getEastRegionBounds(); j <= msg.getWestRegionBounds(); j++) {
+				// check if this exists
+				Integer[] checkInts = new Integer[] { i, j };
+				if (msg.containscoords(checkInts)) {
+					GridCell thisCell = new GridCell(msg.getTemperature(i, j), 0, 0, i, j, 0, 0, 0);
+					gridCells.add(thisCell);
+				}
+			}
+		}
+		this.table.put(time, gridCells);
+	}
+
+	public void InterpolateTable(ResultMessage msg) {
+		
+		int time = 0; // TODO: result message should give output in a range of
+						// time
+		List<GridCell> gridCells = new LinkedList<GridCell>();
+		GridCell thisCell = null;
+		
+		for (int i = msg.getNorthRegionBounds(); i <= msg.getSouthRegionBounds(); i++) {
+			for (int j = msg.getEastRegionBounds(); j <= msg.getWestRegionBounds(); j++) {
+				
+				Integer[] checkInts = new Integer[] { i, j };
+				if (msg.containscoords(checkInts)) {
+					thisCell = new GridCell(msg.getTemperature(i, j), i, j, i, j, 0, 0, 0);
+					gridCells.add(thisCell);
+				} else if (thisCell != null) {
+					double tempNearestCell = thisCell.getTemp();
+					int k = thisCell.getX(), l = thisCell.getY();
+					int dy = l - j, dx = k - i;
+					double mytemp = tempNearestCell * (dy / dx);
+					// SplineInterpolator splineInterp = new
+					// SplineInterpolator();
+					thisCell = new GridCell(mytemp, i, j, i, j, 0, 0, 0);
+					gridCells.add(thisCell);
+				}
+			}
+		}
+		this.table.put(time, gridCells);
+	}
+
+	// Minimum temperature in the region, when and where it occurred;
+	// that is, the smallest temperature in the entire table and the time and
+	// location where it occurred
+	public GridCell getMin(ResultMessage msg) {
+		
+		GridCell result = new GridCell(Constants.MAX_TEMP, 0, 0, 0, 0, 0, 0, 0);
+		for (Map.Entry<Integer, List<GridCell>> entry : this.table.entrySet()) {
+			Integer time = entry.getKey();
+			List<GridCell> gridCells = entry.getValue();
+			for (GridCell mycell : gridCells) {
+				if (mycell.getTemp() < result.getTemp()) {
+					result = mycell;
+					result.timeOfResult = time;
+				}
+			}
+		}
+		return result;
+	}
+
+	// Maximum temperature in the region, when and where it occurred;
+	// that is, the largest temperature in the table and the time and location
+	// where it occurred
+	public GridCell getMax(ResultMessage msg) {
+		
+		GridCell result = new GridCell(Constants.MIN_TEMP, 0, 0, 0, 0, 0, 0, 0);
+		for (Map.Entry<Integer, List<GridCell>> entry : this.table.entrySet()) {
+			
+			Integer time = entry.getKey();
+			List<GridCell> gridCells = entry.getValue();
+			for (GridCell mycell : gridCells) {
+				if (mycell.getTemp() > result.getTemp()) {
+					result = mycell;
+					result.timeOfResult = time;
+				}
+			}
+		}
+		return result;
+	}
+
+	// Mean temperature over the region for the requested times;
+	// that is, for each row in the table, what was its mean temperature across
+	// all of the columns. (The denominator is the number of columns.)
+	public List<Double> getMeanTempOverRegion(ResultMessage msg) {
+		
+		List<Double> meanTemps = new LinkedList<Double>();
+		for (Map.Entry<Integer, List<GridCell>> entry : this.table.entrySet()) {
+			
+			// Integer time = entry.getKey();
+			List<GridCell> gridCells = entry.getValue();
+			double temperatures = 0;
+			for (GridCell mycell : gridCells) {
+				temperatures += mycell.getTemp();
+			}
+			temperatures /= gridCells.size();
+			meanTemps.add(temperatures);
+		}
+		return meanTemps;
+	}
+
+	// Mean temperature over the times for the requested region;
+	// that is, for each column in the table, what was its mean temperature down
+	// all rows. (The denominator is the number of rows.
+	public List<Double> getMeanTempOverTime(ResultMessage msg) {
+		
+		List<Double> meanTemps = new LinkedList<Double>();
+		for (Map.Entry<Integer, List<GridCell>> entry : this.table.entrySet()) {
+			
+			// Integer time = entry.getKey();
+			List<GridCell> gridCells = entry.getValue();
+			int i = 0;
+			for (GridCell mycell : gridCells) {
+				meanTemps.set(i++, meanTemps.get(i) + mycell.getTemp());
+			}
+		}
+		
+		int i = 0;
+		for (Map.Entry<Integer, List<GridCell>> entry : this.table.entrySet()) {
+			meanTemps.set(i++, meanTemps.get(i) / this.table.size());
+		}
+		return meanTemps;
+	}
+	
 }
