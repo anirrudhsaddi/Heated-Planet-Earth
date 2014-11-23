@@ -50,6 +50,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		this.conn.createPreparedStatement(Neo4jConstants.MATCH_NODE_BY_NAME_KEY, Neo4jConstants.MATCH_NODE_BY_NAME_QUERY);
 		this.conn.createPreparedStatement(Neo4jConstants.MATCH_NODE_BY_DATA_KEY, Neo4jConstants.MATCH_NODE_BY_DATA_QUERY);
 		this.conn.createPreparedStatement(Neo4jConstants.GET_GRID_BY_DATE_TIME_KEY, Neo4jConstants.GET_GRID_BY_DATE_TIME_QUERY);
+		this.conn.createPreparedStatement(Neo4jConstants.GET_GRID_BY_DATE_TIME_RANGE_KEY, Neo4jConstants.GET_GRID_BY_DATE_TIME_RANGE_QUERY);
 		this.conn.createPreparedStatement(Neo4jConstants.GET_DATE_TIME_KEY, Neo4jConstants.GET_DATE_TIME_QUERY);
 		
 		this.conn.createPreparedStatement(Neo4jConstants.CREATE_SIMULATION_KEY, Neo4jConstants.CREATE_SIMULATION_NODE);
@@ -379,19 +380,43 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 			throw new SQLException("Failed to find any datetimes on or before query datetime");
 		}
 		
-		// Now get all the temps
-		query = conn.getPreparedStatement(Neo4jConstants.GET_GRID_BY_DATE_TIME_KEY);
-		query.setString(1, name);
-		query.setLong(2, foundDateTime);
+		ResultMessage msg;
 		
-		result = conn.query(query);
-		if (!result.isBeforeFirst() || result == null)
-			throw new SQLException("Failed to find a temperatures");
-		
-		ResultMessage msg = new ResultMessage(southLatitude, northLatitude, westLongitude, eastLongitude, (foundDateTime < startDateTime));
-		
-		while (result.next()) {
-			msg.setTemperature(result.getInt("longitude"), result.getInt("latitude"), result.getDouble("temperature"));
+		// Populate ResultMessage with the range of grids if the startDateTime was found
+		// Otherwise; send only one grid to be simulated on
+		if (foundDateTime == startDateTime) {
+			
+			query = conn.getPreparedStatement(Neo4jConstants.GET_GRID_BY_DATE_TIME_RANGE_KEY);
+			query.setString(1, name);
+			query.setLong(2, startDateTime);
+			query.setLong(2, endDateTime);
+			
+			result = conn.query(query);
+			if (!result.isBeforeFirst() || result == null)
+				throw new SQLException("Failed to find any temperatures within the start and end date times");
+			
+			msg = new ResultMessage(southLatitude, northLatitude, westLongitude, eastLongitude, false);
+			
+			while (result.next()) {
+				msg.setTemperature(result.getInt("longitude"), result.getInt("latitude"), result.getDouble("temperature"), result.getLong("dateTime"));
+			}
+			
+		} else {
+			
+			// Now get all the temps
+			query = conn.getPreparedStatement(Neo4jConstants.GET_GRID_BY_DATE_TIME_KEY);
+			query.setString(1, name);
+			query.setLong(2, foundDateTime);
+			
+			result = conn.query(query);
+			if (!result.isBeforeFirst() || result == null)
+				throw new SQLException("Failed to find temperatures for before the start date time");
+			
+			msg = new ResultMessage(southLatitude, northLatitude, westLongitude, eastLongitude, true);
+			
+			while (result.next()) {
+				msg.setTemperature(result.getInt("longitude"), result.getInt("latitude"), result.getDouble("temperature"));
+			}
 		}
 			
 		Publisher.getInstance().send(msg);

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import common.Constants;
+
 import simulation.util.GridCell;
 import messaging.Message;
 
@@ -74,6 +76,25 @@ public class ResultMessage implements Message {
 
 	public boolean containsCoords(Integer[] checkInts) {
 		return coords.contains(checkInts);
+	}
+	
+	public void setTemperature(int longitude, int latitude, double temp, long dateTime) {
+		
+		// Man this method is horribly inefficent...everytime we call this, a puppy dies :(. 
+		// time permitting, let's make this better
+		Calendar c = ((Calendar) Constants.START_DATE.clone());
+		c.setTimeInMillis(dateTime);
+		
+		List<GridCell> list;
+		if (this.table.containsKey(c)) {
+			list = this.table.get(c);
+			list.add(new GridCell(temp, 0, 0, latitude, longitude, 0, 0, 0));
+		} else {
+			list = new LinkedList<GridCell>();
+			list.add(new GridCell(temp, 0, 0, latitude, longitude, 0, 0, 0));
+		}
+		
+		this.table.put(c, list);
 	}
 	
 	public Map<Calendar, List<GridCell>> getGridCells() {
