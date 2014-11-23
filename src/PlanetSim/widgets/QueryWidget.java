@@ -43,7 +43,7 @@ public class QueryWidget extends JPanel {
 		setLayout(new GridLayout());
 		setAlignmentY(Component.RIGHT_ALIGNMENT);
 
-		JScrollPane listScrollPane = new JScrollPane(list("Simulation List"));
+		JScrollPane listScrollPane = new JScrollPane(slBox);
 		listScrollPane.setPreferredSize(new Dimension(50, this.getHeight()));
 		add(listScrollPane, BorderLayout.EAST);
 		add(inputFields());

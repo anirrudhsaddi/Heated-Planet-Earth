@@ -161,12 +161,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 				
 				final String	simName = gs + "-"+ timeStep + "-" + presentationRate + "-" + simulationLength + "-" + axisTilt + "-" + count;
 				count++;
-				final DateTime	startTime = null;
-				final DateTime	endTime = null;
-				final double	wLat =  Double.parseDouble(queryWidget.GetUserInputs("West Longitude"));
-				final double	eLat =  Double.parseDouble(queryWidget.GetUserInputs("East Longitude"));
-				final double	sLat =  Double.parseDouble(queryWidget.GetUserInputs("South Latitude"));
-				final double	nLat =  Double.parseDouble(queryWidget.GetUserInputs("North Latitude")); 
+				
 
 				if (gs < Constants.MIN_GRID_SPACING || gs > Constants.MAX_GRID_SPACING)
 					throw new IllegalArgumentException("Invalid grid spacing");
@@ -197,6 +192,11 @@ public class ControlGUI extends JFrame implements ActionListener {
 				// TODO set name
 				// TODO check name against the DAO
 				if(isquery){
+					
+					final double wLat =  Double.parseDouble(queryWidget.GetUserInputs("West Longitude"));
+					final double eLat =  Double.parseDouble(queryWidget.GetUserInputs("East Longitude"));
+					final double sLat =  Double.parseDouble(queryWidget.GetUserInputs("South Latitude"));
+					final double nLat =  Double.parseDouble(queryWidget.GetUserInputs("North Latitude")); 
 					
 					try {
 						queryEngine = new QueryEngine();
