@@ -25,11 +25,11 @@ public class QueryEngine {
 	 * 
 	 * 2. IF we generate a guaranteed unique name, then we don't have to check
 	 * simulation name on every normal simulation start (it still might be a
-	 * good idea).
+	 * good idea). // I am auto generating the simulation name now(Anirrudh). 
 	 * 
 	 * 3. Check to see if a simulation exists based on physical data on a normal
 	 * simulation run. If not, let the user know that they need to run a query.
-	 * If it doesn't, call setSimulationName.
+	 * If it doesn't, call setSimulationName. //We are saving every simulation
 	 * 
 	 * 4. For a query, if the uses selects a simulation, call the db to get the
 	 * physical data. If they query with physical data, get the name from the
@@ -41,9 +41,6 @@ public class QueryEngine {
 	 * error out
 	 */
 
-	// We shouldn't need QueryWidget reference here
-	private QueryWidget			q	= new QueryWidget();
-	
 	private final SimulationDAO simDAO;				
 	
 	private String		simName;
@@ -80,10 +77,6 @@ public class QueryEngine {
 
 	public void setConn(IDBConnection conn) {
 		this.conn = conn;
-	}
-
-	public void setQ(QueryWidget q) {
-		this.q = q;
 	}
 
 	public void setSimName(String simName) {
