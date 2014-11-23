@@ -11,6 +11,7 @@ import java.util.TreeMap;
 
 import messaging.Publisher;
 import messaging.events.DeliverMessage;
+import messaging.events.DisplayMessage;
 import messaging.events.PersistMessage;
 import messaging.events.ResultMessage;
 import messaging.events.StartMessage;
@@ -374,9 +375,9 @@ public final class Earth {
 		return x < (width / 2) ? -(x + 1) * this.gs : (360) - (x + 1) * this.gs;
 	}
 	
+	//TABLE DS related code
 	public void populateTable(ResultMessage msg) {
-		int time = 0; // TODO: result message should give output in a range of
-						// time
+		Calendar time = new GregorianCalendar(0, 0, 0, 0, 0, 0);
 		List<GridCell> gridCells = new LinkedList<GridCell>();
 		for (int i = msg.getNorthRegionBounds(); i <= msg.getSouthRegionBounds(); i++) {
 			for (int j = msg.getEastRegionBounds(); j <= msg.getWestRegionBounds(); j++) {
@@ -394,7 +395,7 @@ public final class Earth {
 	public void interpolateTable(ResultMessage msg) {
 		
 		 // TODO: result message should give output in a range of time
-		int time = 0;
+		Calendar time = new GregorianCalendar(0, 0, 0, 0, 0, 0);
 
 		List<GridCell> gridCells = new LinkedList<GridCell>();
 		GridCell thisCell = null;
@@ -424,15 +425,28 @@ public final class Earth {
 		}
 		this.table.put(time, gridCells);
 	}
+	
+	//In the situation when end date can not be found in DB, we have to run a new simmulation
+	public void simulateFromTable(ResultMessage msg) {
+		
+	}
+	
+	public void setDisplayMsg(DisplayMessage msg) {
+		msg.setTable(table);
+		msg.setMaxTemp(this.getMax());
+		msg.setMinTemp(this.getMin());
+		msg.setMeanTempOverRegion(this.getMeanTempOverRegion());
+		msg.setMeanTempOverTime(this.getMeanTempOverTime());
+	}
 
 	// Minimum temperature in the region, when and where it occurred;
 	// that is, the smallest temperature in the entire table and the time and
 	// location where it occurred
-	public GridCell getMin(ResultMessage msg) {
+	public GridCell getMin() {
 		
 		GridCell result = new GridCell(Constants.MAX_TEMP, 0, 0, 0, 0, 0, 0, 0);
-		for (Map.Entry<Integer, List<GridCell>> entry : this.table.entrySet()) {
-			Integer time = entry.getKey();
+		for (Map.Entry<Calendar, List<GridCell>> entry : this.table.entrySet()) {
+			Calendar time = entry.getKey();
 			List<GridCell> gridCells = entry.getValue();
 			for (GridCell mycell : gridCells) {
 				if (mycell.getTemp() < result.getTemp()) {
@@ -447,12 +461,12 @@ public final class Earth {
 	// Maximum temperature in the region, when and where it occurred;
 	// that is, the largest temperature in the table and the time and location
 	// where it occurred
-	public GridCell getMax(ResultMessage msg) {
+	public GridCell getMax() {
 		
 		GridCell result = new GridCell(Constants.MIN_TEMP, 0, 0, 0, 0, 0, 0, 0);
-		for (Map.Entry<Integer, List<GridCell>> entry : this.table.entrySet()) {
+		for (Map.Entry<Calendar, List<GridCell>> entry : this.table.entrySet()) {
 			
-			Integer time = entry.getKey();
+			Calendar time = entry.getKey();
 			List<GridCell> gridCells = entry.getValue();
 			for (GridCell mycell : gridCells) {
 				if (mycell.getTemp() > result.getTemp()) {
@@ -468,10 +482,10 @@ public final class Earth {
 	// Mean temperature over the region for the requested times;
 	// that is, for each row in the table, what was its mean temperature across
 	// all of the columns. (The denominator is the number of columns.)
-	public List<Double> getMeanTempOverRegion(ResultMessage msg) {
+	public List<Double> getMeanTempOverRegion() {
 		
 		List<Double> meanTemps = new LinkedList<Double>();
-		for (Map.Entry<Integer, List<GridCell>> entry : this.table.entrySet()) {
+		for (Map.Entry<Calendar, List<GridCell>> entry : this.table.entrySet()) {
 			
 			// Integer time = entry.getKey();
 			List<GridCell> gridCells = entry.getValue();
@@ -489,10 +503,10 @@ public final class Earth {
 	// Mean temperature over the times for the requested region;
 	// that is, for each column in the table, what was its mean temperature down
 	// all rows. (The denominator is the number of rows.
-	public List<Double> getMeanTempOverTime(ResultMessage msg) {
+	public List<Double> getMeanTempOverTime() {
 		
 		List<Double> meanTemps = new LinkedList<Double>();
-		for (Map.Entry<Integer, List<GridCell>> entry : this.table.entrySet()) {
+		for (Map.Entry<Calendar, List<GridCell>> entry : this.table.entrySet()) {
 			
 			// Integer time = entry.getKey();
 			List<GridCell> gridCells = entry.getValue();
@@ -503,7 +517,7 @@ public final class Earth {
 		}
 		
 		int i = 0;
-		for (Map.Entry<Integer, List<GridCell>> entry : this.table.entrySet()) {
+		for (Map.Entry<Calendar, List<GridCell>> entry : this.table.entrySet()) {
 			meanTemps.set(i++, meanTemps.get(i) / this.table.size());
 		}
 		
