@@ -9,9 +9,9 @@ import java.util.Queue;
 import messaging.Publisher;
 import messaging.events.DeliverMessage;
 import messaging.events.PersistMessage;
-import messaging.events.ResultMessage;
 import messaging.events.StartMessage;
 import simulation.util.GridCell;
+
 import common.Buffer;
 import common.Constants;
 import common.Grid;
@@ -19,20 +19,21 @@ import common.IGrid;
 import common.IMonitorCallback;
 
 public final class Earth {
-	
+
 	private static Calendar currentDate;
 
-	private static final int[] increments = { 6, 9, 10, 12, 15, 18, 20, 30, 36, 45, 60, 90, 180 };
-	
+	private static final int[] increments = { 6, 9, 10, 12, 15, 18, 20, 30, 36,
+			45, 60, 90, 180 };
+
 	private final IMonitorCallback monitor;
-	
+
 	private GridCell prime;
-	
+
 	private String simulationName;
-	
+
 	private float axisTilt;
 	private float eccentricity;
-	
+
 	private int currentStep;
 	private int width;
 	private int height;
@@ -40,19 +41,19 @@ public final class Earth {
 	private int currentTimeInSimulation;
 	private int timeStep;
 	private int gs;
-	
+
 	// persistance variables
 	private int precision;
 	private int totalDataToSave;
 	private int totalGridsToSave;
 	private int nth_data;
 	private int nth_grids;
-	
+
 	public Earth(IMonitorCallback monitor) {
-		
+
 		if (monitor == null)
 			throw new IllegalArgumentException("Invalid monitor provided");
-		
+
 		this.monitor = monitor;
 	}
 
@@ -61,7 +62,7 @@ public final class Earth {
 	}
 
 	public void configure(StartMessage start) {
-		
+
 		this.simulationName = start.getSimulationName();
 		this.timeStep = start.timeStep();
 		this.axisTilt = start.axisTilt();
@@ -78,34 +79,29 @@ public final class Earth {
 			}
 		} else
 			this.gs = gs;
-		
+
 		width = (2 * Constants.MAX_DEGREES / this.gs); // rows
 		height = (Constants.MAX_DEGREES / this.gs); // cols
-		
+
 		// Using width, height, determine totalGridsToSave
 		int totalGrids = width * height;
 		totalGridsToSave = totalGrids * (start.geoAccuracy() / 100);
-		
+
 		// Now calculate the number of 'buckets' (or every 'nth' piece)
 		nth_grids = totalGrids / totalGridsToSave;
-		
+
 		// Convert simulationLength into minutes and divide by the timeStep.
-		// This will give us the total number of generations we will do. 
+		// This will give us the total number of generations we will do.
 		// From there, get the number to save by applying the percentage
-		int totalGens = (start.simulationLength() * 30 * 1440) / this.timeStep;  //simlength*30*1440
+		int totalGens = (start.simulationLength() * 30 * 1440) / this.timeStep; // simlength*30*1440
 		totalDataToSave = totalGens * (start.temporalAccuracy() / 100);
-		System.out.println("Sim length: " + start.simulationLength() +"\n Time step:" + this.timeStep);
-		
+		System.out.println("Sim length: " + start.simulationLength()
+				+ "\n Time step:" + this.timeStep);
+
 		// Now calculate the number of 'buckets' (or every 'nth' piece)
 		nth_data = totalGens / totalDataToSave;
 	}
-	
-	public void configure(ResultMessage msg) {
-		//This function is used to configure the data structures such that a new simulation can be started from here
-		
-	}
 
-	
 	public void start() {
 
 		int x = 0, y = 0;
@@ -115,10 +111,13 @@ public final class Earth {
 		currentStep = 0;
 
 		if (prime != null) {
-			prime.setGridProps(x, y, this.getLatitude(y), this.getLongitude(x), this.gs, this.axisTilt, this.eccentricity);
+			prime.setGridProps(x, y, this.getLatitude(y), this.getLongitude(x),
+					this.gs, this.axisTilt, this.eccentricity);
 			prime.setTemp(Constants.INITIAL_TEMP);
 		} else
-			prime = new GridCell(Constants.INITIAL_TEMP, x, y, this.getLatitude(y), this.getLongitude(x), this.gs, this.axisTilt, this.eccentricity);
+			prime = new GridCell(Constants.INITIAL_TEMP, x, y,
+					this.getLatitude(y), this.getLongitude(x), this.gs,
+					this.axisTilt, this.eccentricity);
 
 		prime.setTop(null);
 
@@ -139,7 +138,7 @@ public final class Earth {
 		for (y = 1; y < height - 1; y++) {
 
 			// curr should be changed, but actually have not.
-			this.createNextRow(bottom, curr, y); 
+			this.createNextRow(bottom, curr, y);
 
 			curr = bottom.getTop();
 
@@ -162,22 +161,23 @@ public final class Earth {
 		for (x = 0; x < height; x++) {
 			GridCell rowgrid = curr.getLeft();
 			for (y = 0; y < width; y++) {
-				totaltemp += rowgrid.calTsun(sunPositionCell, currentTimeInSimulation);
+				totaltemp += rowgrid.calTsun(sunPositionCell,
+						currentTimeInSimulation);
 				totalarea += rowgrid.getSurfarea();
 				rowgrid = rowgrid.getLeft();
 			}
 			curr = curr.getTop();
 		}
-		
+
 		// Set initial average temperature
 		GridCell.setAvgSuntemp(totaltemp / (width * height));
 		GridCell.setAverageArea(totalarea / (width * height));
-		
+
 		currentDate = (Calendar) Constants.START_DATE.clone();
 	}
 
 	public void generate() throws InterruptedException {
-		
+
 		this.monitor.notifyCurrentInterval(currentDate.getTimeInMillis());
 
 		// Don't attempt to generate if output queue is full...
@@ -194,21 +194,23 @@ public final class Earth {
 		if (time % Constants.MINUTES_IN_A_MONTH == 0) {
 			currentTimeInSimulation++;
 		}
-		
+
 		long rotationalAngle = 360 - ((time % Constants.MAX_SPEED) * 360 / Constants.MAX_SPEED);
-		sunPositionCell = (int) (((width * rotationalAngle) / 360 + (width / 2) ) % width);
+		sunPositionCell = (int) (((width * rotationalAngle) / 360 + (width / 2)) % width);
 
 		float sunPositionDeg = rotationalAngle;
 		if (sunPositionDeg > 180) {
 			sunPositionDeg = sunPositionDeg - 360;
 		}
 
-		IGrid grid = new Grid(simulationName, sunPositionCell, sunPositionDeg, width, height, time, 0);
+		IGrid grid = new Grid(simulationName, sunPositionCell, sunPositionDeg,
+				width, height, time, 0);
 
 		double suntotal = 0;
 
 		suntotal = suntotal + prime.getTSun();
-		grid.setTemperature(prime.getX(), prime.getY(), prime.calculateTemp(sunPositionCell, currentTimeInSimulation));
+		grid.setTemperature(prime.getX(), prime.getY(),
+				prime.calculateTemp(sunPositionCell, currentTimeInSimulation));
 
 		prime.visited(true);
 		bfs.add(prime);
@@ -228,20 +230,24 @@ public final class Earth {
 
 				child = itr.next();
 				child.visited(true);
-				grid.setTemperature(child.getX(), child.getY(), child.calculateTemp(sunPositionCell, currentTimeInSimulation));
+				grid.setTemperature(child.getX(), child.getY(),
+						child.calculateTemp(sunPositionCell,
+								currentTimeInSimulation));
 				bfs.add(child);
-				
-				// suntotal += child.calTsun(sunPositionCell, currentTimeInSimulation);
+
+				// suntotal += child.calTsun(sunPositionCell,
+				// currentTimeInSimulation);
 				suntotal += child.getTSun();
-				
-				//Set display values here
-				grid.setSunLatitudeDeg((float) child.getSunLatitudeOnEarth(currentTimeInSimulation));
+
+				// Set display values here
+				grid.setSunLatitudeDeg((float) child
+						.getSunLatitudeOnEarth(currentTimeInSimulation));
 				grid.setPlanetX(child.getPlanetX(currentTimeInSimulation));
 				grid.setPlanetY(child.getPlanetY(currentTimeInSimulation));
 			}
 		}
 
-		GridCell.setAvgSuntemp(suntotal /  (width * height));
+		GridCell.setAvgSuntemp(suntotal / (width * height));
 		GridCell c = calcd.poll();
 		while (c != null) {
 			c.visited(false);
@@ -250,31 +256,46 @@ public final class Earth {
 		}
 
 		// Buffer.getBuffer().add(grid);
+		
+		
 		Publisher.getInstance().send(new DeliverMessage(grid));
+
+		// Determine if we need to persist this grid and, if so, send
+		// Message/payload
 		
-		// Determine if we need to persist this grid and, if so, send Message/payload
-		// persistGrid(grid);
+		// determine persisting based on temporalAccuracy
+		if(currentStep % nth_data == 0){
+			persistGrid(grid);
+		}
 	}
-	
+
 	private void persistGrid(IGrid grid) {
-		
+
 		// Determine if to store
-		
-		
 		BigDecimal valueToStore;
-		PersistMessage msg = new PersistMessage(simulationName, currentDate.getTimeInMillis());
-		
+		PersistMessage msg = new PersistMessage(simulationName,
+				currentDate.getTimeInMillis());
+
 		// TODO this requires (longitude, latitude) coords, not (x, y)
-		int latitude,longitude;
+		int latitude, longitude;
 		for (int x = 0; x < width; x++) {
 			longitude = this.getLongitude(x);
-			for (int y = 0; y < height; y++) {
-				latitude = this.getLatitude(y);
-				valueToStore = new BigDecimal(grid.getTemperature(x, y));
-				msg.setTemperature(longitude, latitude, valueToStore.setScale(this.precision, BigDecimal.ROUND_HALF_UP).doubleValue());
+			for (int y = 0; y < height; y++) {		
+				
+				// determine persisting based on geoAccuracy
+				if((x+y) % nth_grids == 0){
+					latitude = this.getLatitude(y);
+					valueToStore = new BigDecimal(grid.getTemperature(x, y));
+					msg.setTemperature(
+							longitude,
+							latitude,
+							valueToStore.setScale(this.precision,
+									BigDecimal.ROUND_HALF_UP).doubleValue());
+				
+				}
 			}
 		}
-		
+
 		Publisher.getInstance().send(msg);
 	}
 
@@ -301,9 +322,13 @@ public final class Earth {
 		if (curr.getLeft() != null) {
 			GridCell l = curr.getLeft();
 			l.setTemp(Constants.INITIAL_TEMP);
-			l.setGridProps(x, y, this.getLatitude(y), this.getLongitude(x), this.gs, this.axisTilt, this.eccentricity);
+			l.setGridProps(x, y, this.getLatitude(y), this.getLongitude(x),
+					this.gs, this.axisTilt, this.eccentricity);
 		} else {
-			next = new GridCell(null, bottom, null, curr, Constants.INITIAL_TEMP, x, y, this.getLatitude(y), this.getLongitude(x), this.gs, this.axisTilt, this.eccentricity);
+			next = new GridCell(null, bottom, null, curr,
+					Constants.INITIAL_TEMP, x, y, this.getLatitude(y),
+					this.getLongitude(x), this.gs, this.axisTilt,
+					this.eccentricity);
 			curr.setLeft(next);
 			if (bottom != null) {
 				bottom.setTop(next);
@@ -316,9 +341,13 @@ public final class Earth {
 		if (bottom.getTop() != null) {
 			curr = bottom.getTop();
 			curr.setTemp(Constants.INITIAL_TEMP);
-			curr.setGridProps(0, y, this.getLatitude(y), this.getLongitude(0), this.gs, this.axisTilt, this.eccentricity);
+			curr.setGridProps(0, y, this.getLatitude(y), this.getLongitude(0),
+					this.gs, this.axisTilt, this.eccentricity);
 		} else {
-			curr = new GridCell(null, bottom, null, null, Constants.INITIAL_TEMP, 0, y, this.getLatitude(y), this.getLongitude(0), this.gs, this.axisTilt, this.eccentricity);
+			curr = new GridCell(null, bottom, null, null,
+					Constants.INITIAL_TEMP, 0, y, this.getLatitude(y),
+					this.getLongitude(0), this.gs, this.axisTilt,
+					this.eccentricity);
 			bottom.setTop(curr);
 		}
 	}
