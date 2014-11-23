@@ -87,7 +87,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 		// setup overall app ui
 		setTitle("Heated Planet Diffusion Simulation");
 
-		setSize(900, 400);
+		setSize(800, 400);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		getContentPane().setLayout(new GridLayout());
@@ -217,6 +217,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 				// using the constructors be better??
 				StartMessage msg = new StartMessage(simName, gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity, this.precision, this.geoAccuracy, this.temporalAccuracy, animate);
 				Publisher.getInstance().send(msg);
+				System.out.println("Produce msg"); //Code not reaching here
 				Publisher.getInstance().send(new ProduceMessage());
 
 				// do gui stuff to indicate start has occurred.

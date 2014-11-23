@@ -13,6 +13,7 @@ import simulation.util.GridCell;
 
 public class EarthEngine extends ComponentBase {
 
+	
 	private final Earth	model;
 
 	public EarthEngine(IMonitorCallback monitor) {
@@ -27,7 +28,6 @@ public class EarthEngine extends ComponentBase {
 	public void performAction(Message msg) {
 
 		if (msg instanceof StartMessage) {
-
 			model.configure(((StartMessage) msg));
 			model.start();
 

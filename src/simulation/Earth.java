@@ -61,7 +61,7 @@ public final class Earth {
 	}
 
 	public void configure(StartMessage start) {
-
+		
 		this.simulationName = start.getSimulationName();
 		this.timeStep = start.timeStep();
 		this.axisTilt = start.axisTilt();
