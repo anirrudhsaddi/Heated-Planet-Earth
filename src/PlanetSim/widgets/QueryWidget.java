@@ -22,20 +22,21 @@ import PlanetSim.QueryEngine;
 
 public class QueryWidget extends JPanel {
 
-	private static final long	serialVersionUID	= 1L;
-	private QueryEngine queryEngine;
+	private static final long			serialVersionUID	= 1L;
+	private QueryEngine					queryEngine;
 
-	private GridLayout			mainlayout			= new GridLayout(3, 0);
+	private GridLayout					mainlayout			= new GridLayout(3, 0);
 
-	private JTextField			textFieldEndTime, textFieldStartTime;
-	private JTextField			textFieldNorthLongitude;
-	private JTextField			textFieldSouthLongitude;
-	private JTextField			textFieldWestLatitude;
-	private JTextField			textFieldEastLatitude;
-	private JTextField			textFieldSimulationName;
-	private JList<?>			slBox;
-	private JCheckBox			chckbxMinimumTemperature, chckbxMaximumTemperature, chckbxMeanTemperatureOverTime, chckbxMeanTemperatureOverRegion;
-	private HashMap<String, JTextField>	inputs		= new HashMap<String, JTextField>();
+	private JTextField					textFieldEndTime, textFieldStartTime;
+	private JTextField					textFieldNorthLongitude;
+	private JTextField					textFieldSouthLongitude;
+	private JTextField					textFieldWestLatitude;
+	private JTextField					textFieldEastLatitude;
+	private JTextField					textFieldSimulationName;
+	private JList<?>					slBox;
+	private JCheckBox					chckbxMinimumTemperature, chckbxMaximumTemperature,
+			chckbxMeanTemperatureOverTime, chckbxMeanTemperatureOverRegion;
+	private HashMap<String, JTextField>	inputs				= new HashMap<String, JTextField>();
 
 	public QueryWidget() {
 
@@ -51,15 +52,14 @@ public class QueryWidget extends JPanel {
 	}
 
 	private JList<?> list(String string) {
-		
+
 		try {
 			queryEngine = new QueryEngine();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new IllegalStateException(e);
 		}
+		
 		slBox = queryEngine.getSimulationList();
-
 		slBox.addListSelectionListener(new ListSelectionListener() {
 
 			@Override
@@ -143,18 +143,18 @@ public class QueryWidget extends JPanel {
 		textFieldEastLatitude.setColumns(10);
 		inputPanel.add(textFieldEastLatitude);
 		inputs.put("East Latitude", textFieldEastLatitude);
-/*		
-		JLabel lblSimulationName = new JLabel("Simulation Name");
-		lblSimulationName.setBounds(12, 160, 130, 15);
-		inputPanel.add(lblSimulationName);
-		
-		textFieldSimulationName = new JTextField();
-		textFieldSimulationName.setBounds(145, 160, 114, 19);
-		textFieldSimulationName.setEnabled(false);
-		textFieldSimulationName.setColumns(10);
-		inputPanel.add(textFieldSimulationName);
-		inputs.put("Simulation Name", textFieldSimulationName);
-*/
+		/*
+		 * JLabel lblSimulationName = new JLabel("Simulation Name");
+		 * lblSimulationName.setBounds(12, 160, 130, 15);
+		 * inputPanel.add(lblSimulationName);
+		 * 
+		 * textFieldSimulationName = new JTextField();
+		 * textFieldSimulationName.setBounds(145, 160, 114, 19);
+		 * textFieldSimulationName.setEnabled(false);
+		 * textFieldSimulationName.setColumns(10);
+		 * inputPanel.add(textFieldSimulationName);
+		 * inputs.put("Simulation Name", textFieldSimulationName);
+		 */
 		chckbxMinimumTemperature = new JCheckBox("Minimum Temperature");
 		chckbxMinimumTemperature.setBounds(10, 185, 249, 20);
 		inputPanel.add(chckbxMinimumTemperature);
@@ -173,9 +173,6 @@ public class QueryWidget extends JPanel {
 
 		return inputPanel;
 	}
-
-
-
 
 	public void setFields(boolean enabled) {
 
@@ -210,10 +207,8 @@ public class QueryWidget extends JPanel {
 		// computed.
 
 	}
-	
-	public String GetUserInputs(String name){
-		return inputs.get(name).getText();
-		
-	}
 
+	public String GetUserInputs(String name) {
+		return inputs.get(name).getText();
+	}
 }

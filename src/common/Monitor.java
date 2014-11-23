@@ -1,30 +1,22 @@
 package common;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import messaging.Message;
-import messaging.MessageListener;
 import messaging.Publisher;
-import messaging.events.StartMessage;
 import messaging.events.StopMessage;
 
-public class Monitor implements IMonitorCallback, MessageListener{
+public class Monitor implements IMonitorCallback {
 	
-	public int simulationLength;	// in months
 	private Calendar currentTimeInSimulation;
+	private Calendar endDate = (Calendar) Constants.START_DATE.clone();
 	
-	public Monitor(){
-		Publisher.getInstance().subscribe(StartMessage.class, this);
+	public Monitor(int simulationLength) {
+		endDate.add(Calendar.MONTH, simulationLength);
 	}
 	
-	public void onMessage(Message msg) {
-		
-		if (msg instanceof StartMessage) {
-			StartMessage startMsg = (StartMessage) msg;
-			// TODO get time limit here too from StartMessage (add parameter - set to 0 in normal "Start" button action)
-			this.simulationLength = startMsg.simulationLength();
-		}
+	public Monitor(int simulationLength, int endTime){
+		endDate.add(Calendar.MONTH, simulationLength);
+		endDate.add(Calendar.MILLISECOND, endTime);
 	}
 
 	@Override
@@ -37,9 +29,6 @@ public class Monitor implements IMonitorCallback, MessageListener{
 		// you can also check the current time. Since the startTime passed in from StartMessage will be 0 on normal simulations, and START_MESSAGE starts at midnight,
 		// this should also cover the need for checking time with Queries without using special logic.
 		
-		Calendar endDate = (Calendar) Constants.START_DATE.clone();
-		endDate.add(Calendar.MONTH, this.simulationLength);
-		
 		this.currentTimeInSimulation = (Calendar) Constants.START_DATE.clone();
 		this.currentTimeInSimulation.setTimeInMillis(dateTime);
 
@@ -51,7 +40,7 @@ public class Monitor implements IMonitorCallback, MessageListener{
 //		System.out.println("End Time " + strdate + "\n");
 		//end test
 		
-		if(this.currentTimeInSimulation.after(endDate)){
+		if (this.currentTimeInSimulation.after(endDate)){
 			Publisher.getInstance().send(new StopMessage());
 		}
 	}

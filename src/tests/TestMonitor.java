@@ -13,15 +13,15 @@ public class TestMonitor {
 
 	@Test
 	public void testMonitor() {
-		Monitor monitor = new Monitor();
 		
-		monitor.simulationLength = 12; // in months
+		Monitor monitor = new Monitor(12);
+		
 		int timeStep = 2160;	// in minutes
 		
 		Calendar currentDate = (Calendar) Constants.START_DATE.clone();
 
 		//43829.1 minutes in a month
-		float EstimatedCycles = (float) ((monitor.simulationLength * 43829.1)/timeStep);
+		float EstimatedCycles = (float) (12 * 43829.1)/timeStep;
 		EstimatedCycles++;
 		
 		System.out.println("estimated cycles " + EstimatedCycles);

@@ -43,18 +43,17 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 	private ThreadManager		threadManager		= ThreadManager.getManager();
 
+	private QueryWidget			queryWidget;
+	private ControlWidget		controlWidget;
+	private SettingsWidget		settingsWidget;
+	private QueryEngine			queryEngine;
 
-	private  QueryWidget				queryWidget;
-	private  ControlWidget				controlWidget;
-	private  SettingsWidget				settingsWidget;
-	private QueryEngine					queryEngine;
-
-	private final int				precision;
-	private final int				geoAccuracy;
-	private final int				temporalAccuracy;
-	private boolean 				isquery=false;
-	private JPanel 					queryPanel = new JPanel();
-	private int 					count = 1;
+	private final int			precision;
+	private final int			geoAccuracy;
+	private final int			temporalAccuracy;
+	private boolean				isquery				= false;
+	private JPanel				queryPanel			= new JPanel();
+	private int					count				= 1;
 
 	public ControlGUI(int precision, int geoAccuracy, int temporalAccuracy) {
 
@@ -67,19 +66,19 @@ public class ControlGUI extends JFrame implements ActionListener {
 		if (temporalAccuracy < Constants.TEMPORALACCURACY_MIN || temporalAccuracy > Constants.TEMPORALACCURACY_MAX)
 			throw new IllegalArgumentException("Invalid temporalAccuracy provided");
 
-		 this.precision = precision;
-		 this.geoAccuracy = geoAccuracy;
-		 this.temporalAccuracy = temporalAccuracy;
+		this.precision = precision;
+		this.geoAccuracy = geoAccuracy;
+		this.temporalAccuracy = temporalAccuracy;
 
 		// START_DATE is epoch UTC (01/01/1970). Add 3 days to make it
 		// 01/04/1970
 		Constants.START_DATE.add(Calendar.DAY_OF_YEAR, 3);
-		
+
 		// threadManager.add(new SimulationDAO(new SimulationNeo4j()));
 
 		// make widgets
-		 setupWindow();
-		 pack();
+		setupWindow();
+		pack();
 	}
 
 	private void setupWindow() {
@@ -99,7 +98,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 		getContentPane().add(settingsAndControls());
 		getContentPane().add(query(isquery));
-		
+
 	}
 
 	private void lowerRightWindow() {
@@ -108,16 +107,15 @@ public class ControlGUI extends JFrame implements ActionListener {
 		int x = (int) (dimension.getWidth() - this.getWidth());
 		int y = (int) (dimension.getHeight() - this.getHeight());
 		this.setLocation(x, y);
-		
+
 	}
 
 	private JPanel query(boolean isquery) {
 
-		
 		queryPanel.setLayout(new BoxLayout(queryPanel, BoxLayout.PAGE_AXIS));
 		queryPanel.setAlignmentY(Component.TOP_ALIGNMENT);
 		queryPanel.setVisible(isquery);
-		
+
 		queryWidget = new QueryWidget();
 
 		queryPanel.add(queryWidget, BorderLayout.CENTER);
@@ -130,7 +128,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 		JPanel sncPanel = new JPanel();
 		sncPanel.setLayout(new BoxLayout(sncPanel, BoxLayout.PAGE_AXIS));
 		sncPanel.setAlignmentY(Component.TOP_ALIGNMENT);
-		
+
 		controlWidget = new ControlWidget(this);
 		settingsWidget = new SettingsWidget();
 		sncPanel.add(settingsWidget, BorderLayout.WEST);
@@ -148,76 +146,8 @@ public class ControlGUI extends JFrame implements ActionListener {
 		if ("Start".equals(cmd)) {
 			try {
 
-				// TODO check for stop and reset?
-				// TODO All simulations need to start at Jan 4th (epoch)
-
-
-				final int gs = Integer.parseInt(settingsWidget.GetInputText("Grid Spacing"));
-				final int timeStep = Integer.parseInt(settingsWidget.GetInputText("Simulation Time Step"));
-				final float presentationRate = Float.parseFloat(settingsWidget.GetInputText("Presentation Rate"));
-				final int simulationLength = Integer.parseInt(settingsWidget.GetInputText("Simulation Length"));
-				final float axisTilt = Float.parseFloat(settingsWidget.GetInputText("Axis Tilt"));
-				final float eccentricity = Float.parseFloat(settingsWidget.GetInputText("Orbital Eccentricity"));
-				
-				final String	simName = gs + "-"+ timeStep + "-" + presentationRate + "-" + simulationLength + "-" + axisTilt + "-" + count;
-				count++;
-				
-
-				if (gs < Constants.MIN_GRID_SPACING || gs > Constants.MAX_GRID_SPACING)
-					throw new IllegalArgumentException("Invalid grid spacing");
-
-				// We'll let the user provide Time Steps in base 2 intervals starting from 1
-				if (timeStep < Constants.MIN_TIME_STEP || timeStep > Constants.MAX_TIME_STEP || (simulationLength != 1 && simulationLength % 2 != 0))
-					throw new IllegalArgumentException("Invalid time step");
-
-				if (simulationLength < Constants.MIN_SIM_LEN || simulationLength > Constants.MAX_SIM_LEN)
-					throw new IllegalArgumentException("Invalid simulation length");
-
-				if (presentationRate < Constants.MIN_PRESENTATION || presentationRate > Constants.MAX_PRESENTATION)
-					throw new IllegalArgumentException("Invalid presentation interval");
-
-				if (axisTilt < Constants.MIN_AXIS_TILT || axisTilt > Constants.MAX_AXIS_TILT)
-					throw new IllegalArgumentException("Invalid axisTilt value");
-
-				if (eccentricity < Constants.MIN_ECCENTRICITY || eccentricity > Constants.MAX_ECCENTRICITY)
-					throw new IllegalArgumentException("Invalid eccentricity value");
-
-				// Create and reset the buffer
-				Buffer.getBuffer().create(Constants.DEFAULT_BUFFFER_SIZE);
-
-				// threadManager.add(new SimulationDAO(new SimulationNeo4j()));
-				
-				
-
-				// TODO set name
-				// TODO check name against the DAO
-				if(isquery){
-					
-					final double wLat =  Double.parseDouble(queryWidget.GetUserInputs("West Longitude"));
-					final double eLat =  Double.parseDouble(queryWidget.GetUserInputs("East Longitude"));
-					final double sLat =  Double.parseDouble(queryWidget.GetUserInputs("South Latitude"));
-					final double nLat =  Double.parseDouble(queryWidget.GetUserInputs("North Latitude")); 
-					
-					try {
-						queryEngine = new QueryEngine();
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-					
-				}
-
-				threadManager.execute(new EarthEngine(new Monitor()));
-				threadManager.execute(new EarthDisplayEngine());
-				
-				Boolean animate = settingsWidget.GetDisplayAnimationStatus();
-				
-				// TODO There has GOT to be a more elegant way of transporting start values...we want to keep it decoupled, so using the messages was good. But at this point, would
-				// using the constructors be better??
-				StartMessage msg = new StartMessage(simName, gs, timeStep, presentationRate, simulationLength, axisTilt, eccentricity, this.precision, this.geoAccuracy, this.temporalAccuracy, animate);
-				Publisher.getInstance().send(msg);
-				System.out.println("Produce msg"); //Code not reaching here
+				init(0);
+				System.out.println("Produce msg"); // Code not reaching here
 				Publisher.getInstance().send(new ProduceMessage());
 
 				// do gui stuff to indicate start has occurred.
@@ -246,12 +176,84 @@ public class ControlGUI extends JFrame implements ActionListener {
 			controlWidget.disableButtonsBasedOnAction(cmd);
 			queryWidget.setFields(true);
 
-		}else if("Query".equals(cmd)){
-			
+		} else if ("Query".equals(cmd)) {
+
 			System.out.println("Query button clicked");
 			isquery = true;
 			queryPanel.setVisible(isquery);
 			controlWidget.disableButtonsBasedOnAction(cmd);
+			
+		} else if ("Run".equals(cmd)) {
+			
+			final double wLat = Double.parseDouble(queryWidget.GetUserInputs("West Longitude"));
+			final double eLat = Double.parseDouble(queryWidget.GetUserInputs("East Longitude"));
+			final double sLat = Double.parseDouble(queryWidget.GetUserInputs("South Latitude"));
+			final double nLat = Double.parseDouble(queryWidget.GetUserInputs("North Latitude"));
+			final int endTime = Integer.parseInt(queryWidget.GetUserInputs("End Time"));
+
+			try {
+				queryEngine = new QueryEngine();
+			} catch (SQLException e1) {
+				JOptionPane.showMessageDialog(null, "Unable to initialize Database backend. Please close application and try again.");
+			}
+			
+			init(endTime);
 		}
+	}
+	
+	private void init(int endTime) {
+		
+		// TODO check for stop and reset?
+		// TODO All simulations need to start at Jan 4th (epoch)
+
+		final int gs = Integer.parseInt(settingsWidget.GetInputText("Grid Spacing"));
+		final int timeStep = Integer.parseInt(settingsWidget.GetInputText("Simulation Time Step"));
+		final float presentationRate = Float.parseFloat(settingsWidget.GetInputText("Presentation Rate"));
+		final int simulationLength = Integer.parseInt(settingsWidget.GetInputText("Simulation Length"));
+		final float axisTilt = Float.parseFloat(settingsWidget.GetInputText("Axis Tilt"));
+		final float eccentricity = Float.parseFloat(settingsWidget.GetInputText("Orbital Eccentricity"));
+
+		// TODO set name
+		// TODO check name against the DAO
+		// TODO I thought we were going to let the user set the name?
+		final String simName = gs + "-" + timeStep + "-" + presentationRate + "-" + simulationLength + "-"
+				+ axisTilt + "-" + count;
+		count++;
+
+		if (gs < Constants.MIN_GRID_SPACING || gs > Constants.MAX_GRID_SPACING)
+			throw new IllegalArgumentException("Invalid grid spacing");
+
+		// We'll let the user provide Time Steps in base 2 intervals
+		// starting from 1
+		if (timeStep < Constants.MIN_TIME_STEP || timeStep > Constants.MAX_TIME_STEP
+				|| (simulationLength != 1 && simulationLength % 2 != 0))
+			throw new IllegalArgumentException("Invalid time step");
+
+		if (simulationLength < Constants.MIN_SIM_LEN || simulationLength > Constants.MAX_SIM_LEN)
+			throw new IllegalArgumentException("Invalid simulation length");
+
+		if (presentationRate < Constants.MIN_PRESENTATION || presentationRate > Constants.MAX_PRESENTATION)
+			throw new IllegalArgumentException("Invalid presentation interval");
+
+		if (axisTilt < Constants.MIN_AXIS_TILT || axisTilt > Constants.MAX_AXIS_TILT)
+			throw new IllegalArgumentException("Invalid axisTilt value");
+
+		if (eccentricity < Constants.MIN_ECCENTRICITY || eccentricity > Constants.MAX_ECCENTRICITY)
+			throw new IllegalArgumentException("Invalid eccentricity value");
+
+		// Create and reset the buffer
+		Buffer.getBuffer().create(Constants.DEFAULT_BUFFFER_SIZE);
+
+		// threadManager.add(new SimulationDAO(new SimulationNeo4j()));
+
+		threadManager.execute(new EarthEngine(new Monitor(simulationLength, endTime)));
+		threadManager.execute(new EarthDisplayEngine());
+
+		Boolean animate = settingsWidget.GetDisplayAnimationStatus();
+
+		// TODO Make this a Builder Pattern
+		StartMessage msg = new StartMessage(simName, gs, timeStep, presentationRate, simulationLength,
+				axisTilt, eccentricity, this.precision, this.geoAccuracy, this.temporalAccuracy, animate);
+		Publisher.getInstance().send(msg);
 	}
 }
