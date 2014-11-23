@@ -22,7 +22,6 @@ public class Monitor implements IMonitorCallback, MessageListener{
 		
 		if (msg instanceof StartMessage) {
 			StartMessage startMsg = (StartMessage) msg;
-			
 			// TODO get time limit here too from StartMessage (add parameter - set to 0 in normal "Start" button action)
 			this.simulationLength = startMsg.simulationLength();
 		}

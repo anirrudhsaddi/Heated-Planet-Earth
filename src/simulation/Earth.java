@@ -11,7 +11,6 @@ import messaging.events.DeliverMessage;
 import messaging.events.PersistMessage;
 import messaging.events.StartMessage;
 import simulation.util.GridCell;
-
 import common.Buffer;
 import common.Constants;
 import common.Grid;
@@ -61,7 +60,7 @@ public final class Earth {
 	}
 
 	public void configure(StartMessage start) {
-
+		
 		this.simulationName = start.getSimulationName();
 		this.timeStep = start.timeStep();
 		this.axisTilt = start.axisTilt();

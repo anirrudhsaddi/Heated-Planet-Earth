@@ -40,12 +40,13 @@ public class Publisher {
 	}
 	
 	public void send(Message msg) {
-
+		
 		// Send message to all subscribers
 		ConcurrentLinkedQueue<MessageListener> allListeners = subscribers.get(msg.getClass());
 		if (allListeners != null) {
 			for (MessageListener listener : allListeners) {
 				listener.onMessage(msg);
+				System.out.println("Listeners: " + listener);
 			}
 		}
 	}

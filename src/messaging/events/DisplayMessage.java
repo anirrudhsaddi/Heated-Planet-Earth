@@ -1,7 +1,6 @@
 package messaging.events;
 
 import common.IGrid;
-
 import messaging.Message;
 
 public class DisplayMessage implements Message {
@@ -11,8 +10,7 @@ public class DisplayMessage implements Message {
 	public DisplayMessage(IGrid grid) {
 		
 		if (grid == null)
-			throw new IllegalArgumentException("Invliad IGrid provided");
-		
+			throw new IllegalArgumentException("Invalid IGrid provided");
 		this.grid = grid;
 	}
 	

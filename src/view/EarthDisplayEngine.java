@@ -44,11 +44,11 @@ public class EarthDisplayEngine extends ComponentBase {
 	private long presentationCnt = 1;
 
 	public EarthDisplayEngine() {
-
+		
 		super();
-
+	
 		this.grid = null;
-
+		
 		Publisher.getInstance().subscribe(DisplayMessage.class, this);
 		Publisher.getInstance().subscribe(ConsumeMessage.class, this);
 	}
@@ -116,7 +116,6 @@ public class EarthDisplayEngine extends ComponentBase {
 	private void start(int gs, int timeStep, int simulationLength, float axisTilt, float eccentricity, float presentationInterval, boolean animate) {
 		
 		this.presentationInterval = presentationInterval;
-
 
 		this.display = new EarthDisplay(animate);
 		display.display(gs, timeStep, simulationLength, axisTilt, eccentricity);
