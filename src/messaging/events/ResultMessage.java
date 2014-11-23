@@ -1,13 +1,13 @@
 package messaging.events;
 
-import junit.framework.TestCase;
-
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import simulation.util.GridCell;
 import messaging.Message;
 
 public class ResultMessage implements Message {
@@ -17,6 +17,7 @@ public class ResultMessage implements Message {
 
 	private final List<Integer[]>				coords;
 	private final Map<Integer, Double>			grid;
+	private Map<Calendar, List<GridCell>>		table;
 
 	
 	private final int							southLatitude;
@@ -24,8 +25,7 @@ public class ResultMessage implements Message {
 	private final int							westLongitude;
 	private final int							eastLongitude;
 
-	public ResultMessage(int southLatitude, int northLatitude, int westLongitude, int eastLongitude,
-			boolean needsCalculation) {
+	public ResultMessage(int southLatitude, int northLatitude, int westLongitude, int eastLongitude, boolean needsCalculation) {
 
 		this.southLatitude = southLatitude;
 		this.northLatitude = northLatitude;
@@ -72,7 +72,11 @@ public class ResultMessage implements Message {
 		return grid.get(latitude * width + longitude);
 	}
 
-	public boolean containscoords(Integer[] checkInts) {
+	public boolean containsCoords(Integer[] checkInts) {
 		return coords.contains(checkInts);
+	}
+	
+	public Map<Calendar, List<GridCell>> getGridCells() {
+		return this.table;
 	}
 }

@@ -10,13 +10,8 @@ public class Monitor implements IMonitorCallback {
 	private Calendar currentTimeInSimulation;
 	private Calendar endDate = (Calendar) Constants.START_DATE.clone();
 	
-	public Monitor(int simulationLength) {
-		endDate.add(Calendar.MONTH, simulationLength);
-	}
-	
-	public Monitor(int simulationLength, int endTime){
-		endDate.add(Calendar.MONTH, simulationLength);
-		endDate.add(Calendar.MILLISECOND, endTime);
+	public Monitor(long dateTime) {
+		endDate.setTimeInMillis(dateTime);
 	}
 
 	@Override

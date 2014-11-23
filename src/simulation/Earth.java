@@ -23,7 +23,7 @@ import common.IMonitorCallback;
 
 public final class Earth {
 
-	private static Calendar currentDate;
+	private static Calendar currentDate, startDate;
 
 	private static final int[] increments = { 6, 9, 10, 12, 15, 18, 20, 30, 36,
 			45, 60, 90, 180 };
@@ -58,7 +58,7 @@ public final class Earth {
 	// corresponding to the grid cells.
 	// table DS has integer as time(rows), List<GridCell> is list of grid
 	// cells(columns)
-	private final Map<Integer, List<GridCell>>	table = new TreeMap<Integer, List<GridCell>>();
+	private final Map<Calendar, List<GridCell>>	table = new TreeMap<Calendar, List<GridCell>>();
 
 
 	public Earth(IMonitorCallback monitor) {
@@ -81,6 +81,8 @@ public final class Earth {
 		this.eccentricity = start.eccentricity();
 		this.precision = start.precision();
 		this.currentTimeInSimulation = 0;
+		
+		this.startDate = start.getStartDate();
 
 		// The following could be done better - if we have time, we should do so
 		int gs = start.gs();
@@ -372,7 +374,7 @@ public final class Earth {
 		return x < (width / 2) ? -(x + 1) * this.gs : (360) - (x + 1) * this.gs;
 	}
 	
-	public void PopulateTable(ResultMessage msg) {
+	public void populateTable(ResultMessage msg) {
 		int time = 0; // TODO: result message should give output in a range of
 						// time
 		List<GridCell> gridCells = new LinkedList<GridCell>();
@@ -380,7 +382,7 @@ public final class Earth {
 			for (int j = msg.getEastRegionBounds(); j <= msg.getWestRegionBounds(); j++) {
 				// check if this exists
 				Integer[] checkInts = new Integer[] { i, j };
-				if (msg.containscoords(checkInts)) {
+				if (msg.containsCoords(checkInts)) {
 					GridCell thisCell = new GridCell(msg.getTemperature(i, j), 0, 0, i, j, 0, 0, 0);
 					gridCells.add(thisCell);
 				}
@@ -389,10 +391,11 @@ public final class Earth {
 		this.table.put(time, gridCells);
 	}
 
-	public void InterpolateTable(ResultMessage msg) {
+	public void interpolateTable(ResultMessage msg) {
 		
-		int time = 0; // TODO: result message should give output in a range of
-						// time
+		 // TODO: result message should give output in a range of time
+		int time = 0;
+
 		List<GridCell> gridCells = new LinkedList<GridCell>();
 		GridCell thisCell = null;
 		
@@ -400,14 +403,18 @@ public final class Earth {
 			for (int j = msg.getEastRegionBounds(); j <= msg.getWestRegionBounds(); j++) {
 				
 				Integer[] checkInts = new Integer[] { i, j };
-				if (msg.containscoords(checkInts)) {
+				if (msg.containsCoords(checkInts)) {
+					
 					thisCell = new GridCell(msg.getTemperature(i, j), i, j, i, j, 0, 0, 0);
 					gridCells.add(thisCell);
+					
 				} else if (thisCell != null) {
+					
 					double tempNearestCell = thisCell.getTemp();
 					int k = thisCell.getX(), l = thisCell.getY();
 					int dy = l - j, dx = k - i;
 					double mytemp = tempNearestCell * (dy / dx);
+					
 					// SplineInterpolator splineInterp = new
 					// SplineInterpolator();
 					thisCell = new GridCell(mytemp, i, j, i, j, 0, 0, 0);
@@ -454,6 +461,7 @@ public final class Earth {
 				}
 			}
 		}
+		
 		return result;
 	}
 
@@ -474,6 +482,7 @@ public final class Earth {
 			temperatures /= gridCells.size();
 			meanTemps.add(temperatures);
 		}
+		
 		return meanTemps;
 	}
 
@@ -497,7 +506,7 @@ public final class Earth {
 		for (Map.Entry<Integer, List<GridCell>> entry : this.table.entrySet()) {
 			meanTemps.set(i++, meanTemps.get(i) / this.table.size());
 		}
+		
 		return meanTemps;
 	}
-	
 }

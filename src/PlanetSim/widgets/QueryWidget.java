@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -24,18 +25,26 @@ public class QueryWidget extends JPanel {
 
 	private static final long			serialVersionUID	= 1L;
 	private QueryEngine					queryEngine;
+	
+	private Integer[] 					hours = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 32 };
 
 	private GridLayout					mainlayout			= new GridLayout(3, 0);
 
-	private JTextField					textFieldEndTime, textFieldStartTime;
+	//private JTextField					textFieldEndTime, textFieldStartTime;
+	private JComboBox<Integer>			endHour, startHour, endMinute, startMinute, endSecond, startSecond;
+	
+	
 	private JTextField					textFieldNorthLongitude;
 	private JTextField					textFieldSouthLongitude;
 	private JTextField					textFieldWestLatitude;
 	private JTextField					textFieldEastLatitude;
 	private JTextField					textFieldSimulationName;
+	
 	private JList<?>					slBox;
+	
 	private JCheckBox					chckbxMinimumTemperature, chckbxMaximumTemperature,
 			chckbxMeanTemperatureOverTime, chckbxMeanTemperatureOverRegion;
+	
 	private HashMap<String, JTextField>	inputs				= new HashMap<String, JTextField>();
 
 	public QueryWidget() {
@@ -86,6 +95,8 @@ public class QueryWidget extends JPanel {
 		textFieldStartTime.setBounds(145, 10, 114, 19);
 		textFieldStartTime.setEnabled(false);
 		textFieldStartTime.setColumns(10);
+		
+		startHour = new JComboBox<Integer>();
 		inputPanel.add(textFieldStartTime);
 		inputs.put("Start Time", textFieldStartTime);
 
