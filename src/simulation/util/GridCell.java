@@ -42,8 +42,10 @@ public final class GridCell implements EarthCell<GridCell> {
 	
 	// Time of the Equinox
 	private static int tauAN;
+	// This field is used to store the current time in ResultMessage
+	public int timeOfResult;
 
-	public GridCell(float temp, int x, int y, int latitude, int longitude, int gs, float axisTilt, float eccentricity) {
+	public GridCell(double temp, int x, int y, int latitude, int longitude, int gs, float axisTilt, float eccentricity) {
 
 		if (temp > Float.MAX_VALUE) throw new IllegalArgumentException("Invalid temp provided");
 		if (x > Integer.MAX_VALUE || x < Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid 'x' provided");
@@ -62,6 +64,10 @@ public final class GridCell implements EarthCell<GridCell> {
 		this.setBottom(bottom);
 		this.setLeft(left);
 		this.setRight(right);
+	}
+
+	public GridCell() {
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -118,7 +124,7 @@ public final class GridCell implements EarthCell<GridCell> {
 	}
 
 	@Override
-	public void setTemp(float temp) {
+	public void setTemp(double temp) {
 
 		if (temp > Float.MAX_VALUE) throw new IllegalArgumentException("Invalid temp provided");
 		this.currTemp = temp;

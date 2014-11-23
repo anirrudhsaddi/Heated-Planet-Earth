@@ -1,4 +1,6 @@
 package simulation;
+import java.util.List;
+import java.util.LinkedList;
 
 import messaging.Message;
 import messaging.Publisher;
@@ -7,6 +9,7 @@ import messaging.events.ResultMessage;
 import messaging.events.StartMessage;
 import common.ComponentBase;
 import common.IMonitorCallback;
+import simulation.util.GridCell;
 
 public class EarthEngine extends ComponentBase {
 
@@ -57,7 +60,19 @@ public class EarthEngine extends ComponentBase {
 		// indicate what region they queried
 
 		// We also need to provide a report on the query - including min/max/mean, etc.
+		
+		//Scenario 1 - no need of calculation, the data from DB is the perfect hit for what the user wants
+		if(msg.needsCalculation()==false) {
+			//populate msg.table here
+			msg.PopulateTable();			
+		} else if(msg.needsCalculation()==true) {
+			//Scenario 2 - calculate - interpolate, the data that the user wants
+			msg.InterpolateTable(); 
+			//Scenario 3 - calculate - start a new simulation, the data the user wants is beyond the one stored in DB			
+			//Scenario 4 - calculate - start a new simulation with current data, the data the user wants is in between one stored in DB
 
+		}
+		
 		throw new IllegalStateException(
 				"Support for ResultMessage has yet to be added. SimulationStatus needs to be updated. Earth needs to be updated");
 	}

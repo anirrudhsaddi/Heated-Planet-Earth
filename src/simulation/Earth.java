@@ -9,9 +9,9 @@ import java.util.Queue;
 import messaging.Publisher;
 import messaging.events.DeliverMessage;
 import messaging.events.PersistMessage;
+import messaging.events.ResultMessage;
 import messaging.events.StartMessage;
 import simulation.util.GridCell;
-
 import common.Buffer;
 import common.Constants;
 import common.Grid;
@@ -99,7 +99,13 @@ public final class Earth {
 		// Now calculate the number of 'buckets' (or every 'nth' piece)
 		nth_data = totalGens / totalDataToSave;
 	}
+	
+	public void configure(ResultMessage msg) {
+		//This function is used to configure the data structures such that a new simulation can be started from here
+		
+	}
 
+	
 	public void start() {
 
 		int x = 0, y = 0;
