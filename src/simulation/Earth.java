@@ -81,8 +81,9 @@ public final class Earth {
 		this.eccentricity = start.eccentricity();
 		this.precision = start.precision();
 		this.currentTimeInSimulation = 0;
-		
 		this.startDate = start.getStartDate();
+		
+		currentDate = (Calendar) startDate.clone();
 
 		// The following could be done better - if we have time, we should do so
 		int gs = start.gs();
@@ -187,7 +188,6 @@ public final class Earth {
 		GridCell.setAvgSuntemp(totaltemp / (width * height));
 		GridCell.setAverageArea(totalarea / (width * height));
 
-		currentDate = (Calendar) Constants.START_DATE.clone();
 	}
 
 	public void generate() throws InterruptedException {

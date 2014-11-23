@@ -1,36 +1,70 @@
 package messaging.events;
 
+import java.util.Calendar;
+
 import messaging.Message;
 
 public class StartMessage implements Message {
 
-	private final String	simulationName;
-	private final int		gs;
-	private final int		timeStep;
-	private final int		simulationLength;
-	private final float		presentationInterval;
-	private final float		axisTilt;
-	private final float		eccentricity;
-	private final int		precision;
-	private final int		geoAccuracy;
-	private final int		temporalAccuracy;
-	private final boolean	animate;
+	private String simulationName;
+	private int gs;
+	private int timeStep;
+	private int simulationLength;
+	private float presentationInterval;
+	private float axisTilt;
+	private float eccentricity;
+	private int precision;
+	private int geoAccuracy;
+	private int temporalAccuracy;
+	private boolean animate;
+	private Calendar startDate;
 
-	public StartMessage(String simulationName, int gs, int timeStep, float presentationInterval, int simulationLength,
-			float axisTilt, float eccentricity, int precision, int geoAccuracy, int temporalAccuracy, boolean animate) {
+	public void setStartTime(Calendar startDate) {
+		this.startDate = startDate;
+	}
 
-		this.simulationName = simulationName;
-		this.gs = gs;
-		this.timeStep = timeStep;
-		this.simulationLength = simulationLength;
-		this.presentationInterval = presentationInterval;
-		this.axisTilt = axisTilt;
-		this.eccentricity = eccentricity;
-		this.precision = precision;
-		this.geoAccuracy = geoAccuracy;
-		this.temporalAccuracy = temporalAccuracy;
+	public void setAnimated(boolean animate) {
 		this.animate = animate;
+	}
 
+	public void setTemporalAccuracy(int temporalAccuracy) {
+		this.temporalAccuracy = temporalAccuracy;
+	}
+
+	public void setGeoAccuracy(int geoAccuracy) {
+		this.geoAccuracy = geoAccuracy;
+	}
+
+	public void setPrecision(int precision) {
+		this.precision = precision;
+	}
+
+	public void setOrbitalEccentricity(float eccentricity) {
+		this.eccentricity = eccentricity;
+	}
+
+	public void setAxisTilt(float axisTilt) {
+		this.axisTilt = axisTilt;
+	}
+
+	public void setPresentationInterval(float presentationInterval) {
+		this.presentationInterval = presentationInterval;
+	}
+
+	public void setSimulationLength(int simulationLengt) {
+		this.simulationLength = simulationLengt;
+	}
+
+	public void setTimeStep(int timeStep) {
+		this.timeStep = timeStep;
+	}
+
+	public void setGridSpacing(int gs) {
+		this.gs = gs;
+	}
+
+	public void setSimulationName(String simulationName) {
+		this.simulationName = simulationName;
 	}
 
 	public String getSimulationName() {
@@ -72,8 +106,12 @@ public class StartMessage implements Message {
 	public int geoAccuracy() {
 		return this.geoAccuracy;
 	}
-	
+
 	public int temporalAccuracy() {
 		return this.temporalAccuracy;
+	}
+
+	public Calendar getStartDate() {
+		return this.startDate;
 	}
 }

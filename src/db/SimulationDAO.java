@@ -346,7 +346,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	}
 
 	@Override
-	public void findTemperaturesAt(String name, Calendar targetDateTime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException, InterruptedException, ExecutionException {
+	public void findTemperaturesAt(String name, long startDateTime, long endDateTime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException, InterruptedException, ExecutionException {
 
 		/*
 		 *  If so, we then need to derive the end datetime from the simulation length (which is in months. we also have the start date by default (see ControlGui)).
@@ -356,12 +356,11 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		 */
 		
 		ResultSet result;
-		long queryDateTime = targetDateTime.getTimeInMillis();
 		
 		// First, find the closest datetime-valued relationship
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.GET_DATE_TIME_KEY);
 		query.setString(1, name);
-		query.setLong(2, targetDateTime.getTimeInMillis());
+		query.setLong(2, startDateTime);
 		
 		result = conn.query(query);
 		if (!result.isBeforeFirst() || result == null)
@@ -389,7 +388,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!result.isBeforeFirst() || result == null)
 			throw new SQLException("Failed to find a temperatures");
 		
-		ResultMessage msg = new ResultMessage(southLatitude, northLatitude, westLongitude, eastLongitude, (foundDateTime < queryDateTime));
+		ResultMessage msg = new ResultMessage(southLatitude, northLatitude, westLongitude, eastLongitude, (foundDateTime < startDateTime));
 		
 		while (result.next()) {
 			msg.setTemperature(result.getInt("longitude"), result.getInt("latitude"), result.getDouble("temperature"));

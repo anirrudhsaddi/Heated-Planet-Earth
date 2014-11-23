@@ -32,6 +32,6 @@ public interface ISimulationDAO {
 	
 	public Future<IQueryResult> findSimulationByData(int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float eccentricity) throws SQLException;
 	
-	public void findTemperaturesAt(String name, Calendar startDateTime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException, InterruptedException, ExecutionException;
+	public void findTemperaturesAt(String name, long startDateTime, long endDateTime, int westLongitude, int eastLongitude, int northLatitude, int southLatitude) throws SQLException, InterruptedException, ExecutionException;
 
 }

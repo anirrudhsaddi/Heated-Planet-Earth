@@ -12,29 +12,25 @@ REQUIREMENTS:
 
 This project uses Neo4j as it's embedded Database. The jar files are located under /resource/neo4j and should be included in the compile classpath.
 
-NOTE: If neo4j does not run on your system's Java JRE 1.6, JRE 1.7 will be needed. Follow these steps to install an additional JRE on your 
-Ubuntu System.
+NOTE: Java 1.6 was EOL'd two years ago, and EOL'd 1 year ago on OpenJDK. As such, many of the the tools needed to complete this project
+was incompatible with Java 6. As such, we have provided Java 1.7 JDK under "resources/java" for use with this project. 
 
-1. Download the JRE 1.7 from http://apt.ubuntu.com/p/openjdk-7-jre
-2. Download the JDK 1.7 from http://apt.ubuntu.com/p/openjdk-7-jdk (optional)
+There are two options for configuration. 
 
-Choosing the default Java to use
+1. You can set your paths to temporarily point to Java 7.
 
-If your system has more than one version of Java, configure which one your system uses by entering the following command in a terminal window
+	export JAVA_HOME=<path to resource>/resource/java/jdk1.7.0_72
+	export PATH=$JAVA_HOME/bin:$PATH
+	
+2. Install the JDK 1.7 as an alternative Java under Ubuntu's "alternatives"
 
-3. sudo update-alternatives --config java
-
-"""
-	This will present you with a selection that looks similar to the following (the details may differ for you):
-
-	There are 2 choices for the alternative java (providing /usr/bin/java).  
-	Selection Path Priority Status 
-	———————————————————— 
-	* 0 /usr/lib/jvm/java-6-openjdk/jre/bin/java 1061 auto mode 
-	1 /usr/lib/jvm/jre1.7.0/jre/bin/java 3 manual mode  
-
-	Press enter to keep the current choice[*], or type selection number: 1
-"""
+	Choosing the default Java to use:
+	
+	1. sudo update-alternative --install 
+	
+	3. sudo update-alternatives --config java
+	
+	4. select the jdk1.7
 
 Once Java 7 has been selected, compile the project again. If you encounter any errors, please e-mail:
 

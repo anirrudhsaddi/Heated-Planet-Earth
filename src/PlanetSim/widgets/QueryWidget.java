@@ -5,49 +5,71 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JCheckBox;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.jdatepicker.constraints.RangeConstraint;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilCalendarModel;
+
 import PlanetSim.QueryEngine;
+import common.Constants;
 
 public class QueryWidget extends JPanel {
 
 	private static final long			serialVersionUID	= 1L;
 	private QueryEngine					queryEngine;
+
+	private final Integer[]				hours				= new Integer[24];
+	private final Integer[]				minutes				= new Integer[60];
 	
-	private Integer[] 					hours = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 32 };
+	private final RangeConstraint dateRangeConstraint;
+	private JDatePanelImpl startDate;
+	private JDatePanelImpl	endDate;
+	private JDatePickerImpl startDatePicker, endDatePicker;
 
 	private GridLayout					mainlayout			= new GridLayout(3, 0);
 
-	//private JTextField					textFieldEndTime, textFieldStartTime;
-	private JComboBox<Integer>			endHour, startHour, endMinute, startMinute, endSecond, startSecond;
-	
-	
+	// private JTextField textFieldEndTime, textFieldStartTime;
+	private JComboBox<Integer>			endHour, startHour, endMinute, startMinute;
+
 	private JTextField					textFieldNorthLongitude;
 	private JTextField					textFieldSouthLongitude;
 	private JTextField					textFieldWestLatitude;
 	private JTextField					textFieldEastLatitude;
 	private JTextField					textFieldSimulationName;
-	
+
 	private JList<?>					slBox;
-	
+
 	private JCheckBox					chckbxMinimumTemperature, chckbxMaximumTemperature,
 			chckbxMeanTemperatureOverTime, chckbxMeanTemperatureOverRegion;
-	
+
 	private HashMap<String, JTextField>	inputs				= new HashMap<String, JTextField>();
 
 	public QueryWidget() {
+
+		for (int i = 0; i < 24; i++)
+			hours[i] = i;
+
+		for (int i = 1; i <= 60; i++)
+			minutes[i] = i;
+		
+		Calendar startRange = (Calendar) Constants.START_DATE.clone();
+		Calendar endRange = (Calendar) Constants.START_DATE.clone();
+		endRange.add(Calendar.MONTH, Constants.MAX_SIM_LEN);
+		dateRangeConstraint = new RangeConstraint(startRange, endRange);
 
 		setBorder(BorderFactory.createTitledBorder("Query"));
 		setLayout(new GridLayout());
@@ -67,7 +89,7 @@ public class QueryWidget extends JPanel {
 		} catch (SQLException e) {
 			throw new IllegalStateException(e);
 		}
-		
+
 		slBox = queryEngine.getSimulationList();
 		slBox.addListSelectionListener(new ListSelectionListener() {
 
@@ -91,25 +113,38 @@ public class QueryWidget extends JPanel {
 		lblStartTime.setBounds(10, 10, 130, 15);
 		inputPanel.add(lblStartTime);
 
-		textFieldStartTime = new JTextField();
-		textFieldStartTime.setBounds(145, 10, 114, 19);
-		textFieldStartTime.setEnabled(false);
-		textFieldStartTime.setColumns(10);
+		// startTime = new JPanel();
+		// startTime.setBounds(145, 10, 114, 19);
+		// startTime.setEnabled(false);
+		// startTime.setColumns(10);
+		//
+		// inputPanel.add(textFieldStartTime);
+		// inputs.put("Start Time", textFieldStartTime);
+
+		startHour = new JComboBox<Integer>(hours);
+		startMinute = new JComboBox<Integer>(minutes);
 		
-		startHour = new JComboBox<Integer>();
-		inputPanel.add(textFieldStartTime);
-		inputs.put("Start Time", textFieldStartTime);
+		startDate = new JDatePanelImpl(new UtilCalendarModel((Calendar) Constants.START_DATE.clone()));
+		startDate.addDateSelectionConstraint(this.dateRangeConstraint);
+		startDatePicker = new JDatePickerImpl(startDate);
+
+		endHour = new JComboBox<Integer>(hours);
+		endMinute = new JComboBox<Integer>(minutes);
+		
+		endDate = new JDatePanelImpl(new UtilCalendarModel((Calendar) Constants.START_DATE.clone()));
+		endDate.addDateSelectionConstraint(this.dateRangeConstraint);
+		endDatePicker = new JDatePickerImpl(endDate);
 
 		JLabel lblEndTime = new JLabel("End Time");
 		lblEndTime.setBounds(10, 35, 130, 15);
 		inputPanel.add(lblEndTime);
 
-		textFieldEndTime = new JTextField();
-		textFieldEndTime.setBounds(145, 35, 114, 19);
-		textFieldEndTime.setColumns(10);
-		textFieldEndTime.setEnabled(false);
-		inputPanel.add(textFieldEndTime);
-		inputs.put("End Time", textFieldEndTime);
+		// textFieldEndTime = new JTextField();
+		// textFieldEndTime.setBounds(145, 35, 114, 19);
+		// textFieldEndTime.setColumns(10);
+		// textFieldEndTime.setEnabled(false);
+		// inputPanel.add(textFieldEndTime);
+		// inputs.put("End Time", textFieldEndTime);
 
 		JLabel lblNorthLongitude = new JLabel("North Longitude");
 		lblNorthLongitude.setBounds(10, 60, 130, 15);
@@ -188,19 +223,19 @@ public class QueryWidget extends JPanel {
 	public void setFields(boolean enabled) {
 
 		if (!enabled) {
-			textFieldStartTime.setEnabled(false);
+			// textFieldStartTime.setEnabled(false);
 			textFieldEastLatitude.setEnabled(false);
 			textFieldWestLatitude.setEnabled(false);
 			textFieldSouthLongitude.setEnabled(false);
 			textFieldNorthLongitude.setEnabled(false);
-			textFieldEndTime.setEnabled(false);
+			// textFieldEndTime.setEnabled(false);
 		} else if (!enabled) {
-			textFieldStartTime.setEnabled(true);
+			// textFieldStartTime.setEnabled(true);
 			textFieldEastLatitude.setEnabled(true);
 			textFieldWestLatitude.setEnabled(true);
 			textFieldSouthLongitude.setEnabled(true);
 			textFieldNorthLongitude.setEnabled(true);
-			textFieldEndTime.setEnabled(true);
+			// textFieldEndTime.setEnabled(true);
 		}
 
 	}
@@ -221,5 +256,13 @@ public class QueryWidget extends JPanel {
 
 	public String GetUserInputs(String name) {
 		return inputs.get(name).getText();
+	}
+	
+	public Calendar getSelectedStartDate() {
+		return (Calendar) this.startDatePicker.getModel().getValue();
+	}
+	
+	public Calendar getSelectedEndDate() {
+		return (Calendar) this.endDatePicker.getModel().getValue();
 	}
 }

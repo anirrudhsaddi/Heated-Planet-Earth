@@ -6,6 +6,8 @@ import javax.swing.JList;
 
 import org.apache.james.mime4j.field.datetime.DateTime;
 
+import common.ThreadManager;
+
 import db.IDBConnection;
 import db.IQueryResult;
 import db.SimulationDAO;
@@ -53,7 +55,7 @@ public class QueryEngine {
 
 	public QueryEngine() throws SQLException {
 		simDAO = new SimulationDAO(new SimulationNeo4j());
-
+		ThreadManager.getManager().execute(simDAO);
 	}
 
 	public JList<?> getSimulationList() {

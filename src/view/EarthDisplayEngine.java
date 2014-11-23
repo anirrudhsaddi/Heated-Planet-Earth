@@ -62,7 +62,7 @@ public class EarthDisplayEngine extends ComponentBase {
 			start(start.gs(), start.timeStep(), start.simulationLength(), start.axisTilt(), start.eccentricity(), start.presentationInterval(), start.animate());
 			
 		} else if (msg instanceof DisplayMessage) {
-			display.update(((DisplayMessage) msg).getGrid());
+			// TODO
 		} else if (msg instanceof ConsumeMessage) {
 
 			if (grid == null) {
