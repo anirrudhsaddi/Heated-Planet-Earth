@@ -1,15 +1,12 @@
 package simulation;
-import java.util.List;
-import java.util.LinkedList;
-
 import messaging.Message;
 import messaging.Publisher;
 import messaging.events.ProduceMessage;
 import messaging.events.ResultMessage;
 import messaging.events.StartMessage;
+
 import common.ComponentBase;
 import common.IMonitorCallback;
-import simulation.util.GridCell;
 
 public class EarthEngine extends ComponentBase {
 
@@ -46,6 +43,9 @@ public class EarthEngine extends ComponentBase {
 		// destructor when done with class
 	}
 
+	// TODO Is it possible to pull these methods out of ResultMessage?
+	// ResultMessage is intended to be a data transport packet - adding cross method calls like these
+	// increases our dependencies...
 	private void processQueryResult(ResultMessage msg) {
 
 		// Instantiate and interpolate a grid from the ResultMessage
