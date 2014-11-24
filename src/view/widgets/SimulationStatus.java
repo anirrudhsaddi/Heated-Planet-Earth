@@ -20,8 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import view.util.ColorGenerator;
 import view.util.ColorMap;
+
 import common.Constants;
 
 public class SimulationStatus extends JPanel {
@@ -35,8 +35,6 @@ public class SimulationStatus extends JPanel {
 			axisTilt, eccentricity;
 	private JLabel							lblSunPos, lblCurrTime, lblGs, lblTimeStep, lblSimLength, lblAxisTilt,
 			lblEccentricity;
-
-	private JLabel							colorScale;
 
 	private JPanel							statusPanel, legendPanel;
 

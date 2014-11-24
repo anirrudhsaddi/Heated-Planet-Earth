@@ -1,6 +1,7 @@
 package messaging.events;
 
 import java.util.Calendar;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,7 +9,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import common.Constants;
-
 import simulation.util.GridCell;
 import messaging.Message;
 
@@ -37,6 +37,7 @@ public class ResultMessage implements Message {
 
 		grid = new TreeMap<Integer, Double>();
 		coords = new LinkedList<Integer[]>();
+		table = new Hashtable<Calendar, List<GridCell>>();
 	}
 
 	public int getSouthRegionBounds() {
