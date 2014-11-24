@@ -112,8 +112,6 @@ public final class Earth {
 		// From there, get the number to save by applying the percentage
 		int totalGens = (start.simulationLength() * 30 * 1440) / this.timeStep; // simlength*30*1440
 		totalDataToSave = totalGens * (start.temporalAccuracy() / 100);
-		System.out.println("Sim length: " + start.simulationLength()
-				+ "\n Time step:" + this.timeStep);
 
 		// Now calculate the number of 'buckets' (or every 'nth' piece)
 		nth_data = totalGens / totalDataToSave;
@@ -141,7 +139,7 @@ public final class Earth {
 		// South Pole
 		GridCell next = null, curr = prime;
 		for (x = 1; x < width; x++) {
-
+			System.out.println(x);
 			this.createRowCell(curr, next, null, x, y);
 			curr = curr.getLeft();
 		}
@@ -176,10 +174,10 @@ public final class Earth {
 		curr = prime;
 
 		for (x = 0; x < height; x++) {
+			
 			GridCell rowgrid = curr.getLeft();
 			for (y = 0; y < width; y++) {
-				totaltemp += rowgrid.calTsun(sunPositionCell,
-						currentTimeInSimulation);
+				totaltemp += rowgrid.calTsun(sunPositionCell, currentTimeInSimulation);
 				totalarea += rowgrid.getSurfarea();
 				rowgrid = rowgrid.getLeft();
 			}
@@ -376,10 +374,22 @@ public final class Earth {
 		return x < (width / 2) ? -(x + 1) * this.gs : (360) - (x + 1) * this.gs;
 	}
 	
-	//TABLE DS related code
+	// TABLE DS related code
 	public void populateTable(ResultMessage msg) {
-		Calendar time = new GregorianCalendar(0, 0, 0, 0, 0, 0);
+		
+		// This will cause all manner of hell with the time. Any times we use, you should do:
+		/*
+		 * Calendar <instance> = startDate.clone();
+		 * <instance>.add(...) ;
+		 * 
+		 * OR 
+		 * 
+		 * <instance>.setTimeInMillis(....);
+		 */
+		// Calendar time = new GregorianCalendar(0, 0, 0, 0, 0, 0);
+		
 		List<GridCell> gridCells = new LinkedList<GridCell>();
+		
 		for (int i = msg.getNorthRegionBounds(); i <= msg.getSouthRegionBounds(); i++) {
 			for (int j = msg.getEastRegionBounds(); j <= msg.getWestRegionBounds(); j++) {
 				// check if this exists
@@ -390,7 +400,8 @@ public final class Earth {
 				}
 			}
 		}
-		this.table.put(time, gridCells);
+		
+		// this.table.put(time, gridCells);
 	}
 
 	public void interpolateTable(ResultMessage msg) {
