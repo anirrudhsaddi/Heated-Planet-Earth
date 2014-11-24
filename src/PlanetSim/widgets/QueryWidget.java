@@ -69,10 +69,11 @@ public class QueryWidget extends JPanel {
 	private JList<?>					slBox;
 
 	private JCheckBox					chckbxMinimumTemperature, chckbxMaximumTemperature,
-			chckbxMeanTemperatureOverTime, chckbxMeanTemperatureOverRegion;
+			chckbxMeanTemperatureOverTime, chckbxMeanTemperatureOverRegion, chckbxActualValues;
 
 	private HashMap<String, JTextField>	inputs				= new HashMap<String, JTextField>();
-
+	private HashMap<String, JCheckBox>	checkBoxes				= new HashMap<String, JCheckBox>();
+	
 	public QueryWidget() {
 
 		for (int i = 0; i < 24; i++)
@@ -239,19 +240,29 @@ public class QueryWidget extends JPanel {
 		chckbxMinimumTemperature = new JCheckBox("Minimum Temperature");
 		chckbxMinimumTemperature.setBounds(10, 185, 249, 20);
 		inputPanel.add(chckbxMinimumTemperature);
-
+		checkBoxes.put("Minimum Temp", chckbxMinimumTemperature);
+		
+		
 		chckbxMaximumTemperature = new JCheckBox("Maximum Temperature");
 		chckbxMaximumTemperature.setBounds(10, 210, 249, 20);
 		inputPanel.add(chckbxMaximumTemperature);
-
+		checkBoxes.put("Maximum Temp", chckbxMaximumTemperature);
+		
 		chckbxMeanTemperatureOverTime = new JCheckBox("Mean Temperature over Time");
 		chckbxMeanTemperatureOverTime.setBounds(10, 235, 249, 23);
 		inputPanel.add(chckbxMeanTemperatureOverTime);
-
+		checkBoxes.put("Mean Time Temp", chckbxMeanTemperatureOverTime);
+		
 		chckbxMeanTemperatureOverRegion = new JCheckBox("Mean Temperature over Region");
 		chckbxMeanTemperatureOverRegion.setBounds(10, 260, 249, 23);
 		inputPanel.add(chckbxMeanTemperatureOverRegion);
-
+		checkBoxes.put("Mean Region Temp", chckbxMeanTemperatureOverRegion);
+		
+		chckbxActualValues = new JCheckBox("Actual Values");
+		chckbxActualValues.setBounds(10, 285, 249, 23);
+		inputPanel.add(chckbxActualValues);
+		checkBoxes.put("Actual Values", chckbxActualValues);
+		
 		return inputPanel;
 	}
 
@@ -277,20 +288,24 @@ public class QueryWidget extends JPanel {
 
 	public void getRequiredValues() {
 
-		Boolean min, max, time, region;
+		Boolean min, max, time, region, actualValues;
 
 		min = chckbxMinimumTemperature.isSelected();
 		max = chckbxMaximumTemperature.isSelected();
 		time = chckbxMeanTemperatureOverTime.isSelected();
 		region = chckbxMeanTemperatureOverRegion.isSelected();
-
-		// Todo: Method to access database asking for these values to be
+		actualValues = chckbxActualValues.isSelected();
+		// TODO: Method to access database asking for these values to be
 		// computed.
 
 	}
 
 	public String GetUserInputs(String name) {
 		return inputs.get(name).getText();
+	}
+	
+	public boolean GetCheckBox(String name) {
+		return checkBoxes.get(name).isSelected();
 	}
 	
 //	public Calendar getSelectedStartDate() {
