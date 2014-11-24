@@ -1,6 +1,7 @@
 package simulation.util;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public final class GridCell implements EarthCell<GridCell> {
 	// Time of the Equinox
 	private static int tauAN;
 	// This field is used to store the current time in ResultMessage
-	public int timeOfResult;
+	public Calendar  timeOfResult;
 
 	public GridCell(double temp, int x, int y, int latitude, int longitude, int gs, float axisTilt, float eccentricity) {
 

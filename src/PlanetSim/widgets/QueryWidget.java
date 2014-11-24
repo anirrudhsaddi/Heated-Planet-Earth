@@ -35,10 +35,10 @@ public class QueryWidget extends JPanel {
 	private final Integer[]				hours				= new Integer[24];
 	private final Integer[]				minutes				= new Integer[61];
 	
-	private final RangeConstraint dateRangeConstraint;
-	private JDatePanelImpl startDate;
-	private JDatePanelImpl	endDate;
-	private JDatePickerImpl startDatePicker, endDatePicker;
+//	private final RangeConstraint dateRangeConstraint;
+//	private JDatePanelImpl startDate;
+//	private JDatePanelImpl	endDate;
+//	private JDatePickerImpl startDatePicker, endDatePicker;
 
 	private GridLayout					mainlayout			= new GridLayout(3, 0);
 
@@ -64,12 +64,12 @@ public class QueryWidget extends JPanel {
 			hours[i] = i;
 
 		for (int i = 1; i <= 60; i++)
-			minutes[i] = i;
+			minutes[i - 1] = i;
 		
-		Calendar startRange = (Calendar) Constants.START_DATE.clone();
-		Calendar endRange = (Calendar) Constants.START_DATE.clone();
-		endRange.add(Calendar.MONTH, Constants.MAX_SIM_LEN);
-		dateRangeConstraint = new RangeConstraint(startRange, endRange);
+		//Calendar startRange = (Calendar) Constants.START_DATE.clone();
+		//Calendar endRange = (Calendar) Constants.START_DATE.clone();
+		//endRange.add(Calendar.MONTH, Constants.MAX_SIM_LEN);
+		//dateRangeConstraint = new RangeConstraint(startRange, endRange);
 
 		setBorder(BorderFactory.createTitledBorder("Query"));
 		setLayout(new GridLayout());
@@ -134,13 +134,16 @@ public class QueryWidget extends JPanel {
 		inputPanel.add(startHour);
 		inputPanel.add(startMinute);
 		inputPanel.add(startDatePicker);
+//		startDate = new JDatePanelImpl(new UtilCalendarModel((Calendar) Constants.START_DATE.clone()));
+//		startDate.addDateSelectionConstraint(this.dateRangeConstraint);
+//		startDatePicker = new JDatePickerImpl(startDate);
 
 		endHour = new JComboBox<Integer>(hours);
 		endMinute = new JComboBox<Integer>(minutes);
 		
-		endDate = new JDatePanelImpl(new UtilCalendarModel((Calendar) Constants.START_DATE.clone()));
-		endDate.addDateSelectionConstraint(this.dateRangeConstraint);
-		endDatePicker = new JDatePickerImpl(endDate);
+//		endDate = new JDatePanelImpl(new UtilCalendarModel((Calendar) Constants.START_DATE.clone()));
+//		endDate.addDateSelectionConstraint(this.dateRangeConstraint);
+//		endDatePicker = new JDatePickerImpl(endDate);
 
 		JLabel lblEndTime = new JLabel("End Time");
 		lblEndTime.setBounds(10, 35, 130, 15);
@@ -265,11 +268,11 @@ public class QueryWidget extends JPanel {
 		return inputs.get(name).getText();
 	}
 	
-	public Calendar getSelectedStartDate() {
-		return (Calendar) this.startDatePicker.getModel().getValue();
-	}
-	
-	public Calendar getSelectedEndDate() {
-		return (Calendar) this.endDatePicker.getModel().getValue();
-	}
+//	public Calendar getSelectedStartDate() {
+//		return (Calendar) this.startDatePicker.getModel().getValue();
+//	}
+//	
+//	public Calendar getSelectedEndDate() {
+//		return (Calendar) this.endDatePicker.getModel().getValue();
+//	}
 }

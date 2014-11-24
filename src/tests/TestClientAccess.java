@@ -153,7 +153,7 @@ public class TestClientAccess {
 
 		try {
 
-			t.dao.findTemperaturesAt("kungfu panda", c, 2, 0, 2, 0);
+			t.dao.findTemperaturesAt("kungfu panda",  c.getTimeInMillis(), c.getTimeInMillis(), 2, 0, 2, 0);
 
 		} catch (SQLException e) {
 			e.printStackTrace();

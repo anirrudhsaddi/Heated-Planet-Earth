@@ -207,17 +207,17 @@ public class ControlGUI extends JFrame implements ActionListener {
 			final int endHour = Integer.parseInt(queryWidget.GetUserInputs("End Hour"));
 			final int endMinute = Integer.parseInt(queryWidget.GetUserInputs("End Minute"));
 			
-			final Calendar start = queryWidget.getSelectedStartDate();
-			final Calendar end = queryWidget.getSelectedEndDate();
+//			final Calendar start = queryWidget.getSelectedStartDate();
+//			final Calendar end = queryWidget.getSelectedEndDate();
 			
-			start.add(Calendar.HOUR, startHour);
-			start.add(Calendar.MINUTE, startMinute);
-			
-			end.add(Calendar.HOUR, endHour);
-			end.add(Calendar.MINUTE, endMinute);
-			
-			long startDateTime = start.getTimeInMillis();
-			long endDateTime = end.getTimeInMillis();
+//			start.add(Calendar.HOUR, startHour);
+//			start.add(Calendar.MINUTE, startMinute);
+//			
+//			end.add(Calendar.HOUR, endHour);
+//			end.add(Calendar.MINUTE, endMinute);
+//			
+//			long startDateTime = start.getTimeInMillis();
+//			long endDateTime = end.getTimeInMillis();
 
 			try {
 				queryEngine = new QueryEngine();
@@ -227,7 +227,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 			
 			// TODO get the dates and times from query widget and convert them into calendars, send in millis 
 			
-			init(simulationLength, startDateTime, endDateTime);
+			// init(simulationLength, startDateTime, endDateTime);
 		}
 	}
 	

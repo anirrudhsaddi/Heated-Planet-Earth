@@ -26,6 +26,6 @@
 	<classpathentry kind="lib" path="resource/neo4j/scala-library-2.10.4.jar"/>
 	<classpathentry kind="lib" path="resource/neo4j/server-api-2.1.5.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/Users/bwebb/Development/JavaProjects/CS6310P3/resource/java/jdatepicker.jar"/>
+	<classpathentry kind="lib" path="resource/java/jdatepicker.jar" sourcepath="resource/java/jdk1.7.0_72"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

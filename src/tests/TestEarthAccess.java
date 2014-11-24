@@ -85,7 +85,7 @@ public class TestEarthAccess {
 
 		try {
 
-			t.dao.findTemperaturesAt("kungfu panda", c, 8, 5, 8, 5);
+			t.dao.findTemperaturesAt("kungfu panda", c.getTimeInMillis(), c.getTimeInMillis(), 8, 5, 8, 5);
 
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -1,10 +1,10 @@
 package simulation;
 import messaging.Message;
 import messaging.Publisher;
+import messaging.events.DisplayMessage;
 import messaging.events.ProduceMessage;
 import messaging.events.ResultMessage;
 import messaging.events.StartMessage;
-
 import common.ComponentBase;
 import common.IMonitorCallback;
 
@@ -43,6 +43,7 @@ public class EarthEngine extends ComponentBase {
 		// destructor when done with class
 	}
 
+
 	// TODO Is it possible to pull these methods out of ResultMessage?
 	// ResultMessage is intended to be a data transport packet - adding cross method calls like these
 	// increases our dependencies...
@@ -60,19 +61,21 @@ public class EarthEngine extends ComponentBase {
 		// indicate what region they queried
 
 		// We also need to provide a report on the query - including min/max/mean, etc.
+		DisplayMessage displayMsg = new DisplayMessage(null);
 		
 		//Scenario 1 - no need of calculation, the data from DB is the perfect hit for what the user wants
 		if(msg.needsCalculation()==false) {
 			//populate msg.table here
-			model.populateTable(msg);			
+			model.populateTable(msg);
+			model.interpolateTable(msg); 
 		} else if(msg.needsCalculation()==true) {
 			//Scenario 2 - calculate - interpolate, the data that the user wants
-			model.interpolateTable(msg); 
+			model.simulateFromTable(msg); 
 			//Scenario 3 - calculate - start a new simulation, the data the user wants is beyond the one stored in DB			
 			//Scenario 4 - calculate - start a new simulation with current data, the data the user wants is in between one stored in DB
 
 		}
-		
+		model.setDisplayMsg(displayMsg);
 		throw new IllegalStateException(
 				"Support for ResultMessage has yet to be added. SimulationStatus needs to be updated. Earth needs to be updated");
 	}

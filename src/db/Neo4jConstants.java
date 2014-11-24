@@ -147,10 +147,11 @@ public interface Neo4jConstants {
 			+ "RETURN simulation, simulationLength";
 
 	// Define the Query Statements
-	public static final String MATCH_NODE_BY_NAME_KEY 		= "match_node_name";
-	public static final String MATCH_NODE_BY_DATA_KEY 		= "match_node_values";
-	public static final String GET_GRID_BY_DATE_TIME_KEY 	= "match_area_by_date";
-	public static final String GET_DATE_TIME_KEY 			= "match_closest_datetime";
+	public static final String MATCH_NODE_BY_NAME_KEY 			= "match_node_name";
+	public static final String MATCH_NODE_BY_DATA_KEY 			= "match_node_values";
+	public static final String GET_GRID_BY_DATE_TIME_KEY 		= "match_area_by_date_time";
+	public static final String GET_GRID_BY_DATE_TIME_RANGE_KEY 	= "match_area_by_date_time_range";
+	public static final String GET_DATE_TIME_KEY 				= "match_closest_datetime";
 
 	public static final String MATCH_NODE_BY_NAME_QUERY = "MATCH (n:Simulation)-[:HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY|:HAS_AXIS|:HAS_LENGTH]->(o) "
 			+ "WHERE n.name = {1} "
@@ -172,5 +173,10 @@ public interface Neo4jConstants {
 			+ "WHERE n.name = {1} AND r.datetime <= {2} "
 			+ "WITH max(r.datetime) as dateTime " 
 			+ "RETURN dateTime";
+	
+	public static final String GET_GRID_BY_DATE_TIME_RANGE_QUERY = "MATCH (n:Simulation)-[r:HAS_TEMP]->(t:Temperature) "
+			+ "WHERE n.name = {1} AND r.datetime = {2} OR r.datetime = {3} OR (r.datetime < {3} AND r.datetime > {2})"
+			+ "WITH r.latitude AS latitude, r.longitude AS longitude, r.datetime AS dateTime, t.value AS temperature "
+			+ "RETURN latitude, longitude, dateTime, temperature";
 
 }
