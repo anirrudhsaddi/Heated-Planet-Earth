@@ -19,11 +19,26 @@ import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.jdatepicker.constraints.RangeConstraint;
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilCalendarModel;
 
+//import org.jdatepicker.constraints.RangeConstraint;
+//import org.jdatepicker.impl.JDatePanelImpl;
+//import org.jdatepicker.impl.JDatePickerImpl;
+//import org.jdatepicker.impl.UtilCalendarModel;
+//import org.jdatepicker.impl.UtilDateModel;
+//import org.jdatepicker.*;
+
+
+
+
+
+
+
+
+
+
+import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
+import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
+import net.sourceforge.jdatepicker.impl.UtilDateModel;
 import PlanetSim.QueryEngine;
 import common.Constants;
 
@@ -33,12 +48,12 @@ public class QueryWidget extends JPanel {
 	private QueryEngine					queryEngine;
 
 	private final Integer[]				hours				= new Integer[24];
-	private final Integer[]				minutes				= new Integer[61];
+	private final Integer[]				minutes				= new Integer[60];
 	
-//	private final RangeConstraint dateRangeConstraint;
+	//private final RangeConstraint dateRangeConstraint;
 //	private JDatePanelImpl startDate;
 //	private JDatePanelImpl	endDate;
-//	private JDatePickerImpl startDatePicker, endDatePicker;
+	//private JDatePickerImpl startDatePicker, endDatePicker;
 
 	private GridLayout					mainlayout			= new GridLayout(3, 0);
 
@@ -66,10 +81,10 @@ public class QueryWidget extends JPanel {
 		for (int i = 1; i <= 60; i++)
 			minutes[i - 1] = i;
 		
-		//Calendar startRange = (Calendar) Constants.START_DATE.clone();
-		//Calendar endRange = (Calendar) Constants.START_DATE.clone();
-		//endRange.add(Calendar.MONTH, Constants.MAX_SIM_LEN);
-		//dateRangeConstraint = new RangeConstraint(startRange, endRange);
+		Calendar startRange = (Calendar) Constants.START_DATE.clone();
+		Calendar endRange = (Calendar) Constants.START_DATE.clone();
+		endRange.add(Calendar.MONTH, Constants.MAX_SIM_LEN);
+	//	dateRangeConstraint = new RangeConstraint(startRange, endRange);
 
 		setBorder(BorderFactory.createTitledBorder("Query"));
 		setLayout(new GridLayout());
@@ -124,19 +139,29 @@ public class QueryWidget extends JPanel {
 		startHour = new JComboBox<Integer>(hours);
 		startMinute = new JComboBox<Integer>(minutes);
 		
-		startDate = new JDatePanelImpl(new UtilCalendarModel((Calendar) Constants.START_DATE.clone()));
-		startDate.addDateSelectionConstraint(this.dateRangeConstraint);
-		startDatePicker = new JDatePickerImpl(startDate);
-		
-		startDatePicker.setBounds(145, 10, 95, 19);
-		startHour.setBounds(250, 10, 10, 19);
-		startMinute.setBounds(260, 10, 10, 19);
-		inputPanel.add(startHour);
-		inputPanel.add(startMinute);
-		inputPanel.add(startDatePicker);
 //		startDate = new JDatePanelImpl(new UtilCalendarModel((Calendar) Constants.START_DATE.clone()));
 //		startDate.addDateSelectionConstraint(this.dateRangeConstraint);
 //		startDatePicker = new JDatePickerImpl(startDate);
+		
+// 		startDatePicker.setBounds(145, 10, 95, 19);
+//		startHour.setBounds(250, 10, 10, 19);
+//		startMinute.setBounds(260, 10, 10, 19);
+//    	inputPanel.add(startHour);
+//		inputPanel.add(startMinute);
+//		inputPanel.add(startDatePicker);
+//		startDate = new JDatePanelImpl(new UtilCalendarModel((Calendar) Constants.START_DATE.clone()));
+//	    startDate.addDateSelectionConstraint(this.dateRangeConstraint);
+//		startDatePicker = new JDatePickerImpl(startDate);
+		UtilDateModel model = new UtilDateModel();
+		JDatePanelImpl datepanel = new JDatePanelImpl(model);
+		JDatePickerImpl datePicker = new JDatePickerImpl(datepanel);
+		datePicker.setBounds(145, 10, 95, 19);
+		inputPanel.add(datePicker);
+		
+		startHour.setBounds(250, 10, 10, 19);
+		startMinute.setBounds(260, 10, 10, 19);
+    	inputPanel.add(startHour);
+		inputPanel.add(startMinute);
 
 		endHour = new JComboBox<Integer>(hours);
 		endMinute = new JComboBox<Integer>(minutes);
