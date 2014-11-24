@@ -184,6 +184,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 			System.out.println("Query button clicked");
 			isquery = true;
 			queryPanel.setVisible(isquery);
+			queryWidget.updateQList();
 			controlWidget.disableButtonsBasedOnAction(cmd);
 			
 		} else if ("Run".equals(cmd)) {

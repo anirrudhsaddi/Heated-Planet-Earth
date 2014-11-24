@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -26,6 +27,7 @@ import javax.swing.event.ListSelectionListener;
 //import org.jdatepicker.impl.UtilCalendarModel;
 //import org.jdatepicker.impl.UtilDateModel;
 //import org.jdatepicker.*;
+
 
 
 
@@ -67,6 +69,7 @@ public class QueryWidget extends JPanel {
 	private JTextField					textFieldSimulationName;
 
 	private JList<?>					slBox;
+	private Vector<String> 				slBoxList;
 
 	private JCheckBox					chckbxMinimumTemperature, chckbxMaximumTemperature,
 			chckbxMeanTemperatureOverTime, chckbxMeanTemperatureOverRegion, chckbxActualValues;
@@ -91,22 +94,25 @@ public class QueryWidget extends JPanel {
 		setLayout(new GridLayout());
 		setAlignmentY(Component.RIGHT_ALIGNMENT);
 
-		JScrollPane listScrollPane = new JScrollPane(slBox);
+		JScrollPane listScrollPane = new JScrollPane(getJList());
 		listScrollPane.setPreferredSize(new Dimension(50, this.getHeight()));
 		add(listScrollPane, BorderLayout.EAST);
 		add(inputFields());
 
 	}
-
-	private JList<?> list(String string) {
-
+	
+	public void updateQList(){
 		try {
 			queryEngine = new QueryEngine();
 		} catch (SQLException e) {
 			throw new IllegalStateException(e);
 		}
-
 		slBox = queryEngine.getSimulationList();
+	}
+
+	private JList<?> getJList() {
+		
+		slBox =  new JList();
 		slBox.addListSelectionListener(new ListSelectionListener() {
 
 			@Override

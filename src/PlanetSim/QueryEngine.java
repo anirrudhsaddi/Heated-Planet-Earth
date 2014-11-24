@@ -1,13 +1,14 @@
 package PlanetSim;
 
+import java.awt.List;
 import java.sql.SQLException;
+import java.util.concurrent.Future;
 
 import javax.swing.JList;
 
 import org.apache.james.mime4j.field.datetime.DateTime;
 
 import common.ThreadManager;
-
 import db.IDBConnection;
 import db.IQueryResult;
 import db.SimulationDAO;
@@ -61,7 +62,7 @@ public class QueryEngine {
 	public JList<?> getSimulationList() {
 		
 		JList simList = new JList();
-
+		
 		IQueryResult rs = null;
 		try {
 			rs = simDAO.findNamedSimulations();
@@ -69,15 +70,30 @@ public class QueryEngine {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		simList = (JList) rs.getSimulationName();
+		
+		java.util.List<String> names= rs.getSimulationName();
+		simList.setListData(names.toArray(new Object[0]));
+		System.out.println("SimList size: " + simList.getModel().getSize() );
+		for(int i=0;i<simList.getModel().getSize();){
+			System.out.println("Element at "+ i +". " + simList.getModel().getElementAt(i));
+			i++;
+		}
 		return simList;
 
 	}
 
 	private void getPhysicalParameters(String simulationName){
 		
-		String simName = simulationName;
+		IQueryResult result = null;
+		try {
+			result = (IQueryResult) simDAO.findSimulationByName(simulationName); //
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//TODO: result has the physical parameters. Set them in the settings Wdiget at runtime!
+		
 		
 	}
 	
