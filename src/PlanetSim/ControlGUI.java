@@ -149,7 +149,6 @@ public class ControlGUI extends JFrame implements ActionListener {
 				
 				Calendar end = (Calendar) Constants.START_DATE.clone();
 				end.add(Calendar.MONTH, simulationLength);
-
 				init(simulationLength, ((Calendar) Constants.START_DATE.clone()).getTimeInMillis(), end.getTimeInMillis());
 				System.out.println("Produce msg"); // Code not reaching here
 				Publisher.getInstance().send(new ProduceMessage());

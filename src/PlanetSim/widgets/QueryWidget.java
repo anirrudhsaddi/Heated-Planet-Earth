@@ -79,8 +79,8 @@ public class QueryWidget extends JPanel {
 		for (int i = 0; i < 24; i++)
 			hours[i] = i;
 
-		for (int i = 1; i <= 60; i++)
-			minutes[i - 1] = i;
+		for (int i = 0; i < 60; i++)
+			minutes[i] = i;
 		
 		Calendar startRange = (Calendar) Constants.START_DATE.clone();
 		Calendar endRange = (Calendar) Constants.START_DATE.clone();
@@ -125,9 +125,19 @@ public class QueryWidget extends JPanel {
 		inputPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		inputPanel.setLayout(null);
 
+		JLabel lblHours = new JLabel("Hrs");
+		lblHours.setBounds(285, 0, 50, 10);
+		inputPanel.add(lblHours);
+		
+		JLabel lblMins = new JLabel("Mins");
+		lblMins.setBounds(335, 0, 50, 10);
+		inputPanel.add(lblMins);
+		
 		JLabel lblStartTime = new JLabel("Start Time");
-		lblStartTime.setBounds(10, 10, 130, 15);
+		lblStartTime.setBounds(10, 15, 130, 15);
 		inputPanel.add(lblStartTime);
+		
+		
 
 		// startTime = new JPanel();
 		// startTime.setBounds(145, 10, 114, 19);
@@ -153,11 +163,11 @@ public class QueryWidget extends JPanel {
 //		startDate = new JDatePanelImpl(new UtilCalendarModel((Calendar) Constants.START_DATE.clone()));
 //	    startDate.addDateSelectionConstraint(this.dateRangeConstraint);
 //		startDatePicker = new JDatePickerImpl(startDate);
-		UtilDateModel model = new UtilDateModel();
-		JDatePanelImpl datepanel = new JDatePanelImpl(model);
-		JDatePickerImpl datePicker = new JDatePickerImpl(datepanel);
-		datePicker.setBounds(145, 10, 135, 25);
-		inputPanel.add(datePicker);
+		UtilDateModel startModel = new UtilDateModel();
+		JDatePanelImpl startDatepanel = new JDatePanelImpl(startModel);
+		JDatePickerImpl startDatePicker = new JDatePickerImpl(startDatepanel);
+		startDatePicker.setBounds(145, 10, 135, 25);
+		inputPanel.add(startDatePicker);
 		
 		startHour.setBounds(285, 10, 50, 25);
 		startMinute.setBounds(335, 10, 50, 25);
@@ -166,13 +176,24 @@ public class QueryWidget extends JPanel {
 
 		endHour = new JComboBox<Integer>(hours);
 		endMinute = new JComboBox<Integer>(minutes);
+		UtilDateModel endModel = new UtilDateModel();
+		JDatePanelImpl endDatePanel = new JDatePanelImpl(endModel);
+		JDatePickerImpl endDatePicker = new JDatePickerImpl(endDatePanel);
+		endDatePicker.setBounds(145, 40, 135, 25);
+		inputPanel.add(endDatePicker);
+		
+		endHour.setBounds(285, 40, 50, 25);
+		endMinute.setBounds(335, 40, 50, 25);
+    	inputPanel.add(endHour);
+		inputPanel.add(endMinute);
+		
 		
 //		endDate = new JDatePanelImpl(new UtilCalendarModel((Calendar) Constants.START_DATE.clone()));
 //		endDate.addDateSelectionConstraint(this.dateRangeConstraint);
 //		endDatePicker = new JDatePickerImpl(endDate);
 
 		JLabel lblEndTime = new JLabel("End Time");
-		lblEndTime.setBounds(10, 35, 130, 15);
+		lblEndTime.setBounds(10, 40, 130, 15);
 		inputPanel.add(lblEndTime);
 
 		// textFieldEndTime = new JTextField();
@@ -183,45 +204,45 @@ public class QueryWidget extends JPanel {
 		// inputs.put("End Time", textFieldEndTime);
 
 		JLabel lblNorthLongitude = new JLabel("North Longitude");
-		lblNorthLongitude.setBounds(10, 60, 130, 15);
+		lblNorthLongitude.setBounds(10, 70, 130, 15);
 		inputPanel.add(lblNorthLongitude);
 
 		textFieldNorthLongitude = new JTextField();
-		textFieldNorthLongitude.setBounds(145, 60, 114, 19);
-		textFieldNorthLongitude.setEnabled(false);
+		textFieldNorthLongitude.setBounds(145, 70, 114, 19);
+		textFieldNorthLongitude.setEnabled(true);
 		textFieldNorthLongitude.setColumns(10);
 		inputPanel.add(textFieldNorthLongitude);
 		inputs.put("North Longitude", textFieldNorthLongitude);
 
 		JLabel lblSouthLongitude = new JLabel("South Longitude");
-		lblSouthLongitude.setBounds(10, 85, 130, 15);
+		lblSouthLongitude.setBounds(10, 95, 130, 15);
 		inputPanel.add(lblSouthLongitude);
 
 		textFieldSouthLongitude = new JTextField();
 		textFieldSouthLongitude.setColumns(10);
-		textFieldSouthLongitude.setBounds(145, 85, 114, 19);
-		textFieldSouthLongitude.setEnabled(false);
+		textFieldSouthLongitude.setBounds(145, 90, 114, 19);
+		textFieldSouthLongitude.setEnabled(true);
 		inputPanel.add(textFieldSouthLongitude);
 		inputs.put("South Longitude", textFieldSouthLongitude);
 
 		JLabel lblWestLatitude = new JLabel("West Latitude");
-		lblWestLatitude.setBounds(10, 110, 114, 15);
+		lblWestLatitude.setBounds(10, 115, 114, 15);
 		inputPanel.add(lblWestLatitude);
 
 		textFieldWestLatitude = new JTextField();
-		textFieldWestLatitude.setBounds(145, 110, 114, 19);
-		textFieldWestLatitude.setEnabled(false);
+		textFieldWestLatitude.setBounds(145, 115, 114, 19);
+		textFieldWestLatitude.setEnabled(true);
 		textFieldWestLatitude.setColumns(10);
 		inputPanel.add(textFieldWestLatitude);
 		inputs.put("West Latitude", textFieldWestLatitude);
 
 		JLabel lblEastLatitude = new JLabel("East Latitude");
-		lblEastLatitude.setBounds(12, 135, 130, 15);
+		lblEastLatitude.setBounds(12, 140, 130, 15);
 		inputPanel.add(lblEastLatitude);
 
 		textFieldEastLatitude = new JTextField();
-		textFieldEastLatitude.setBounds(145, 135, 114, 19);
-		textFieldEastLatitude.setEnabled(false);
+		textFieldEastLatitude.setBounds(145, 140, 114, 19);
+		textFieldEastLatitude.setEnabled(true);
 		textFieldEastLatitude.setColumns(10);
 		inputPanel.add(textFieldEastLatitude);
 		inputs.put("East Latitude", textFieldEastLatitude);

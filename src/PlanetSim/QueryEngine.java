@@ -75,6 +75,12 @@ public class QueryEngine {
 
 	}
 
+	private void getPhysicalParameters(String simulationName){
+		
+		String simName = simulationName;
+		
+	}
+	
 	// probably don't need this since we do an anonymous instantiation on line 55
 	public void setConn(IDBConnection conn) {
 		this.conn = conn;
