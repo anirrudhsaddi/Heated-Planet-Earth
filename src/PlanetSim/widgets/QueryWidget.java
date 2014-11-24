@@ -33,7 +33,7 @@ public class QueryWidget extends JPanel {
 	private QueryEngine					queryEngine;
 
 	private final Integer[]				hours				= new Integer[24];
-	private final Integer[]				minutes				= new Integer[60];
+	private final Integer[]				minutes				= new Integer[61];
 	
 	private final RangeConstraint dateRangeConstraint;
 	private JDatePanelImpl startDate;
@@ -127,6 +127,13 @@ public class QueryWidget extends JPanel {
 		startDate = new JDatePanelImpl(new UtilCalendarModel((Calendar) Constants.START_DATE.clone()));
 		startDate.addDateSelectionConstraint(this.dateRangeConstraint);
 		startDatePicker = new JDatePickerImpl(startDate);
+		
+		startDatePicker.setBounds(145, 10, 95, 19);
+		startHour.setBounds(250, 10, 10, 19);
+		startMinute.setBounds(260, 10, 10, 19);
+		inputPanel.add(startHour);
+		inputPanel.add(startMinute);
+		inputPanel.add(startDatePicker);
 
 		endHour = new JComboBox<Integer>(hours);
 		endMinute = new JComboBox<Integer>(minutes);
