@@ -156,11 +156,11 @@ public class QueryWidget extends JPanel {
 		UtilDateModel model = new UtilDateModel();
 		JDatePanelImpl datepanel = new JDatePanelImpl(model);
 		JDatePickerImpl datePicker = new JDatePickerImpl(datepanel);
-		datePicker.setBounds(145, 10, 95, 19);
+		datePicker.setBounds(145, 10, 135, 25);
 		inputPanel.add(datePicker);
 		
-		startHour.setBounds(250, 10, 10, 19);
-		startMinute.setBounds(260, 10, 10, 19);
+		startHour.setBounds(285, 10, 50, 25);
+		startMinute.setBounds(335, 10, 50, 25);
     	inputPanel.add(startHour);
 		inputPanel.add(startMinute);
 
