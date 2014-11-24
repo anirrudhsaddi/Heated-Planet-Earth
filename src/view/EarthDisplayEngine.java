@@ -4,7 +4,7 @@ import messaging.Message;
 import messaging.Publisher;
 import messaging.events.ConsumeMessage;
 import messaging.events.DisplayMessage;
-import messaging.events.StartMessage;
+import messaging.events.ConfigureMessage;
 import common.Buffer;
 import common.ComponentBase;
 import common.IBuffer;
@@ -56,10 +56,9 @@ public class EarthDisplayEngine extends ComponentBase {
 	@Override
 	public synchronized void performAction(Message msg) {
 
-		if (msg instanceof StartMessage) {
+		if (msg instanceof ConfigureMessage) {
 
-			StartMessage start = (StartMessage) msg;
-			start(start.gs(), start.timeStep(), start.simulationLength(), start.axisTilt(), start.eccentricity(), start.presentationInterval(), start.animate());
+			start((ConfigureMessage) msg);
 			
 		} else if (msg instanceof DisplayMessage) {
 			// TODO
@@ -83,11 +82,11 @@ public class EarthDisplayEngine extends ComponentBase {
 		while (!Thread.currentThread().isInterrupted() && !stopped.get()) {
 			
 			long curTime = System.nanoTime();
-			if ((curTime - lastDisplayTime) * 1e-9 >= presentationInterval) {
+			if ((curTime - lastDisplayTime) * 1e-9 >= presentationInterval && !paused.get()) {
 				
 				if (grid != null) {
-					if (STATISTIC_MODE)
-						generateStatisicalData(grid);
+//					if (STATISTIC_MODE)
+//						generateStatisicalData(grid);
 
 					display.update(grid);
 					grid = null;
@@ -113,69 +112,69 @@ public class EarthDisplayEngine extends ComponentBase {
 		display.close();
 	}
 
-	private void start(int gs, int timeStep, int simulationLength, float axisTilt, float eccentricity, float presentationInterval, boolean animate) {
+	private void start(ConfigureMessage msg) {
 		
-		this.presentationInterval = presentationInterval;
+		this.presentationInterval = msg.presentationInterval();
 
-		this.display = new EarthDisplay(animate);
-		display.display(gs, timeStep, simulationLength, axisTilt, eccentricity);
+		this.display = new EarthDisplay(msg.animate());
+		display.display(msg.gs(), msg.timeStep(), msg.simulationLength(), msg.axisTilt(), msg.eccentricity());
 		display.update(grid);
 	}
 
 	// TODO move to separate module
-	private void generateStatisicalData(IGrid data) {
-
-		if (!steadyState && steadyStateReached(data)) {
-			steadyState = true;
-			System.out.printf("========STABLE REACHED!========: %d\n",
-					data.getCurrentTime());
-		}
-
-		long curTime = System.nanoTime();
-
-		// Sample memory usage periodically
-		if ((curTime - lastStatTime) * 1e-9 > statInterval) {
-			
-			float wallTimePerPresentation = (float) (System.nanoTime() - startWallTime) / presentationCnt;
-			System.out.printf("walltime/present (msec): %f\n", wallTimePerPresentation / 1e6);
-			Runtime runtime = Runtime.getRuntime();
-			
-			System.gc();
-			
-			maxUsedMem = Math.max(maxUsedMem, runtime.totalMemory() - runtime.freeMemory());
-			System.out.printf("usedMem: %.1f\n", maxUsedMem / 1e6);
-			lastStatTime = curTime;
-
-			IBuffer b = Buffer.getBuffer();
-			System.out.printf("Buffer fill status: %d/%d\n", b.size() + 1, b.size() + b.getRemainingCapacity());
-
-			startWallTime = System.nanoTime();
-			presentationCnt = 0;
-
-		}
-		presentationCnt++;
-	}
-
-	// TODO move to separate module
-	private boolean steadyStateReached(IGrid grid) {
-
-		float equatorAverage = 0.0f;
-		int eqIdx = grid.getGridHeight() / 2;
-		
-		for (int i = 0; i < grid.getGridWidth(); i++) {
-			equatorAverage += grid.getTemperature(i, eqIdx);
-		}
-		
-		equatorAverage /= grid.getGridWidth();
-
-		boolean stable = false;
-
-		if (Math.abs(equatorAverage - lastEquatorAverage) <= STABLE_THRESHOLD) {
-			stable = true;
-		}
-		
-		lastEquatorAverage = equatorAverage;
-		return stable;
-
-	}
+//	private void generateStatisicalData(IGrid data) {
+//
+//		if (!steadyState && steadyStateReached(data)) {
+//			steadyState = true;
+//			System.out.printf("========STABLE REACHED!========: %d\n",
+//					data.getCurrentTime());
+//		}
+//
+//		long curTime = System.nanoTime();
+//
+//		// Sample memory usage periodically
+//		if ((curTime - lastStatTime) * 1e-9 > statInterval) {
+//			
+//			float wallTimePerPresentation = (float) (System.nanoTime() - startWallTime) / presentationCnt;
+//			System.out.printf("walltime/present (msec): %f\n", wallTimePerPresentation / 1e6);
+//			Runtime runtime = Runtime.getRuntime();
+//			
+//			System.gc();
+//			
+//			maxUsedMem = Math.max(maxUsedMem, runtime.totalMemory() - runtime.freeMemory());
+//			System.out.printf("usedMem: %.1f\n", maxUsedMem / 1e6);
+//			lastStatTime = curTime;
+//
+//			IBuffer b = Buffer.getBuffer();
+//			System.out.printf("Buffer fill status: %d/%d\n", b.size() + 1, b.size() + b.getRemainingCapacity());
+//
+//			startWallTime = System.nanoTime();
+//			presentationCnt = 0;
+//
+//		}
+//		presentationCnt++;
+//	}
+//
+//	// TODO move to separate module
+//	private boolean steadyStateReached(IGrid grid) {
+//
+//		float equatorAverage = 0.0f;
+//		int eqIdx = grid.getGridHeight() / 2;
+//		
+//		for (int i = 0; i < grid.getGridWidth(); i++) {
+//			equatorAverage += grid.getTemperature(i, eqIdx);
+//		}
+//		
+//		equatorAverage /= grid.getGridWidth();
+//
+//		boolean stable = false;
+//
+//		if (Math.abs(equatorAverage - lastEquatorAverage) <= STABLE_THRESHOLD) {
+//			stable = true;
+//		}
+//		
+//		lastEquatorAverage = equatorAverage;
+//		return stable;
+//
+//	}
 }

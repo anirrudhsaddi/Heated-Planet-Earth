@@ -17,7 +17,7 @@ import messaging.Message;
 import messaging.MessageListener;
 import messaging.Publisher;
 import messaging.events.DisplayMessage;
-import messaging.events.StartMessage;
+import messaging.events.ConfigureMessage;
 import simulation.util.GridCell;
 import common.IGrid;
 
@@ -42,7 +42,7 @@ public class TableDisplay extends JFrame implements MessageListener{
     public TableDisplay() {
     	super("Query Table");
     	Publisher.getInstance().subscribe(DisplayMessage.class, this);
-    	Publisher.getInstance().subscribe(StartMessage.class, this);
+    	Publisher.getInstance().subscribe(ConfigureMessage.class, this);
     	
     	this.columnNames =  new String[0];
     	this.data = new Object[0][0];
@@ -160,7 +160,7 @@ public class TableDisplay extends JFrame implements MessageListener{
 	        columnIdx++;
 	        
 	        // Min Temp
-	        if(showMinTemp){	// 								ex: TEMP° at WHEN, WHERE 
+	        if(showMinTemp){	// 								ex: TEMPï¿½ at WHEN, WHERE 
 	        	gridCell = msg.getMinTemp();
 	        	data[rowIdx][columnIdx] = 	"Min Temp: " + gridCell.getTemp() + 
 	        								" Time:" + gridCell.timeOfResult + 
@@ -169,7 +169,7 @@ public class TableDisplay extends JFrame implements MessageListener{
 	        }
 	        
 	        // Max Temp
-	        if(showMaxTemp){	// 								ex: TEMP° at WHEN, WHERE
+	        if(showMaxTemp){	// 								ex: TEMPï¿½ at WHEN, WHERE
 	        	gridCell = msg.getMaxTemp();
 	        	data[rowIdx][columnIdx] = 	"Max Temp: " + gridCell.getTemp() + 
 	        								" Time:" + gridCell.timeOfResult + 
@@ -178,7 +178,7 @@ public class TableDisplay extends JFrame implements MessageListener{
 	        }
 	        
 	        // Mean Temp Over Region
-	        if(showMeanRegion){	// 								ex: TEMP° at ROW
+	        if(showMeanRegion){	// 								ex: TEMPï¿½ at ROW
 	        	meanTemp = msg.getMeanTempOverRegion();
 	        	data[rowIdx][columnIdx] = 	"Mean Temp Over Region : " + meanTemp.get(rowIdx) +
 											" Row:??";
@@ -186,7 +186,7 @@ public class TableDisplay extends JFrame implements MessageListener{
 	        }
 	        
 	        // Mean Temp Over Time
-	        if(showMeanTime){	// 								ex: TEMP° at ROW
+	        if(showMeanTime){	// 								ex: TEMPï¿½ at ROW
 	        	meanTemp = msg.getMeanTempOverTime();
 	        	data[rowIdx][columnIdx] = 	"Mean Temp Over Time : " + meanTemp.get(rowIdx) +
 											" Row:??";
@@ -194,7 +194,7 @@ public class TableDisplay extends JFrame implements MessageListener{
 	        }
 	        
 	        // Actual Cell Values
-	        if(showActualValue){	// 								ex: TEMP° at X,Y
+	        if(showActualValue){	// 								ex: TEMPï¿½ at X,Y
 	        	IGrid grid = msg.getGrid();
 	        	for(int x=0;x<grid.getGridWidth();x++){
 	        		for(int y=0;y<grid.getGridHeight();y++){
@@ -238,8 +238,8 @@ public class TableDisplay extends JFrame implements MessageListener{
 		if (msg instanceof DisplayMessage) {
 			updateTableData(((DisplayMessage) msg));
 		}
-		else if(msg instanceof StartMessage){
-			StartMessage startMsg = (StartMessage)msg;
+		else if(msg instanceof ConfigureMessage){
+			ConfigureMessage startMsg = (ConfigureMessage)msg;
 			this.gs = startMsg.gs();
 			this.showMinTemp = startMsg.showMinTemp();
 			this.showMaxTemp = startMsg.showMaxTemp();

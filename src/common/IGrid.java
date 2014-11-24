@@ -1,5 +1,7 @@
 package common;
 
+import java.util.Calendar;
+
 public interface IGrid {
 	
 	public void setTemperature(int x, int y, double temp);
@@ -20,13 +22,13 @@ public interface IGrid {
 	
 	public float getPlanetY();	
 	
-	public long getCurrentTime();
+//	public long getCurrentTime();
 	
 	public int getGridWidth();
 	
 	public int getGridHeight();
 	
-	public long getDateTime();
+	public Calendar getDateTime();
 	
 	public String getSimulationName();
 

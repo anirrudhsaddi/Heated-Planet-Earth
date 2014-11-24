@@ -25,14 +25,14 @@ public class ColorMap {
 
 		for (int i = 0; i < maps.length; i++) {
 			if (nm.equalsIgnoreCase(maps[i].name)) {
-				res = maps[i];
-				break;
+				return maps[i];
 			}
 		}
 
 		if (res == null)
 			throw new IllegalArgumentException("unknown colormap requested");
-
+		
+		// Just to get Java to shut up
 		return res;
 	}
 

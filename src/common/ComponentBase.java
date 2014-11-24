@@ -8,7 +8,7 @@ import messaging.MessageListener;
 import messaging.Publisher;
 import messaging.events.PauseMessage;
 import messaging.events.ResumeMessage;
-import messaging.events.StartMessage;
+import messaging.events.ConfigureMessage;
 import messaging.events.StopMessage;
 
 public abstract class ComponentBase implements MessageListener, Runnable {
@@ -25,7 +25,7 @@ public abstract class ComponentBase implements MessageListener, Runnable {
 		stopped.set(false);
 		
 		Publisher publisher = Publisher.getInstance();
-		publisher.subscribe(StartMessage.class, this);
+		publisher.subscribe(ConfigureMessage.class, this);
 		publisher.subscribe(StopMessage.class, this);
 		publisher.subscribe(PauseMessage.class, this);
 		publisher.subscribe(ResumeMessage.class, this);
@@ -37,7 +37,7 @@ public abstract class ComponentBase implements MessageListener, Runnable {
 		if (msg instanceof StopMessage) {
 			this.msgQueue.clear();
 			this.stop();
-		} else if (msg instanceof StartMessage) {
+		} else if (msg instanceof ConfigureMessage) {
 			this.performAction(msg);
 		} else if (msg instanceof PauseMessage) {
 			this.pause();

@@ -1,38 +1,105 @@
 package view.widgets;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.LinearGradientPaint;
+import java.awt.RenderingHints;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import view.util.ColorGenerator;
+import view.util.ColorMap;
+import common.Constants;
+
 public class SimulationStatus extends JPanel {
 
 	/**
      * 
      */
-	private static final long serialVersionUID = 4874764682275993951L;
+	private static final long				serialVersionUID	= 4874764682275993951L;
 
-	private JTextField sunPosStats, currTimeStatus, gsStatus, timeStepStatus,
-			simulationLength, axisTilt, eccentricity;
-	private JLabel lblSunPos, lblCurrTime, lblGs, lblTimeStep, lblSimLength,
-			lblAxisTilt, lblEccentricity;
+	private JTextField						sunPosStats, currTimeStatus, gsStatus, timeStepStatus, simulationLength,
+			axisTilt, eccentricity;
+	private JLabel							lblSunPos, lblCurrTime, lblGs, lblTimeStep, lblSimLength, lblAxisTilt,
+			lblEccentricity;
 
-	private static final int HEIGHT = 7;
-	private static final int WIDTH = 2;
-	private static final int HGAP = 1;
-	private static final int VGAP = 1;
+	private JLabel							colorScale;
 
-	// private final SimpleDateFormat DATE_FORMAT = new
-	// SimpleDateFormat("dd-MM-yy HH:mm:SS");
+	private JPanel							statusPanel, legendPanel;
 
-	public SimulationStatus() {
+	private static final int				HEIGHT				= 7;
+	private static final int				WIDTH				= 2;
+	private static final int				HGAP				= 1;
+	private static final int				VGAP				= 1;
+
+	private Calendar						currDateTime		= (Calendar) Constants.START_DATE.clone();
+	private static final SimpleDateFormat	DATE_FORMAT			= new SimpleDateFormat("dd-MM-yy HH:mm:SS");
+
+	private ColorMap						colorMap;
+
+	public SimulationStatus(String colorMap) {
 
 		this.setBorder(new EmptyBorder(10, 10, 10, 10));
-		this.setLayout(new GridLayout(HEIGHT, WIDTH, HGAP, VGAP));
+		this.setLayout(new GridLayout(1, 2, HGAP, VGAP));
+
+		statusPanel = new JPanel();
+		statusPanel.setLayout(new GridLayout(HEIGHT, WIDTH, HGAP, VGAP));
+
+		legendPanel = new JPanel();
+		legendPanel.setLayout(new GridLayout(1, 2, HGAP, VGAP));
+
+		this.colorMap = ColorMap.getMap(colorMap);
+
+		this.addStatusPanel();
+		this.addKeyPanel();
+	}
+
+	public void init() {
+
+		this.sunPosStats.setText("0");
+		this.gsStatus.setText("0");
+		this.timeStepStatus.setText("0");
+		this.simulationLength.setText("0");
+		this.axisTilt.setText("0");
+		this.eccentricity.setText("0");
+
+		this.currTimeStatus.setText(DATE_FORMAT.format(currDateTime.getTime()));
+	}
+
+	public void update(float sunPosition, Calendar dateTime, int gs, int timeStep, int simulationLength,
+			float axisTilt, float eccentricity) {
+
+		this.sunPosStats.setText(String.format("%.1f", sunPosition));
+		this.gsStatus.setText(Integer.toString(gs));
+		this.timeStepStatus.setText(Integer.toString(timeStep));
+		this.simulationLength.setText(Integer.toString(simulationLength));
+		this.axisTilt.setText(Float.toString(axisTilt));
+		this.eccentricity.setText(Float.toString(eccentricity));
+
+		this.currTimeStatus.setText(DATE_FORMAT.format(dateTime.getTime()));
+	}
+
+	private void addKeyPanel() {
+		
+		legendPanel.add(new ThermalScale());
+
+		this.add(legendPanel);
+	}
+
+	private void addStatusPanel() {
 
 		sunPosStats = new JTextField("0");
 		currTimeStatus = new JTextField("0");
@@ -93,47 +160,63 @@ public class SimulationStatus extends JPanel {
 		lblAxisTilt.getFont().deriveFont(Font.PLAIN, 8);
 		lblEccentricity.getFont().deriveFont(Font.PLAIN, 8);
 
-		this.add(lblSunPos);
-		this.add(sunPosStats);
+		statusPanel.add(lblSunPos);
+		statusPanel.add(sunPosStats);
 
-		this.add(lblCurrTime);
-		this.add(currTimeStatus);
+		statusPanel.add(lblCurrTime);
+		statusPanel.add(currTimeStatus);
 
-		this.add(lblGs);
-		this.add(gsStatus);
+		statusPanel.add(lblGs);
+		statusPanel.add(gsStatus);
 
-		this.add(lblTimeStep);
-		this.add(timeStepStatus);
+		statusPanel.add(lblTimeStep);
+		statusPanel.add(timeStepStatus);
 
-		this.add(lblSimLength);
-		this.add(simulationLength);
+		statusPanel.add(lblSimLength);
+		statusPanel.add(simulationLength);
 
-		this.add(lblAxisTilt);
-		this.add(axisTilt);
+		statusPanel.add(lblAxisTilt);
+		statusPanel.add(axisTilt);
 
-		this.add(lblEccentricity);
-		this.add(eccentricity);
+		statusPanel.add(lblEccentricity);
+		statusPanel.add(eccentricity);
+
+		this.add(statusPanel);
 	}
 
-	public void init() {
-		this.sunPosStats.setText("0");
-		this.currTimeStatus.setText("0");
-		this.gsStatus.setText("0");
-		this.timeStepStatus.setText("0");
-		this.simulationLength.setText("0");
-		this.axisTilt.setText("0");
-		this.eccentricity.setText("0");
-	}
+	private class ThermalScale extends Component {
 
-	public void update(float sunPosition, long l, int gs, int timeStep,
-			int simulationLength, float axisTilt, float eccentricity) {
+		public void paint(Graphics g) {
 
-		this.sunPosStats.setText(String.format("%.1f", sunPosition));
-		this.currTimeStatus.setText(Long.toString(l));
-		this.gsStatus.setText(Integer.toString(gs));
-		this.timeStepStatus.setText(Integer.toString(timeStep));
-		this.simulationLength.setText(Integer.toString(simulationLength));
-		this.axisTilt.setText(Float.toString(axisTilt));
-		this.eccentricity.setText(Float.toString(eccentricity));
+			final ArrayList<Color> gradient = new ArrayList<Color>();
+
+			Color c;
+			for (double temp = 0; temp < Constants.MAX_TEMP; temp++) {
+				c = colorMap.getColor(temp, 1);
+				if (!gradient.contains(c))
+					gradient.add(c);
+			}
+
+			System.out.println(gradient);
+
+			int size = gradient.size();
+			float increment = (float) (1.0 / size);
+			float curr = 0;
+			float[] fractions = new float[size];
+			for (int i = 0; i < size; i++) {
+				fractions[i] = curr;
+				curr += increment;
+			}
+
+			System.out.println(fractions);
+
+			final Rectangle2D r2d = new Rectangle2D.Double(0, 0, 100, 50);
+
+			Graphics2D g2D = (Graphics2D) g;
+			g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			LinearGradientPaint DARK_GRADIENT = new LinearGradientPaint(new Point2D.Double(0, 0), new Point2D.Double(100, 0), fractions, (Color[]) gradient.toArray());
+			g2D.setPaint(DARK_GRADIENT);
+			g2D.fill(r2d);
+		}
 	}
 }

@@ -2,6 +2,7 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.Calendar;
 
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
@@ -45,7 +46,7 @@ public class EarthDisplay extends JFrame {
 		this.setResizable(true);
 
 		// Add sim settings
-		simStatus = new SimulationStatus();
+		simStatus = new SimulationStatus(Constants.COLORMAP);
 		this.add(simStatus, BorderLayout.SOUTH);
 
 		// Add the display region
@@ -94,10 +95,9 @@ public class EarthDisplay extends JFrame {
 	public void update(IGrid grid) {
 		
 		if (grid != null)
-			simStatus.update(grid.getSunPositionDeg(), grid.getCurrentTime(), this.gs, this.timeStep,
-					this.simulationLength, this.axisTilt, this.eccentricity);
+			simStatus.update(grid.getSunPositionDeg(), grid.getDateTime(), this.gs, this.timeStep, this.simulationLength, this.axisTilt, this.eccentricity);
 		else
-			simStatus.update(0, 0, this.gs, this.timeStep, this.simulationLength, this.axisTilt, this.eccentricity);
+			simStatus.update(0, (Calendar) Constants.START_DATE.clone(), this.gs, this.timeStep, this.simulationLength, this.axisTilt, this.eccentricity);
 		
 		if (animate)
 			gridDisplay.update(grid);

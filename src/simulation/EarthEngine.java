@@ -4,7 +4,7 @@ import messaging.Publisher;
 import messaging.events.DisplayMessage;
 import messaging.events.ProduceMessage;
 import messaging.events.ResultMessage;
-import messaging.events.StartMessage;
+import messaging.events.ConfigureMessage;
 import common.ComponentBase;
 import common.IMonitorCallback;
 
@@ -24,8 +24,8 @@ public class EarthEngine extends ComponentBase {
 	@Override
 	public void performAction(Message msg) {
 
-		if (msg instanceof StartMessage) {
-			model.configure(((StartMessage) msg));
+		if (msg instanceof ConfigureMessage) {
+			model.configure(((ConfigureMessage) msg));
 			model.start();
 
 		} else if (msg instanceof ProduceMessage) {

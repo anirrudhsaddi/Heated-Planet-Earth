@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 import messaging.Message;
 
-public class StartMessage implements Message {
+public class ConfigureMessage implements Message {
 
 	private String simulationName;
 	private int gs;

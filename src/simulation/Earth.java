@@ -15,7 +15,7 @@ import messaging.events.DeliverMessage;
 import messaging.events.DisplayMessage;
 import messaging.events.PersistMessage;
 import messaging.events.ResultMessage;
-import messaging.events.StartMessage;
+import messaging.events.ConfigureMessage;
 import simulation.util.GridCell;
 import common.Buffer;
 import common.Constants;
@@ -39,11 +39,11 @@ public final class Earth {
 	private float axisTilt;
 	private float eccentricity;
 
-	private int currentStep;
+	private int currentNumberOfSimulations;
 	private int width;
 	private int height;
 	private int sunPositionCell;
-	private int currentTimeInSimulation;
+	private int currentMonthInSimulation;
 	private int timeStep;
 	private int gs;
 
@@ -75,14 +75,14 @@ public final class Earth {
 		return prime;
 	}
 
-	public void configure(StartMessage start) {
+	public void configure(ConfigureMessage start) {
 
 		this.simulationName = start.getSimulationName();
 		this.timeStep = start.timeStep();
 		this.axisTilt = start.axisTilt();
 		this.eccentricity = start.eccentricity();
 		this.precision = start.precision();
-		this.currentTimeInSimulation = 0;
+		this.currentMonthInSimulation = 0;
 		this.startDate = start.getStartDate();
 		
 		currentDate = (Calendar) startDate.clone();
@@ -123,7 +123,7 @@ public final class Earth {
 
 		// do a reset
 		sunPositionCell = (width / 2) % width;
-		currentStep = 0;
+		currentNumberOfSimulations = 0;
 
 		if (prime != null) {
 			prime.setGridProps(x, y, this.getLatitude(y), this.getLongitude(x),
@@ -177,7 +177,7 @@ public final class Earth {
 			
 			GridCell rowgrid = curr.getLeft();
 			for (y = 0; y < width; y++) {
-				totaltemp += rowgrid.calTsun(sunPositionCell, currentTimeInSimulation);
+				totaltemp += rowgrid.calTsun(sunPositionCell, currentMonthInSimulation);
 				totalarea += rowgrid.getSurfarea();
 				rowgrid = rowgrid.getLeft();
 			}
@@ -201,15 +201,15 @@ public final class Earth {
 		Queue<GridCell> bfs = new LinkedList<GridCell>();
 		Queue<GridCell> calcd = new LinkedList<GridCell>();
 
-		currentStep++;
+		currentNumberOfSimulations++;
 
-		long time = timeStep * currentStep;
-		currentDate.add(Calendar.MINUTE, timeStep);
-		if (time % Constants.MINUTES_IN_A_MONTH == 0) {
-			currentTimeInSimulation++;
+		long totlaMinutesInSimulation = timeStep * currentNumberOfSimulations;
+		currentDate.add(Calendar.MINUTE, currentNumberOfSimulations);
+		if (totlaMinutesInSimulation % Constants.MINUTES_IN_A_MONTH == 0) {
+			currentMonthInSimulation++;
 		}
 
-		long rotationalAngle = 360 - ((time % Constants.MAX_SPEED) * 360 / Constants.MAX_SPEED);
+		long rotationalAngle = 360 - ((totlaMinutesInSimulation % Constants.MAX_SPEED) * 360 / Constants.MAX_SPEED);
 		sunPositionCell = (int) (((width * rotationalAngle) / 360 + (width / 2)) % width);
 
 		float sunPositionDeg = rotationalAngle;
@@ -217,20 +217,18 @@ public final class Earth {
 			sunPositionDeg = sunPositionDeg - 360;
 		}
 
-		IGrid grid = new Grid(simulationName, sunPositionCell, sunPositionDeg,
-				width, height, time, 0);
+		IGrid grid = new Grid(simulationName, sunPositionCell, sunPositionDeg, width, height, currentDate);
 
 		double suntotal = 0;
 
 		suntotal = suntotal + prime.getTSun();
-		grid.setTemperature(prime.getX(), prime.getY(),
-				prime.calculateTemp(sunPositionCell, currentTimeInSimulation));
+		grid.setTemperature(prime.getX(), prime.getY(), prime.calculateTemp(sunPositionCell, currentMonthInSimulation));
 
 		prime.visited(true);
 		bfs.add(prime);
 
 		// P3 - Heated Planet
-		currentTimeInSimulation = currentStep * 200;
+		// currentTimeInSimulation = currentStep * 200;
 
 		while (!bfs.isEmpty()) {
 
@@ -244,20 +242,15 @@ public final class Earth {
 
 				child = itr.next();
 				child.visited(true);
-				grid.setTemperature(child.getX(), child.getY(),
-						child.calculateTemp(sunPositionCell,
-								currentTimeInSimulation));
+				grid.setTemperature(child.getX(), child.getY(), child.calculateTemp(sunPositionCell, currentMonthInSimulation));
 				bfs.add(child);
 
-				// suntotal += child.calTsun(sunPositionCell,
-				// currentTimeInSimulation);
 				suntotal += child.getTSun();
 
 				// Set display values here
-				grid.setSunLatitudeDeg((float) child
-						.getSunLatitudeOnEarth(currentTimeInSimulation));
-				grid.setPlanetX(child.getPlanetX(currentTimeInSimulation));
-				grid.setPlanetY(child.getPlanetY(currentTimeInSimulation));
+				grid.setSunLatitudeDeg((float) child.getSunLatitudeOnEarth(currentMonthInSimulation));
+				grid.setPlanetX(child.getPlanetX(currentMonthInSimulation));
+				grid.setPlanetY(child.getPlanetY(currentMonthInSimulation));
 			}
 		}
 
@@ -268,8 +261,6 @@ public final class Earth {
 			c.swapTemp();
 			c = calcd.poll();
 		}
-
-		// Buffer.getBuffer().add(grid);
 		
 		
 		Publisher.getInstance().send(new DeliverMessage(grid));
@@ -278,7 +269,7 @@ public final class Earth {
 		// Message/payload
 		
 		// determine persisting based on temporalAccuracy
-		if(currentStep % nth_data == 0){
+		if (currentNumberOfSimulations % nth_data == 0){
 			persistGrid(grid);
 		}
 	}

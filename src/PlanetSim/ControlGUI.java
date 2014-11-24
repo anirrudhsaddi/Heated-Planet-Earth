@@ -20,7 +20,7 @@ import messaging.Publisher;
 import messaging.events.PauseMessage;
 import messaging.events.ProduceMessage;
 import messaging.events.ResumeMessage;
-import messaging.events.StartMessage;
+import messaging.events.ConfigureMessage;
 import messaging.events.StopMessage;
 import simulation.EarthEngine;
 import view.EarthDisplayEngine;
@@ -68,8 +68,8 @@ public class ControlGUI extends JFrame implements ActionListener {
 		this.geoAccuracy = geoAccuracy;
 		this.temporalAccuracy = temporalAccuracy;
 
-		// START_DATE is epoch UTC (01/01/1970). Add 3 days to make it
-		// 01/04/1970
+		// START_DATE is epoch UTC (01/01/1970). Add 3 days to make it 01/04/1970
+		Constants.START_DATE.setTimeInMillis(0);
 		Constants.START_DATE.add(Calendar.DAY_OF_YEAR, 3);
 
 		// make widgets
@@ -213,7 +213,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 			
 			final int gs = Integer.parseInt(settingsWidget.GetInputText("Grid Spacing"));
 			
-			StartMessage msg = new StartMessage();
+			ConfigureMessage msg = new ConfigureMessage();
 			msg.setGridSpacing(gs);
 			
 			msg.setLatitude(nLat, sLat, eLat, wLat);
@@ -296,7 +296,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 		Calendar startDateTimeCal = (Calendar) Constants.START_DATE.clone();
 		startDateTimeCal.setTimeInMillis(startDateTime);
 
-		StartMessage msg = new StartMessage();
+		ConfigureMessage msg = new ConfigureMessage();
 		msg.setSimulationName(simName);
 		msg.setGridSpacing(gs);
 		msg.setTimeStep(timeStep);

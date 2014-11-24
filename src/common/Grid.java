@@ -1,5 +1,6 @@
 package common;
 
+import java.util.Calendar;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -8,7 +9,7 @@ public class Grid implements IGrid {
 	// Used to transport the temps in the buffer
 	private final int sunPosition,  width, height;
 	private final float sunPositionDeg;
-	private final long dateTime, currTime;
+	private final Calendar currDateTime;
 	private final String simulationName;
 	
 	private float planetX, planetY;
@@ -18,15 +19,14 @@ public class Grid implements IGrid {
 	// backed by a Red/Black Tree, so we get pretty decent access times
 	private final Map<Integer, Double> grid;
 
-	public Grid(String simulationName, int sunPosition, float sunPositionDeg, int width, int height, long currTime, long dateTime) {
+	public Grid(String simulationName, int sunPosition, float sunPositionDeg, int width, int height, Calendar currDateTime) {
 
 		this.simulationName = simulationName;
 		this.sunPosition = sunPosition;
 		this.sunPositionDeg = sunPositionDeg;
-		this.currTime = currTime;
+		this.currDateTime = currDateTime;
 		this.width = width;
 		this.height = height;
-		this.dateTime = dateTime;
 
 		grid = new TreeMap<Integer, Double>();
 	}
@@ -36,13 +36,12 @@ public class Grid implements IGrid {
 		this.simulationName = toCopy.simulationName;
 		this.sunPosition = toCopy.sunPosition;
 		this.sunPositionDeg = toCopy.sunPositionDeg;
-		this.currTime = toCopy.currTime;
 		this.width = toCopy.width;
 		this.height = toCopy.height;
 		this.planetX = toCopy.planetX;
 		this.planetY = toCopy.planetY;
 		this.sunLatitudeDeg = toCopy.sunLatitudeDeg;
-		this.dateTime = toCopy.dateTime;
+		this.currDateTime = toCopy.currDateTime;
 		
 		this.grid = new TreeMap<Integer, Double>(toCopy.grid);
 	}
@@ -74,11 +73,6 @@ public class Grid implements IGrid {
 	
 	public void setSunLatitudeDeg(float lat) {
 		this.sunLatitudeDeg = (float) lat;
-	}
-	
-	@Override
-	public long getCurrentTime() {
-		return this.currTime;
 	}
 
 	@Override
@@ -112,8 +106,8 @@ public class Grid implements IGrid {
 	}
 	
 	@Override
-	public long getDateTime() {
-		return this.dateTime;
+	public Calendar getDateTime() {
+		return this.currDateTime;
 	}
 	
 	@Override
