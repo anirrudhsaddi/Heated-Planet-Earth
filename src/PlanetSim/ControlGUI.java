@@ -16,8 +16,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.apache.james.mime4j.field.datetime.DateTime;
-
 import messaging.Publisher;
 import messaging.events.PauseMessage;
 import messaging.events.ProduceMessage;
@@ -212,6 +210,21 @@ public class ControlGUI extends JFrame implements ActionListener {
 			final boolean meanTime = queryWidget.GetCheckBox("Mean Time Temp");
 			final boolean meanRegion = queryWidget.GetCheckBox("Mean Region Temp");
 			final boolean actualValue = queryWidget.GetCheckBox("Actual Values");
+			
+			final int gs = Integer.parseInt(settingsWidget.GetInputText("Grid Spacing"));
+			
+			StartMessage msg = new StartMessage();
+			msg.setGridSpacing(gs);
+			
+			msg.setLatitude(nLat, sLat, eLat, wLat);
+			msg.setStartTime(startHour, startMinute);
+			msg.setEndTime(endHour, endMinute);
+			msg.setShowMinTemp(minTemp);
+			msg.setShowMaxTemp(maxTemp);
+			msg.setShowMeanTime(meanTime);
+			msg.setShowMeanRegion(meanRegion);
+			msg.setShowActualValue(actualValue);
+			Publisher.getInstance().send(msg);
 			
 //			final Calendar start = queryWidget.getSelectedStartDate();
 //			final Calendar end = queryWidget.getSelectedEndDate();

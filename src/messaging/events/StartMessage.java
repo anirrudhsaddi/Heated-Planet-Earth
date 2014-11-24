@@ -19,6 +19,27 @@ public class StartMessage implements Message {
 	private boolean animate;
 	private Calendar startDate;
 
+	// Query Parameters
+	private double westLat;
+	private double eastLat;
+	private double southLat;
+	private double northLat;
+	
+	private int startHour;
+	private int startMinute;
+	private int endHour;
+	private int endMinute;
+	
+	private boolean showMinTemp;
+	private boolean showMaxTemp;
+	private boolean showMeanTime;
+	private boolean showMeanRegion;
+	private boolean showActualValue;
+	
+	
+	
+	
+	
 	public void setStartTime(Calendar startDate) {
 		this.startDate = startDate;
 	}
@@ -114,4 +135,82 @@ public class StartMessage implements Message {
 	public Calendar getStartDate() {
 		return this.startDate;
 	}
+
+	// Query Parameter Functions
+	public void setLatitude(double north,double south,double east,double west){
+		this.northLat = north;
+		this.southLat = south;
+		this.eastLat = east;
+		this.westLat = west;
+	}
+	
+	public void setStartTime(int hour,int minute){
+		this.startHour = hour;
+		this.startMinute = minute;
+	}
+	public void setEndTime(int hour,int minute){
+		this.endHour = hour;
+		this.endMinute = minute;
+	}
+	
+	public void setShowMinTemp(boolean minTemp){
+		this.showMinTemp = minTemp;
+	}
+	public void setShowMaxTemp(boolean maxTemp){
+		this.showMaxTemp = maxTemp;
+	}
+	public void setShowMeanTime(boolean meanTime){
+		this.showMeanTime = meanTime;
+	}
+	public void setShowMeanRegion(boolean meanRegion){
+		this.showMeanRegion = meanRegion;
+	}
+	public void setShowActualValue(boolean actualValue){
+		this.showActualValue = actualValue;
+	}
+	
+	
+	
+	public double westLat(){
+		return this.westLat;
+	}
+	public double eastLat(){
+		return this.eastLat;
+	}
+	public double southLat(){
+		return this.southLat;
+	}
+	public double northLat(){
+		return this.northLat;
+	}
+	
+	public int startHour(){
+		return this.startHour;
+	}
+	public int startMinute(){
+		return this.startMinute;
+	}
+	public int endHour(){
+		return this.endHour;
+	}
+	public int endMinute(){
+		return this.endMinute;
+	}
+	
+	public boolean showMinTemp(){
+		return this.showMinTemp;
+	}
+	public boolean showMaxTemp(){
+		return this.showMaxTemp;
+	}
+	public boolean showMeanTime(){
+		return this.showMeanTime;
+	}
+	public boolean showMeanRegion(){
+		return this.showMeanRegion;
+	}
+	public boolean showActualValue(){
+		return this.showActualValue;
+	}
+
 }
