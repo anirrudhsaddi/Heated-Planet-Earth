@@ -71,7 +71,7 @@ public class EarthDisplay extends JFrame {
 		gridDisplay = new GridDisplay(new ThermalVisualizer(Constants.COLORMAP, Constants.MIN_TEMP, Constants.MAX_TEMP, Constants.OPACITY), w, h);
 		display.add(gridDisplay, new Integer(Constants.GRID));
 
-		this.setPreferredSize(new Dimension(w, h + 130));
+		this.setPreferredSize(new Dimension(w, h + 200));
 
 	}
 

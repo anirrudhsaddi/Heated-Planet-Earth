@@ -38,8 +38,8 @@ public class SimulationStatus extends JSplitPane {
 			axisTilt, eccentricity;
 	private JLabel							lblSunPos, lblCurrTime, lblGs, lblTimeStep, lblSimLength, lblAxisTilt,
 			lblEccentricity;
-	
-	private JPanel statusPanel, legendPanel;
+
+	private JPanel							statusPanel, legendPanel;
 
 	private static final int				HEIGHT				= 7;
 	private static final int				WIDTH				= 2;
@@ -55,7 +55,6 @@ public class SimulationStatus extends JSplitPane {
 
 		this.setBorder(new EmptyBorder(10, 10, 10, 10));
 		this.setPreferredSize(new Dimension(200, 200));
-
 
 		this.colorMap = ColorMap.getMap(colorMap);
 
@@ -90,32 +89,32 @@ public class SimulationStatus extends JSplitPane {
 	}
 
 	private void addKeyPanel() {
-		
-		JLabel lblOne = new JLabel("0"); 
+
+		JLabel lblOne = new JLabel("0");
 		lblOne.setSize(new Dimension(10, 10));
-		
-		JLabel lblTwo = new JLabel("" + (Constants.MAX_TEMP * 0.25)); 
+
+		JLabel lblTwo = new JLabel("" + (Constants.MAX_TEMP * 0.25));
 		lblTwo.setSize(new Dimension(10, 10));
-		
-		JLabel lblThree = new JLabel("" + (Constants.MAX_TEMP * 0.5)); 
+
+		JLabel lblThree = new JLabel("" + (Constants.MAX_TEMP * 0.5));
 		lblThree.setSize(new Dimension(10, 10));
-		
-		JLabel lblFour = new JLabel("" + (Constants.MAX_TEMP * 0.75)); 
+
+		JLabel lblFour = new JLabel("" + (Constants.MAX_TEMP * 0.75));
 		lblFour.setSize(new Dimension(10, 10));
-		
+
 		JLabel lblFive = new JLabel("" + Constants.MAX_TEMP);
 		lblFive.setSize(new Dimension(10, 10));
-		
+
 		ThermalScale t = new ThermalScale();
-		
+
 		legendPanel = new JPanel();
-		legendPanel.setLayout(new FlowLayout());
-		
-		legendPanel.add(lblOne);
-		legendPanel.add(lblTwo);
-		legendPanel.add(lblThree);
-		legendPanel.add(lblFour);
-		legendPanel.add(lblFive);
+//		legendPanel.setLayout();
+
+//		legendPanel.add(lblOne);
+//		legendPanel.add(lblTwo);
+//		legendPanel.add(lblThree);
+//		legendPanel.add(lblFour);
+//		legendPanel.add(lblFive);
 		legendPanel.add(t);
 
 		this.add(legendPanel, JSplitPane.RIGHT);
@@ -181,10 +180,10 @@ public class SimulationStatus extends JSplitPane {
 		lblSimLength.getFont().deriveFont(Font.PLAIN, 8);
 		lblAxisTilt.getFont().deriveFont(Font.PLAIN, 8);
 		lblEccentricity.getFont().deriveFont(Font.PLAIN, 8);
-		
+
 		statusPanel = new JPanel();
 		statusPanel.setLayout(new GridLayout(7, 2, HGAP, VGAP));
-		
+
 		statusPanel.add(lblSunPos);
 		statusPanel.add(sunPosStats);
 		statusPanel.add(lblCurrTime);
@@ -199,9 +198,9 @@ public class SimulationStatus extends JSplitPane {
 		statusPanel.add(axisTilt);
 		statusPanel.add(lblEccentricity);
 		statusPanel.add(eccentricity);
-		
+
 		this.add(statusPanel, JSplitPane.LEFT);
-		
+
 	}
 
 	private class ThermalScale extends Component {
@@ -224,7 +223,7 @@ public class SimulationStatus extends JSplitPane {
 
 			int size = gradient.size();
 			float curr = 0;
-			
+
 			Color[] colors = new Color[size];
 			float[] fractions = new float[size];
 			for (int i = 0; i < size; i++) {
@@ -237,7 +236,8 @@ public class SimulationStatus extends JSplitPane {
 
 			Graphics2D g2D = (Graphics2D) g;
 			g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			LinearGradientPaint DARK_GRADIENT = new LinearGradientPaint(new Point2D.Double(0, 0), new Point2D.Double(400, 0), fractions, colors);
+			LinearGradientPaint DARK_GRADIENT = new LinearGradientPaint(new Point2D.Double(0, 0), new Point2D.Double(
+					400, 0), fractions, colors);
 			g2D.setPaint(DARK_GRADIENT);
 			g2D.fill(r2d);
 		}

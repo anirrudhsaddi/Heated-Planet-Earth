@@ -268,10 +268,8 @@ public final class Earth {
 		// Message/payload
 		
 		// determine persisting based on temporalAccuracy
-		System.out.println("can we persist? " + (currentNumberOfSimulations % nth_data == 0));
-		if (currentNumberOfSimulations % nth_data == 0){
+		if (currentNumberOfSimulations % nth_data == 0)
 			persistGrid(grid);
-		}
 	}
 
 	private void persistGrid(IGrid grid) {

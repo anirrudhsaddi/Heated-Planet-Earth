@@ -11,8 +11,10 @@ import java.util.concurrent.Future;
 
 import messaging.Message;
 import messaging.Publisher;
+import messaging.events.PauseMessage;
 import messaging.events.PersistMessage;
 import messaging.events.ResultMessage;
+import messaging.events.ResumeMessage;
 import messaging.events.StopMessage;
 import common.ComponentBase;
 import common.ThreadManager;
@@ -496,9 +498,14 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		} else if (msg instanceof StopMessage) {
 			this.stop();
 			this.conn.close();
+		} else if (msg instanceof PauseMessage) {
+			this.pause();
+		} else if (msg instanceof ResumeMessage) {
+			this.resume();
+		} else {
+			System.err.printf("WARNING: No processor specified in class %s for message %s\n",
+					this.getClass().getName(), msg.getClass().getName());
 		}
-		else
-			super.onMessage(msg);
 	}
 
 	@Override
