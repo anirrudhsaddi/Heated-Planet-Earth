@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -38,6 +39,8 @@ public class SimulationStatus extends JSplitPane {
      * 
      */
 	private static final long				serialVersionUID	= 4874764682275993951L;
+	
+	private static final String 			GRADIENT_ICON = "resource/gradient.png";
 
 	private JTextField						sunPosStats, currTimeStatus, gsStatus, timeStepStatus, simulationLength,
 			axisTilt, eccentricity;
@@ -51,8 +54,6 @@ public class SimulationStatus extends JSplitPane {
 
 	private Calendar						currDateTime		= (Calendar) Constants.START_DATE.clone();
 	private static final SimpleDateFormat	DATE_FORMAT			= new SimpleDateFormat("dd-MM-yy HH:mm:SS");
-
-	private ColorMap						colorMap;
 	
 	private Label lblZero;
 	private Label lblOne;
@@ -64,8 +65,6 @@ public class SimulationStatus extends JSplitPane {
 
 		this.setBorder(new EmptyBorder(10, 10, 10, 10));
 		this.setPreferredSize(new Dimension(200, 200));
-
-		this.colorMap = ColorMap.getMap(colorMap);
 
 		this.addStatusPanel();
 		this.addKeyPanel();
@@ -143,42 +142,11 @@ public class SimulationStatus extends JSplitPane {
 		gbc_lblFour.gridy = 1;
 		legendPanel.add(lblFour, gbc_lblFour);
 		
-		JLabel scalePanel = new JLabel("\"\"") {
-			
-			/**
-			 * 
-			 */
-			private static final long	serialVersionUID	= 7025571074578869796L;
-
-			@Override
-			public void paintComponent(Graphics g) {
-				
-				System.out.println("Here");
-				
-				super.paint( g );
-				
-				int width = getWidth();
-				System.out.println("width: " + width);
-			    int height = getHeight();
-			    System.out.println("height: " + height);
-
-			    // Create the gradient paint
-			    GradientPaint GRADIENT = new GradientPaint(0, 0, colorMap.getColor(0, 1), width, height, colorMap.getColor(1, 1));
-
-			    // we need to cast to Graphics2D for this operation
-			    Graphics2D g2d = (Graphics2D)g;
-			    //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-			    // set the paint to use for this operation
-			    g2d.setPaint(GRADIENT);
-
-			    // fill the background using the paint
-			    g2d.fillRect(0, 0, width, height);
-
-			}
-		};
+		ImageIcon gradientImg = new ImageIcon(GRADIENT_ICON);
+		JLabel scalePanel = new JLabel();
+		scalePanel.setIcon(gradientImg);
 		
-		scalePanel.setSize(200, 50);
+//		scalePanel.setSize(200, 50);
 		
 		GridBagConstraints gbc_scalePanel = new GridBagConstraints();
 		gbc_scalePanel.insets = new Insets(0, 0, 5, 5);
@@ -273,52 +241,52 @@ public class SimulationStatus extends JSplitPane {
 
 	}
 
-	private class ThermalScale extends JLabel {
-
-		/**
-		 * 
-		 */
-		private static final long	serialVersionUID	= 5835845197614603392L;
-
-		public void paint(Graphics g) {
-
-			final ArrayList<Color> gradient = new ArrayList<Color>();
-
-			Color c;
-			for (double temp = 0; temp <= 1; temp += 0.05) {
-				c = colorMap.getColor(temp, 1);
-				if (!gradient.contains(c))
-					gradient.add(c);
-			}
-
-			int size = gradient.size();
-			float curr = 0;
-
-			Color[] colors = new Color[size];
-			float[] fractions = new float[size];
-			for (int i = 0; i < size; i++) {
-				colors[i] = gradient.get(i);
-				fractions[i] = curr;
-				curr += 0.05;
-			}
-			
-			int width = getWidth();
-		    int height = getHeight();
-
-		    // Create the gradient paint
-		    LinearGradientPaint GRADIENT = new LinearGradientPaint(0, 0, width, height, fractions, colors);
-
-		    // we need to cast to Graphics2D for this operation
-		    Graphics2D g2d = ( Graphics2D )g;
-		    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-		    // set the paint to use for this operation
-		    g2d.setPaint(GRADIENT);
-
-		    // fill the background using the paint
-		    g2d.fillRect( 0, 0, width, height );
-
-		    super.paint( g );
-		}
-	}
+//	private class ThermalScale extends JLabel {
+//
+//		/**
+//		 * 
+//		 */
+//		private static final long	serialVersionUID	= 5835845197614603392L;
+//
+//		public void paint(Graphics g) {
+//
+//			final ArrayList<Color> gradient = new ArrayList<Color>();
+//
+//			Color c;
+//			for (double temp = 0; temp <= 1; temp += 0.05) {
+//				c = colorMap.getColor(temp, 1);
+//				if (!gradient.contains(c))
+//					gradient.add(c);
+//			}
+//
+//			int size = gradient.size();
+//			float curr = 0;
+//
+//			Color[] colors = new Color[size];
+//			float[] fractions = new float[size];
+//			for (int i = 0; i < size; i++) {
+//				colors[i] = gradient.get(i);
+//				fractions[i] = curr;
+//				curr += 0.05;
+//			}
+//			
+//			int width = getWidth();
+//		    int height = getHeight();
+//
+//		    // Create the gradient paint
+//		    LinearGradientPaint GRADIENT = new LinearGradientPaint(0, 0, width, height, fractions, colors);
+//
+//		    // we need to cast to Graphics2D for this operation
+//		    Graphics2D g2d = ( Graphics2D )g;
+//		    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//
+//		    // set the paint to use for this operation
+//		    g2d.setPaint(GRADIENT);
+//
+//		    // fill the background using the paint
+//		    g2d.fillRect( 0, 0, width, height );
+//
+//		    super.paint( g );
+//		}
+//	}
 }
