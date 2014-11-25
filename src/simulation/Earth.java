@@ -424,13 +424,14 @@ public final class Earth {
 		prime = new GridCell(msg.getTemperature(0, 0), 0, 0,
 				this.getLatitude(0), this.getLongitude(0), this.gs,
 				this.axisTilt, this.eccentricity);
-		this.start();		
-		try {
+		this.start();
+		//generate data gets called from Produce Msg
+		/*try {
 			this.generate();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	public void setDisplayMsg(DisplayMessage msg) {
