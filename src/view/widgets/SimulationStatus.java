@@ -3,11 +3,13 @@ package view.widgets;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.LinearGradientPaint;
 import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
@@ -18,14 +20,14 @@ import java.util.Calendar;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import view.util.ColorMap;
-
 import common.Constants;
 
-public class SimulationStatus extends JPanel {
+public class SimulationStatus extends JSplitPane {
 
 	/**
      * 
@@ -37,8 +39,7 @@ public class SimulationStatus extends JPanel {
 	private JLabel							lblSunPos, lblCurrTime, lblGs, lblTimeStep, lblSimLength, lblAxisTilt,
 			lblEccentricity;
 	
-	private GridBagLayout grid;
-	private GridBagConstraints constraint;
+	private JPanel statusPanel, legendPanel;
 
 	private static final int				HEIGHT				= 7;
 	private static final int				WIDTH				= 2;
@@ -54,21 +55,13 @@ public class SimulationStatus extends JPanel {
 
 		this.setBorder(new EmptyBorder(10, 10, 10, 10));
 		this.setPreferredSize(new Dimension(200, 200));
-		
-		grid = new GridBagLayout();
-		constraint = new GridBagConstraints();
-		constraint.weightx = 1;
-		constraint.weighty = 1;
-		constraint.gridx = 0;
-		constraint.gridy = 0;
-		constraint.anchor = GridBagConstraints.CENTER;
-		
-		this.setLayout(grid);
+
 
 		this.colorMap = ColorMap.getMap(colorMap);
 
 		this.addStatusPanel();
 		this.addKeyPanel();
+
 	}
 
 	public void init() {
@@ -113,15 +106,19 @@ public class SimulationStatus extends JPanel {
 		JLabel lblFive = new JLabel("" + Constants.MAX_TEMP);
 		lblFive.setSize(new Dimension(10, 10));
 		
-		this.add(lblOne);
-		this.add(lblTwo);
-		this.add(lblThree);
-		this.add(lblFour);
-		this.add(lblFive);
-		
 		ThermalScale t = new ThermalScale();
-		this.add(t);
+		
+		legendPanel = new JPanel();
+		legendPanel.setLayout(new FlowLayout());
+		
+		legendPanel.add(lblOne);
+		legendPanel.add(lblTwo);
+		legendPanel.add(lblThree);
+		legendPanel.add(lblFour);
+		legendPanel.add(lblFive);
+		legendPanel.add(t);
 
+		this.add(legendPanel, JSplitPane.RIGHT);
 	}
 
 	private void addStatusPanel() {
@@ -185,20 +182,25 @@ public class SimulationStatus extends JPanel {
 		lblAxisTilt.getFont().deriveFont(Font.PLAIN, 8);
 		lblEccentricity.getFont().deriveFont(Font.PLAIN, 8);
 		
-		this.add(lblSunPos);
-		this.add(sunPosStats);
-		this.add(lblCurrTime);
-		this.add(currTimeStatus);
-		this.add(lblGs);
-		this.add(gsStatus);
-		this.add(lblTimeStep);
-		this.add(timeStepStatus);
-		this.add(lblSimLength);
-		this.add(simulationLength);
-		this.add(lblAxisTilt);
-		this.add(axisTilt);
-		this.add(lblEccentricity);
-		this.add(eccentricity);
+		statusPanel = new JPanel();
+		statusPanel.setLayout(new GridLayout(7, 2, HGAP, VGAP));
+		
+		statusPanel.add(lblSunPos);
+		statusPanel.add(sunPosStats);
+		statusPanel.add(lblCurrTime);
+		statusPanel.add(currTimeStatus);
+		statusPanel.add(lblGs);
+		statusPanel.add(gsStatus);
+		statusPanel.add(lblTimeStep);
+		statusPanel.add(timeStepStatus);
+		statusPanel.add(lblSimLength);
+		statusPanel.add(simulationLength);
+		statusPanel.add(lblAxisTilt);
+		statusPanel.add(axisTilt);
+		statusPanel.add(lblEccentricity);
+		statusPanel.add(eccentricity);
+		
+		this.add(statusPanel, JSplitPane.LEFT);
 		
 	}
 

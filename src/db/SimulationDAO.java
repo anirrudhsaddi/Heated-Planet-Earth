@@ -485,18 +485,20 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	@Override
 	public void onMessage(Message msg) {
 
-		if (msg instanceof PersistMessage)
+		if (msg instanceof PersistMessage) {
 			try {
-				System.out.println("Adding msg " + msg);
 				this.msgQueue.add(msg);
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.err.println("Unable to add Grid to Database");
 				Publisher.getInstance().send(new StopMessage());
 			}
+		} else if (msg instanceof StopMessage) {
+			this.stop();
+			this.conn.close();
+		}
 		else
-			System.err.printf("WARNING: No processor specified in class %s for message %s\n",
-					this.getClass().getName(), msg.getClass().getName());
+			super.onMessage(msg);
 	}
 
 	@Override
