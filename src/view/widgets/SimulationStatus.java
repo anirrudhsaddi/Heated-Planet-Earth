@@ -6,7 +6,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.LinearGradientPaint;
 import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
@@ -35,8 +36,9 @@ public class SimulationStatus extends JPanel {
 			axisTilt, eccentricity;
 	private JLabel							lblSunPos, lblCurrTime, lblGs, lblTimeStep, lblSimLength, lblAxisTilt,
 			lblEccentricity;
-
-	private JPanel							statusPanel, legendPanel;
+	
+	private GridBagLayout grid;
+	private GridBagConstraints constraint;
 
 	private static final int				HEIGHT				= 7;
 	private static final int				WIDTH				= 2;
@@ -51,13 +53,17 @@ public class SimulationStatus extends JPanel {
 	public SimulationStatus(String colorMap) {
 
 		this.setBorder(new EmptyBorder(10, 10, 10, 10));
-		this.setLayout(new GridLayout(1, 2, HGAP, VGAP));
-
-		statusPanel = new JPanel();
-		statusPanel.setLayout(new GridLayout(HEIGHT, WIDTH, HGAP, VGAP));
-
-		legendPanel = new JPanel();
-		legendPanel.setLayout(new GridLayout(1, 2, HGAP, VGAP));
+		this.setPreferredSize(new Dimension(200, 200));
+		
+		grid = new GridBagLayout();
+		constraint = new GridBagConstraints();
+		constraint.weightx = 1;
+		constraint.weighty = 1;
+		constraint.gridx = 0;
+		constraint.gridy = 0;
+		constraint.anchor = GridBagConstraints.CENTER;
+		
+		this.setLayout(grid);
 
 		this.colorMap = ColorMap.getMap(colorMap);
 
@@ -92,9 +98,30 @@ public class SimulationStatus extends JPanel {
 
 	private void addKeyPanel() {
 		
-		legendPanel.add(new ThermalScale());
+		JLabel lblOne = new JLabel("0"); 
+		lblOne.setSize(new Dimension(10, 10));
+		
+		JLabel lblTwo = new JLabel("" + (Constants.MAX_TEMP * 0.25)); 
+		lblTwo.setSize(new Dimension(10, 10));
+		
+		JLabel lblThree = new JLabel("" + (Constants.MAX_TEMP * 0.5)); 
+		lblThree.setSize(new Dimension(10, 10));
+		
+		JLabel lblFour = new JLabel("" + (Constants.MAX_TEMP * 0.75)); 
+		lblFour.setSize(new Dimension(10, 10));
+		
+		JLabel lblFive = new JLabel("" + Constants.MAX_TEMP);
+		lblFive.setSize(new Dimension(10, 10));
+		
+		this.add(lblOne);
+		this.add(lblTwo);
+		this.add(lblThree);
+		this.add(lblFour);
+		this.add(lblFive);
+		
+		ThermalScale t = new ThermalScale();
+		this.add(t);
 
-		this.add(legendPanel);
 	}
 
 	private void addStatusPanel() {
@@ -115,38 +142,38 @@ public class SimulationStatus extends JPanel {
 		lblAxisTilt = new JLabel("Axis Tilt:");
 		lblEccentricity = new JLabel("Orbital Eccentricity:");
 
-		sunPosStats.setPreferredSize(new Dimension(10, 10));
-		sunPosStats.setMaximumSize(new Dimension(10, 10));
+		sunPosStats.setSize(new Dimension(50, 10));
+		sunPosStats.setMaximumSize(new Dimension(50, 10));
 		sunPosStats.getFont().deriveFont(Font.PLAIN, 10);
 		sunPosStats.setEditable(false);
 
-		currTimeStatus.setPreferredSize(new Dimension(10, 10));
-		currTimeStatus.setMaximumSize(new Dimension(10, 10));
+		currTimeStatus.setSize(new Dimension(50, 10));
+		currTimeStatus.setMaximumSize(new Dimension(50, 10));
 		currTimeStatus.getFont().deriveFont(Font.PLAIN, 10);
 		currTimeStatus.setEditable(false);
 
-		gsStatus.setPreferredSize(new Dimension(10, 10));
-		gsStatus.setMaximumSize(new Dimension(10, 10));
+		gsStatus.setSize(new Dimension(50, 10));
+		gsStatus.setMaximumSize(new Dimension(50, 10));
 		gsStatus.getFont().deriveFont(Font.PLAIN, 10);
 		gsStatus.setEditable(false);
 
-		timeStepStatus.setPreferredSize(new Dimension(10, 10));
-		timeStepStatus.setMaximumSize(new Dimension(10, 10));
+		timeStepStatus.setSize(new Dimension(50, 10));
+		timeStepStatus.setMaximumSize(new Dimension(50, 10));
 		timeStepStatus.getFont().deriveFont(Font.PLAIN, 10);
 		timeStepStatus.setEditable(false);
 
-		simulationLength.setPreferredSize(new Dimension(10, 10));
-		simulationLength.setMaximumSize(new Dimension(10, 10));
+		simulationLength.setSize(new Dimension(50, 10));
+		simulationLength.setMaximumSize(new Dimension(50, 10));
 		simulationLength.getFont().deriveFont(Font.PLAIN, 10);
 		simulationLength.setEditable(false);
 
-		axisTilt.setPreferredSize(new Dimension(10, 10));
-		axisTilt.setMaximumSize(new Dimension(10, 10));
+		axisTilt.setSize(new Dimension(50, 10));
+		axisTilt.setMaximumSize(new Dimension(50, 10));
 		axisTilt.getFont().deriveFont(Font.PLAIN, 10);
 		axisTilt.setEditable(false);
 
-		eccentricity.setPreferredSize(new Dimension(10, 10));
-		eccentricity.setMaximumSize(new Dimension(10, 10));
+		eccentricity.setSize(new Dimension(50, 10));
+		eccentricity.setMaximumSize(new Dimension(50, 10));
 		eccentricity.getFont().deriveFont(Font.PLAIN, 10);
 		eccentricity.setEditable(false);
 
@@ -157,62 +184,58 @@ public class SimulationStatus extends JPanel {
 		lblSimLength.getFont().deriveFont(Font.PLAIN, 8);
 		lblAxisTilt.getFont().deriveFont(Font.PLAIN, 8);
 		lblEccentricity.getFont().deriveFont(Font.PLAIN, 8);
-
-		statusPanel.add(lblSunPos);
-		statusPanel.add(sunPosStats);
-
-		statusPanel.add(lblCurrTime);
-		statusPanel.add(currTimeStatus);
-
-		statusPanel.add(lblGs);
-		statusPanel.add(gsStatus);
-
-		statusPanel.add(lblTimeStep);
-		statusPanel.add(timeStepStatus);
-
-		statusPanel.add(lblSimLength);
-		statusPanel.add(simulationLength);
-
-		statusPanel.add(lblAxisTilt);
-		statusPanel.add(axisTilt);
-
-		statusPanel.add(lblEccentricity);
-		statusPanel.add(eccentricity);
-
-		this.add(statusPanel);
+		
+		this.add(lblSunPos);
+		this.add(sunPosStats);
+		this.add(lblCurrTime);
+		this.add(currTimeStatus);
+		this.add(lblGs);
+		this.add(gsStatus);
+		this.add(lblTimeStep);
+		this.add(timeStepStatus);
+		this.add(lblSimLength);
+		this.add(simulationLength);
+		this.add(lblAxisTilt);
+		this.add(axisTilt);
+		this.add(lblEccentricity);
+		this.add(eccentricity);
+		
 	}
 
 	private class ThermalScale extends Component {
+
+		/**
+		 * 
+		 */
+		private static final long	serialVersionUID	= 5835845197614603392L;
 
 		public void paint(Graphics g) {
 
 			final ArrayList<Color> gradient = new ArrayList<Color>();
 
 			Color c;
-			for (double temp = 0; temp < Constants.MAX_TEMP; temp++) {
+			for (double temp = 0; temp <= 1; temp += 0.05) {
 				c = colorMap.getColor(temp, 1);
 				if (!gradient.contains(c))
 					gradient.add(c);
 			}
 
-			System.out.println(gradient);
-
 			int size = gradient.size();
-			float increment = (float) (1.0 / size);
 			float curr = 0;
+			
+			Color[] colors = new Color[size];
 			float[] fractions = new float[size];
 			for (int i = 0; i < size; i++) {
+				colors[i] = gradient.get(i);
 				fractions[i] = curr;
-				curr += increment;
+				curr += 0.05;
 			}
 
-			System.out.println(fractions);
-
-			final Rectangle2D r2d = new Rectangle2D.Double(0, 0, 100, 50);
+			final Rectangle2D r2d = new Rectangle2D.Double(0, 0, 400, 100);
 
 			Graphics2D g2D = (Graphics2D) g;
 			g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			LinearGradientPaint DARK_GRADIENT = new LinearGradientPaint(new Point2D.Double(0, 0), new Point2D.Double(100, 0), fractions, (Color[]) gradient.toArray());
+			LinearGradientPaint DARK_GRADIENT = new LinearGradientPaint(new Point2D.Double(0, 0), new Point2D.Double(400, 0), fractions, colors);
 			g2D.setPaint(DARK_GRADIENT);
 			g2D.fill(r2d);
 		}

@@ -29,7 +29,6 @@ public class EarthEngine extends ComponentBase {
 			model.start();
 
 		} else if (msg instanceof ProduceMessage) {
-			System.out.println("EarthEngine got a ProduceMessage");
 			generateData();
 		} else if (msg instanceof ResultMessage) {
 			processQueryResult(((ResultMessage) msg));

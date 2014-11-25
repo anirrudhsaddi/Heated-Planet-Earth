@@ -72,7 +72,6 @@ public class Buffer implements IBuffer {
 		if (buffer.isEmpty()) 
 			return null;
 		
-		System.out.println("Buffer. Attempting to return IGrid");
 		return buffer.poll(1, TimeUnit.SECONDS);
 	}
 

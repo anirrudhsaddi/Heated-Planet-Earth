@@ -54,9 +54,9 @@ public class QueryEngine {
 	private double				sLat;
 	private double				nLat;
 
-	public QueryEngine() throws SQLException {
-		simDAO = new SimulationDAO(new SimulationNeo4j());
-		ThreadManager.getManager().execute(simDAO);
+	public QueryEngine(SimulationDAO simDAO) throws SQLException {
+		
+		this.simDAO = simDAO;
 	}
 
 	public JList<?> getSimulationList() {

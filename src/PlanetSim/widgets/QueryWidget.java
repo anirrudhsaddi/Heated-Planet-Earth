@@ -73,11 +73,15 @@ public class QueryWidget extends JPanel {
 
 	private JCheckBox					chckbxMinimumTemperature, chckbxMaximumTemperature,
 			chckbxMeanTemperatureOverTime, chckbxMeanTemperatureOverRegion, chckbxActualValues;
+	
+	private QueryEngine engine;
 
 	private HashMap<String, JTextField>	inputs				= new HashMap<String, JTextField>();
 	private HashMap<String, JCheckBox>	checkBoxes				= new HashMap<String, JCheckBox>();
 	
-	public QueryWidget() {
+	public QueryWidget(QueryEngine engine) {
+		
+		this.engine = engine;
 
 		for (int i = 0; i < 24; i++)
 			hours[i] = i;
@@ -102,12 +106,7 @@ public class QueryWidget extends JPanel {
 	}
 	
 	public void updateQList(){
-		try {
-			queryEngine = new QueryEngine();
-		} catch (SQLException e) {
-			throw new IllegalStateException(e);
-		}
-		slBox = queryEngine.getSimulationList();
+		slBox = this.engine.getSimulationList();
 	}
 
 	private JList<?> getJList() {

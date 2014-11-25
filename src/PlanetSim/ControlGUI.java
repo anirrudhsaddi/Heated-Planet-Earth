@@ -31,6 +31,8 @@ import common.Buffer;
 import common.Constants;
 import common.Monitor;
 import common.ThreadManager;
+import db.SimulationDAO;
+import db.SimulationNeo4j;
 
 public class ControlGUI extends JFrame implements ActionListener {
 
@@ -71,6 +73,15 @@ public class ControlGUI extends JFrame implements ActionListener {
 		// START_DATE is epoch UTC (01/01/1970). Add 3 days to make it 01/04/1970
 		Constants.START_DATE.setTimeInMillis(0);
 		Constants.START_DATE.add(Calendar.DAY_OF_YEAR, 3);
+		
+		SimulationDAO simDAO;
+		try {
+			simDAO = new SimulationDAO(new SimulationNeo4j());
+			ThreadManager.getManager().execute(simDAO);
+			queryEngine = new QueryEngine(simDAO);
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Unable to initialize Database backend. Please close application and try again.");
+		}
 
 		// make widgets
 		setupWindow();
@@ -112,7 +123,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 		queryPanel.setAlignmentY(Component.TOP_ALIGNMENT);
 		queryPanel.setVisible(isquery);
 
-		queryWidget = new QueryWidget();
+		queryWidget = new QueryWidget(queryEngine);
 
 		queryPanel.add(queryWidget, BorderLayout.CENTER);
 		return queryPanel;
@@ -138,7 +149,6 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 		String cmd = e.getActionCommand();
 
-		// TODO open new tab?
 		if ("Start".equals(cmd)) {
 			try {
 				
@@ -149,8 +159,12 @@ public class ControlGUI extends JFrame implements ActionListener {
 				
 				Calendar end = (Calendar) Constants.START_DATE.clone();
 				end.add(Calendar.MONTH, simulationLength);
-				init(simulationLength, ((Calendar) Constants.START_DATE.clone()).getTimeInMillis(), end.getTimeInMillis());
-				System.out.println("Produce msg"); // Code not reaching here
+				
+				ConfigureMessage msg = new ConfigureMessage();
+				
+				init(msg, simulationLength, ((Calendar) Constants.START_DATE.clone()).getTimeInMillis(), end.getTimeInMillis());
+				
+				// Quick off a simulation
 				Publisher.getInstance().send(new ProduceMessage());
 
 				// do gui stuff to indicate start has occurred.
@@ -224,7 +238,6 @@ public class ControlGUI extends JFrame implements ActionListener {
 			msg.setShowMeanTime(meanTime);
 			msg.setShowMeanRegion(meanRegion);
 			msg.setShowActualValue(actualValue);
-			Publisher.getInstance().send(msg);
 			
 //			final Calendar start = queryWidget.getSelectedStartDate();
 //			final Calendar end = queryWidget.getSelectedEndDate();
@@ -237,20 +250,14 @@ public class ControlGUI extends JFrame implements ActionListener {
 //			
 //			long startDateTime = start.getTimeInMillis();
 //			long endDateTime = end.getTimeInMillis();
-
-			try {
-				queryEngine = new QueryEngine();
-			} catch (SQLException e1) {
-				JOptionPane.showMessageDialog(null, "Unable to initialize Database backend. Please close application and try again.");
-			}
 			
 			// TODO get the dates and times from query widget and convert them into calendars, send in millis 
 			
-			// init(simulationLength, startDateTime, endDateTime);
+			// init(msg, simulationLength, startDateTime, endDateTime);
 		}
 	}
 	
-	private void init(int simulationLength, long startDateTime, long endDateTime) {
+	private void init(ConfigureMessage msg, int simulationLength, long startDateTime, long endDateTime) {
 		
 		// TODO check for stop and reset?
 
@@ -286,8 +293,6 @@ public class ControlGUI extends JFrame implements ActionListener {
 		// Create and reset the buffer
 		Buffer.getBuffer().create(Constants.DEFAULT_BUFFFER_SIZE);
 
-		// threadManager.add(new SimulationDAO(new SimulationNeo4j()));
-
 		threadManager.execute(new EarthEngine(new Monitor(endDateTime)));
 		threadManager.execute(new EarthDisplayEngine());
 
@@ -296,7 +301,6 @@ public class ControlGUI extends JFrame implements ActionListener {
 		Calendar startDateTimeCal = (Calendar) Constants.START_DATE.clone();
 		startDateTimeCal.setTimeInMillis(startDateTime);
 
-		ConfigureMessage msg = new ConfigureMessage();
 		msg.setSimulationName(simName);
 		msg.setGridSpacing(gs);
 		msg.setTimeStep(timeStep);

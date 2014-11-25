@@ -139,7 +139,6 @@ public final class Earth {
 		// South Pole
 		GridCell next = null, curr = prime;
 		for (x = 1; x < width; x++) {
-			System.out.println(x);
 			this.createRowCell(curr, next, null, x, y);
 			curr = curr.getLeft();
 		}
@@ -269,6 +268,7 @@ public final class Earth {
 		// Message/payload
 		
 		// determine persisting based on temporalAccuracy
+		System.out.println("can we persist? " + (currentNumberOfSimulations % nth_data == 0));
 		if (currentNumberOfSimulations % nth_data == 0){
 			persistGrid(grid);
 		}
@@ -278,25 +278,20 @@ public final class Earth {
 
 		// Determine if to store
 		BigDecimal valueToStore;
-		PersistMessage msg = new PersistMessage(simulationName,
-				currentDate.getTimeInMillis());
+		PersistMessage msg = new PersistMessage(simulationName, currentDate.getTimeInMillis());
 
 		// TODO this requires (longitude, latitude) coords, not (x, y)
 		int latitude, longitude;
 		for (int x = 0; x < width; x++) {
+			
 			longitude = this.getLongitude(x);
 			for (int y = 0; y < height; y++) {		
 				
 				// determine persisting based on geoAccuracy
-				if((x+y) % nth_grids == 0){
+				if ((x+y) % nth_grids == 0) {
 					latitude = this.getLatitude(y);
 					valueToStore = new BigDecimal(grid.getTemperature(x, y));
-					msg.setTemperature(
-							longitude,
-							latitude,
-							valueToStore.setScale(this.precision,
-									BigDecimal.ROUND_HALF_UP).doubleValue());
-				
+					msg.setTemperature(longitude, latitude, valueToStore.setScale(this.precision, BigDecimal.ROUND_HALF_UP).doubleValue());
 				}
 			}
 		}

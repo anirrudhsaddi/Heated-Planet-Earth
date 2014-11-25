@@ -46,7 +46,6 @@ public class Publisher {
 		if (allListeners != null) {
 			for (MessageListener listener : allListeners) {
 				listener.onMessage(msg);
-				System.out.println("Listeners: " + listener);
 			}
 		}
 	}
