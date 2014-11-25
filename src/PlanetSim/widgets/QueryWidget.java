@@ -68,7 +68,7 @@ public class QueryWidget extends JPanel {
 	private JTextField					textFieldEastLatitude;
 	private JTextField					textFieldSimulationName;
 
-	private JList<?>					slBox;
+	private JList<?>					slBox = new JList();
 	private Vector<String> 				slBoxList;
 
 	private JCheckBox					chckbxMinimumTemperature, chckbxMaximumTemperature,
@@ -105,13 +105,14 @@ public class QueryWidget extends JPanel {
 
 	}
 	
-	public void updateQList(){
+	public JList<?> updateQList(){
 		slBox = this.engine.getSimulationList();
+		return slBox;
 	}
 
 	private JList<?> getJList() {
 		
-		slBox =  new JList();
+		slBox =  this.updateQList();
 		slBox.addListSelectionListener(new ListSelectionListener() {
 
 			@Override
