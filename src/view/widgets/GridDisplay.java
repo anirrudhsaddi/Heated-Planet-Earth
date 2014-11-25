@@ -98,7 +98,7 @@ public class GridDisplay extends JPanel {
 			float degFromLeft = grid.getSunPositionDeg() + 180f;
 			int sunx = Math.round(degFromLeft * pixPerDeg);
 			
-			//Draw sun position latitude
+			// Draw sun position latitude
 			float degFromTop = grid.getSunLatitudeDeg();
 			if(degFromTop > 0)
 				degFromTop = 90f - degFromTop;
@@ -109,7 +109,7 @@ public class GridDisplay extends JPanel {
 			int suny = Math.round(degFromTop * pixPerDeg);
 			g.drawOval(sunx, suny, 10, 10);
 			
-			//Draw planet orbit around earth
+			// Draw planet orbit around earth
 			g.drawOval(0,0, (int)(300 * 2 * Constants.a / 2 * GridCell.b), 300);
 			g.drawOval(0,150, 10, 300);
 

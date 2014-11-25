@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -27,6 +28,10 @@ import javax.swing.border.EmptyBorder;
 import view.util.ColorMap;
 import common.Constants;
 
+import java.awt.Panel;
+import java.awt.Label;
+import java.awt.Insets;
+
 public class SimulationStatus extends JSplitPane {
 
 	/**
@@ -41,8 +46,6 @@ public class SimulationStatus extends JSplitPane {
 
 	private JPanel							statusPanel, legendPanel;
 
-	private static final int				HEIGHT				= 7;
-	private static final int				WIDTH				= 2;
 	private static final int				HGAP				= 1;
 	private static final int				VGAP				= 1;
 
@@ -50,6 +53,12 @@ public class SimulationStatus extends JSplitPane {
 	private static final SimpleDateFormat	DATE_FORMAT			= new SimpleDateFormat("dd-MM-yy HH:mm:SS");
 
 	private ColorMap						colorMap;
+	private Panel panel;
+	private Label lblZero;
+	private Label lblOne;
+	private Label lblTwo;
+	private Label lblThree;
+	private Label lblFour;
 
 	public SimulationStatus(String colorMap) {
 
@@ -90,33 +99,58 @@ public class SimulationStatus extends JSplitPane {
 
 	private void addKeyPanel() {
 
-		JLabel lblOne = new JLabel("0");
-		lblOne.setSize(new Dimension(10, 10));
-
-		JLabel lblTwo = new JLabel("" + (Constants.MAX_TEMP * 0.25));
-		lblTwo.setSize(new Dimension(10, 10));
-
-		JLabel lblThree = new JLabel("" + (Constants.MAX_TEMP * 0.5));
-		lblThree.setSize(new Dimension(10, 10));
-
-		JLabel lblFour = new JLabel("" + (Constants.MAX_TEMP * 0.75));
-		lblFour.setSize(new Dimension(10, 10));
-
-		JLabel lblFive = new JLabel("" + Constants.MAX_TEMP);
-		lblFive.setSize(new Dimension(10, 10));
-
-		ThermalScale t = new ThermalScale();
-
 		legendPanel = new JPanel();
-//		legendPanel.setLayout();
-
-//		legendPanel.add(lblOne);
-//		legendPanel.add(lblTwo);
-//		legendPanel.add(lblThree);
-//		legendPanel.add(lblFour);
-//		legendPanel.add(lblFive);
-		legendPanel.add(t);
-
+		
+		GridBagLayout gbl_legendPanel = new GridBagLayout();
+		gbl_legendPanel.columnWidths = new int[]{40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 0};
+		gbl_legendPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
+		gbl_legendPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_legendPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		legendPanel.setLayout(gbl_legendPanel);
+		
+		lblZero = new Label("0");
+		GridBagConstraints gbc_lblZero = new GridBagConstraints();
+		gbc_lblZero.insets = new Insets(0, 0, 5, 5);
+		gbc_lblZero.gridx = 1;
+		gbc_lblZero.gridy = 1;
+		legendPanel.add(lblZero, gbc_lblZero);
+		
+		lblOne = new Label("" + (Constants.MAX_TEMP * 0.25));
+		GridBagConstraints gbc_lblOne = new GridBagConstraints();
+		gbc_lblOne.insets = new Insets(0, 0, 5, 5);
+		gbc_lblOne.gridx = 3;
+		gbc_lblOne.gridy = 1;
+		legendPanel.add(lblOne, gbc_lblOne);
+		
+		lblTwo = new Label("" + (Constants.MAX_TEMP * 0.5));
+		GridBagConstraints gbc_lblTwo = new GridBagConstraints();
+		gbc_lblTwo.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTwo.gridx = 5;
+		gbc_lblTwo.gridy = 1;
+		legendPanel.add(lblTwo, gbc_lblTwo);
+		
+		lblThree = new Label("" + (Constants.MAX_TEMP * 0.75));
+		GridBagConstraints gbc_lblThree = new GridBagConstraints();
+		gbc_lblThree.insets = new Insets(0, 0, 5, 5);
+		gbc_lblThree.gridx = 7;
+		gbc_lblThree.gridy = 1;
+		legendPanel.add(lblThree, gbc_lblThree);
+		
+		lblFour = new Label("" + Constants.MAX_TEMP);
+		GridBagConstraints gbc_lblFour = new GridBagConstraints();
+		gbc_lblFour.insets = new Insets(0, 0, 5, 0);
+		gbc_lblFour.gridx = 9;
+		gbc_lblFour.gridy = 1;
+		legendPanel.add(lblFour, gbc_lblFour);
+		
+		JLabel scalePanel = new ThermalScale();
+		GridBagConstraints gbc_panel = new GridBagConstraints();
+		gbc_panel.insets = new Insets(0, 0, 5, 5);
+		gbc_panel.gridwidth = 8;
+		gbc_panel.gridx = 1;
+		gbc_panel.gridy = 2;
+		legendPanel.add(scalePanel, gbc_panel);
+		
 		this.add(legendPanel, JSplitPane.RIGHT);
 	}
 
@@ -203,7 +237,7 @@ public class SimulationStatus extends JSplitPane {
 
 	}
 
-	private class ThermalScale extends Component {
+	private class ThermalScale extends JLabel {
 
 		/**
 		 * 
@@ -231,15 +265,24 @@ public class SimulationStatus extends JSplitPane {
 				fractions[i] = curr;
 				curr += 0.05;
 			}
+			
+			int width = getWidth();
+		    int height = getHeight();
 
-			final Rectangle2D r2d = new Rectangle2D.Double(0, 0, 400, 100);
+		    // Create the gradient paint
+		    LinearGradientPaint GRADIENT = new LinearGradientPaint(0, 0, width, height, fractions, colors);
 
-			Graphics2D g2D = (Graphics2D) g;
-			g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			LinearGradientPaint DARK_GRADIENT = new LinearGradientPaint(new Point2D.Double(0, 0), new Point2D.Double(
-					400, 0), fractions, colors);
-			g2D.setPaint(DARK_GRADIENT);
-			g2D.fill(r2d);
+		    // we need to cast to Graphics2D for this operation
+		    Graphics2D g2d = ( Graphics2D )g;
+		    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		    // set the paint to use for this operation
+		    g2d.setPaint(GRADIENT);
+
+		    // fill the background using the paint
+		    g2d.fillRect( 0, 0, width, height );
+
+		    super.paint( g );
 		}
 	}
 }

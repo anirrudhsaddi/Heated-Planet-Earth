@@ -495,9 +495,9 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 				System.err.println("Unable to add Grid to Database");
 				Publisher.getInstance().send(new StopMessage());
 			}
-		} else if (msg instanceof StopMessage) {
-			this.stop();
-			this.conn.close();
+//		} else if (msg instanceof StopMessage) {
+//			this.stop();
+//			this.conn.close();
 		} else if (msg instanceof PauseMessage) {
 			this.pause();
 		} else if (msg instanceof ResumeMessage) {
