@@ -53,7 +53,7 @@ public class SimulationStatus extends JSplitPane {
 	private static final SimpleDateFormat	DATE_FORMAT			= new SimpleDateFormat("dd-MM-yy HH:mm:SS");
 
 	private ColorMap						colorMap;
-	private Panel panel;
+	
 	private Label lblZero;
 	private Label lblOne;
 	private Label lblTwo;
@@ -103,7 +103,7 @@ public class SimulationStatus extends JSplitPane {
 		
 		GridBagLayout gbl_legendPanel = new GridBagLayout();
 		gbl_legendPanel.columnWidths = new int[]{40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 0};
-		gbl_legendPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
+		gbl_legendPanel.rowHeights = new int[]{0, 35, 39, 0, 0, 0};
 		gbl_legendPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_legendPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		legendPanel.setLayout(gbl_legendPanel);
@@ -143,13 +143,49 @@ public class SimulationStatus extends JSplitPane {
 		gbc_lblFour.gridy = 1;
 		legendPanel.add(lblFour, gbc_lblFour);
 		
-		JLabel scalePanel = new ThermalScale();
-		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.insets = new Insets(0, 0, 5, 5);
-		gbc_panel.gridwidth = 8;
-		gbc_panel.gridx = 1;
-		gbc_panel.gridy = 2;
-		legendPanel.add(scalePanel, gbc_panel);
+		JLabel scalePanel = new JLabel("\"\"") {
+			
+			/**
+			 * 
+			 */
+			private static final long	serialVersionUID	= 7025571074578869796L;
+
+			@Override
+			public void paintComponent(Graphics g) {
+				
+				System.out.println("Here");
+				
+				super.paint( g );
+				
+				int width = getWidth();
+				System.out.println("width: " + width);
+			    int height = getHeight();
+			    System.out.println("height: " + height);
+
+			    // Create the gradient paint
+			    GradientPaint GRADIENT = new GradientPaint(0, 0, colorMap.getColor(0, 1), width, height, colorMap.getColor(1, 1));
+
+			    // we need to cast to Graphics2D for this operation
+			    Graphics2D g2d = (Graphics2D)g;
+			    //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+			    // set the paint to use for this operation
+			    g2d.setPaint(GRADIENT);
+
+			    // fill the background using the paint
+			    g2d.fillRect(0, 0, width, height);
+
+			}
+		};
+		
+		scalePanel.setSize(200, 50);
+		
+		GridBagConstraints gbc_scalePanel = new GridBagConstraints();
+		gbc_scalePanel.insets = new Insets(0, 0, 5, 5);
+		gbc_scalePanel.gridwidth = 8;
+		gbc_scalePanel.gridx = 1;
+		gbc_scalePanel.gridy = 2;
+		legendPanel.add(scalePanel, gbc_scalePanel);
 		
 		this.add(legendPanel, JSplitPane.RIGHT);
 	}

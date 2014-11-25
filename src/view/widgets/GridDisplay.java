@@ -80,6 +80,7 @@ public class GridDisplay extends JPanel {
 					g.fillRect(cellx, celly, cellw, cellh);
 				}
 			}
+			
 			// Draw grid lines
 			g.setColor(Color.GRAY);
 			for (int y = 1; y < grid.getGridHeight()-1; y++) {
