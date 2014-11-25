@@ -70,6 +70,7 @@ public class EarthEngine extends ComponentBase {
 		} else if(msg.needsCalculation()==true) {
 			//Scenario 2 - calculate - interpolate, the data that the user wants
 			model.simulateFromTable(msg); 
+			Publisher.getInstance().send(new ProduceMessage());
 			//Scenario 3 - calculate - start a new simulation, the data the user wants is beyond the one stored in DB			
 			//Scenario 4 - calculate - start a new simulation with current data, the data the user wants is in between one stored in DB
 

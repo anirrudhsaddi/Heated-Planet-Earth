@@ -360,17 +360,9 @@ public final class Earth {
 	
 	// TABLE DS related code
 	public void populateTable(ResultMessage msg) {
-		
-		// This will cause all manner of hell with the time. Any times we use, you should do:
-		/*
-		 * Calendar <instance> = startDate.clone();
-		 * <instance>.add(...) ;
-		 * 
-		 * OR 
-		 * 
-		 * <instance>.setTimeInMillis(....);
-		 */
 		// Calendar time = new GregorianCalendar(0, 0, 0, 0, 0, 0);
+		Calendar c = ((Calendar) Constants.START_DATE.clone());
+		c.setTimeInMillis(0);
 		
 		List<GridCell> gridCells = new LinkedList<GridCell>();
 		
@@ -385,13 +377,14 @@ public final class Earth {
 			}
 		}
 		
-		// this.table.put(time, gridCells);
+		this.table.put(c, gridCells);
 	}
 
 	public void interpolateTable(ResultMessage msg) {
 		
 		 // TODO: result message should give output in a range of time
-		Calendar time = new GregorianCalendar(0, 0, 0, 0, 0, 0);
+		Calendar c = ((Calendar) Constants.START_DATE.clone());
+		c.setTimeInMillis(0);
 
 		List<GridCell> gridCells = new LinkedList<GridCell>();
 		GridCell thisCell = null;
@@ -419,12 +412,25 @@ public final class Earth {
 				}
 			}
 		}
-		this.table.put(time, gridCells);
+		this.table.put(c, gridCells);
 	}
 	
 	//In the situation when end date can not be found in DB, we have to run a new simmulation
 	public void simulateFromTable(ResultMessage msg) {
-		
+		//Simulation should start with the parameters for this particular query 
+		//these parameters are not available in result message.
+		//this.configure(null);  //Already Configured
+		//Set the prime grid member, but unable to populate the other cells with temp values from DB
+		prime = new GridCell(msg.getTemperature(0, 0), 0, 0,
+				this.getLatitude(0), this.getLongitude(0), this.gs,
+				this.axisTilt, this.eccentricity);
+		this.start();		
+		try {
+			this.generate();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void setDisplayMsg(DisplayMessage msg) {
