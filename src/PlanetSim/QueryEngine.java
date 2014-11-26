@@ -96,6 +96,7 @@ public class QueryEngine {
 			return new Hashtable<String, String>();
 		if (result.isErrored())
 			throw result.getError();
+		
 		// HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY|:HAS_AXIS|:HAS_LENGTH
 		
 		List<String> queryResult = result.getQueryList().get(0);
@@ -106,6 +107,7 @@ public class QueryEngine {
 		ret.put("Presentation Rate", String.valueOf(queryResult.get(0)));
 		ret.put("Axis Tilt", String.valueOf(queryResult.get(4)));
 		ret.put("Orbital Eccentricity", String.valueOf(queryResult.get(3)));
+		ret.put("Simulation Name", result.getSimulationName().get(0));
 		return ret;
 		
 	}

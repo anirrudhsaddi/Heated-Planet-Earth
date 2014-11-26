@@ -3,6 +3,7 @@ package PlanetSim;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -16,6 +17,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import messaging.Publisher;
 import messaging.events.ConfigureMessage;
@@ -53,8 +55,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 	private final int			geoAccuracy;
 	private final int			temporalAccuracy;
 
-	private JPanel				queryPanel			= new JPanel();
-	private int					count				= 1;
+	private JPanel				queryPanel;
 
 	private String				simulationName;
 	private int					gs;
@@ -119,45 +120,38 @@ public class ControlGUI extends JFrame implements ActionListener {
 		// setup overall app ui
 		setTitle("Heated Planet Diffusion Simulation");
 
-		setSize(900, 500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		getContentPane().setLayout(new GridLayout());
 		setLocationRelativeTo(null);
 
-		// lowerRightWindow(); // Set window location to lower right (so we
-		// don't
-		// hide dialogs)
 		setAlwaysOnTop(true);
 
 		getContentPane().add(settingsAndControls());
-		getContentPane().add(query());
+		
+		JScrollPane scrollPane = new JScrollPane(query());
+		
+		scrollPane.setBounds(0, 0, 800, 450);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		getContentPane().add(scrollPane);
 
 	}
 
-	//
-	// private void lowerRightWindow() {
-	//
-	// Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-	// int x = (int) (dimension.getWidth() - this.getWidth());
-	// int y = (int) (dimension.getHeight() - this.getHeight());
-	// this.setLocation(x, y);
-	//
-	// }
-
 	private JPanel query() {
+		
+		queryPanel = new JPanel();
 
 		queryPanel.setLayout(new BoxLayout(queryPanel, BoxLayout.PAGE_AXIS));
 		queryPanel.setAlignmentY(Component.TOP_ALIGNMENT);
-		// queryPanel.setVisible(isquery);
 
 		queryWidget = new QueryWidget(queryEngine, settingsWidget);
 
 		queryPanel.add(queryWidget, BorderLayout.CENTER);
+		queryPanel.setPreferredSize(new Dimension(600, 450));
 		return queryPanel;
 	}
 
-	// queryPanel.add()
 	private JPanel settingsAndControls() {
 
 		JPanel sncPanel = new JPanel();
@@ -166,6 +160,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 		controlWidget = new ControlWidget(this);
 		settingsWidget = new SettingsWidget();
+		settingsWidget.setPreferredSize(new Dimension(100, 350));
 		sncPanel.add(settingsWidget, BorderLayout.WEST);
 		sncPanel.add(controlWidget, BorderLayout.WEST);
 
@@ -181,6 +176,9 @@ public class ControlGUI extends JFrame implements ActionListener {
 			try {
 
 				init();
+				
+				if (simulationName == null || "".equals(simulationName))
+					throw new IllegalArgumentException("Invalid Simulation Name");
 
 				if (!simDAO.doesSimulationExist(simulationName)) {
 					
@@ -204,14 +202,14 @@ public class ControlGUI extends JFrame implements ActionListener {
 					ShowMessage("Simulation Name already exists in the database");
 				}
 
-			} catch (NumberFormatException nfe) {
-				ShowMessage("Please correct input. All fields need numbers");
+			} catch (NumberFormatException ex) {
+				ShowMessage("Invalid input: " + ex.getMessage());
 			} catch (IllegalArgumentException ex) {
-				ShowMessage("Please correct input. All fields need numbers");
+				ShowMessage("Invalid input: " + ex.getMessage());
 			} catch (SQLException ex) {
-				ShowMessage("Query against Simulation name failed: " + ex);
+				ShowMessage("Query against Simulation name failed: " + ex.getMessage());
 			} catch (Exception ex) {
-				ShowMessage("Failed to save Simulation Data: " + ex);
+				ShowMessage("Failed to save Simulation Data: " + ex.getMessage());
 			}
 		} else if ("Pause".equals(cmd)) {
 
@@ -229,6 +227,11 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 			controlWidget.disableButtonsBasedOnAction(cmd);
 			queryWidget.setFields(true);
+			
+		} else if ("Reset".equals(cmd)) {
+			
+			queryWidget.updateQList();
+			controlWidget.disableButtonsBasedOnAction(cmd);
 
 		} else if ("Query".equals(cmd)) {
 
@@ -239,12 +242,12 @@ public class ControlGUI extends JFrame implements ActionListener {
 				queryWidget.query(gs, timeStep, simulationLength, presentationInterval, axisTilt, eccentricity);
 				controlWidget.disableButtonsBasedOnAction(cmd);
 
-			} catch (NumberFormatException nfe) {
-				ShowMessage("Please correct input. All fields need numbers");
+			} catch (NumberFormatException ex) {
+				ShowMessage("Invalid input: " + ex.getMessage());
 			} catch (IllegalArgumentException ex) {
-				ShowMessage("Please correct input. All fields need numbers");
+				ShowMessage("Invalid input: " + ex.getMessage());
 			} catch (Exception ex) {
-				ShowMessage("Query failed: " + ex);
+				ShowMessage("Query failed: " + ex.getMessage());
 			}
 
 		} else if ("Run".equals(cmd)) {
@@ -252,6 +255,9 @@ public class ControlGUI extends JFrame implements ActionListener {
 			try {
 
 				init();
+				
+				if (simulationName == null || "".equals(simulationName))
+					throw new IllegalArgumentException("Invalid Simulation Name");
 
 				final double wLat = Double.parseDouble(queryWidget.GetUserInputs("West Longitude"));
 				final double eLat = Double.parseDouble(queryWidget.GetUserInputs("East Longitude"));
@@ -295,17 +301,13 @@ public class ControlGUI extends JFrame implements ActionListener {
 				
 				long startDateTime = start.getTimeInMillis();
 				long endDateTime = end.getTimeInMillis();
-				
-
-				// TODO get the dates and times from query widget and convert
-				// them
-				// into calendars, send in millis
 
 				configure(msg, startDateTime, endDateTime);
-			} catch (NumberFormatException nfe) {
-				ShowMessage("Please correct input(nfe). All fields need numbers");
+				
+			} catch (NumberFormatException ex) {
+				ShowMessage("Invalid input: " + ex.getMessage());
 			} catch (IllegalArgumentException ex) {
-				ShowMessage("Please correct input. All fields need numbers");
+				ShowMessage("Invalid input: " + ex.getMessage());
 			} catch (Exception ex) {
 				ShowMessage("Query run failed: " + ex);
 			}
@@ -322,11 +324,6 @@ public class ControlGUI extends JFrame implements ActionListener {
 		presentationInterval = Float.parseFloat(settingsWidget.getInputText("Presentation Rate"));
 		axisTilt = Float.parseFloat(settingsWidget.getInputText("Axis Tilt"));
 		eccentricity = Float.parseFloat(settingsWidget.getInputText("Orbital Eccentricity"));
-
-		// simulationName = gs + "_" + timeStep + "_" + presentationInterval +
-		// "_" + simulationLength + "_" + axisTilt
-		// + "_" + count;
-		// count++;
 
 		if (gs < Constants.MIN_GRID_SPACING || gs > Constants.MAX_GRID_SPACING)
 			throw new IllegalArgumentException("Invalid grid spacing");

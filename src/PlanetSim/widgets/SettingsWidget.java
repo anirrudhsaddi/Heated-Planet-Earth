@@ -2,6 +2,7 @@ package PlanetSim.widgets;
 
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
@@ -12,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class SettingsWidget extends JPanel {
-	
+
 	private static final long			serialVersionUID		= 6146431536208036768L;
 	private static final int			DEFAULT_GRID_SPACING	= 15;
 	private static final int			DEFAULT_TIME_STEP		= 1440;
@@ -22,29 +23,32 @@ public class SettingsWidget extends JPanel {
 	private static final float			DEFAULT_ECCENTRICITY	= 0.0167f;
 
 	private HashMap<String, JTextField>	inputs					= new HashMap<String, JTextField>();
+
+	private JPanel						inputPanel;
 	private JCheckBox					chckbxDisplayAnimation;
 
 	public SettingsWidget() {
-		
+
 		setBorder(BorderFactory.createTitledBorder("Settings"));
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		setAlignmentY(Component.TOP_ALIGNMENT);
 
-		add(inputField("Simulation Name", ""));
-		add(inputField("Grid Spacing", Integer.toString(DEFAULT_GRID_SPACING)));
-		add(inputField("Simulation Time Step", Integer.toString(DEFAULT_TIME_STEP)));
-		add(inputField("Presentation Rate", Float.toString(DEFAULT_PRESENTATION)));
-		add(inputField("Simulation Length", Integer.toString(DEFAULT_SIM_LEN)));
-		add(inputField("Axis Tilt", Float.toString(DEFAULT_AXIS_TILT)));
-		add(inputField("Orbital Eccentricity", Float.toString(DEFAULT_ECCENTRICITY)));
+		inputPanel = new JPanel();
+		inputPanel.setLayout(new GridLayout(7, 2));
+
+		inputField("Simulation Name", "");
+		inputField("Grid Spacing", Integer.toString(DEFAULT_GRID_SPACING));
+		inputField("Simulation Time Step", Integer.toString(DEFAULT_TIME_STEP));
+		inputField("Presentation Rate", Float.toString(DEFAULT_PRESENTATION));
+		inputField("Simulation Length", Integer.toString(DEFAULT_SIM_LEN));
+		inputField("Axis Tilt", Float.toString(DEFAULT_AXIS_TILT));
+		inputField("Orbital Eccentricity", Float.toString(DEFAULT_ECCENTRICITY));
+		
+		add(inputPanel);
 		add(checkBox());
 	}
 
-	private JPanel inputField(String name, String defaultText) {
-
-		JPanel inputPanel = new JPanel();
-		inputPanel.setLayout(new FlowLayout());
-		inputPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+	private void inputField(String name, String defaultText) {
 
 		JLabel l = new JLabel(name);
 		l.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -56,7 +60,6 @@ public class SettingsWidget extends JPanel {
 		inputPanel.add(t);
 
 		inputs.put(name, t);
-		return inputPanel;
 	}
 
 	private JPanel checkBox() {
@@ -80,7 +83,7 @@ public class SettingsWidget extends JPanel {
 	public String getInputText(String InputName) {
 		return inputs.get(InputName).getText();
 	}
-	
+
 	public void setInputText(String InputName, String value) {
 		inputs.get(InputName).setText(value);
 	}

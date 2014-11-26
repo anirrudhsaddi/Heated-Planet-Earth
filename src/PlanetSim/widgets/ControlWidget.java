@@ -1,6 +1,8 @@
 package PlanetSim.widgets;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
@@ -14,6 +16,8 @@ public class ControlWidget extends JPanel {
 	private HashMap<String, JButton>	buttons				= new HashMap<String, JButton>();
 
 	public ControlWidget(ActionListener listener) {
+		
+		setLayout(new GridLayout(1, 7));
 
 		setAlignmentX(Component.RIGHT_ALIGNMENT);
 
@@ -23,6 +27,7 @@ public class ControlWidget extends JPanel {
 		add(button("Stop", listener));
 		add(button("Query", listener));
 		add(button("Run", listener));
+		add(button("Reset", listener));
 
 		buttons.get("Start").setEnabled(true);
 		buttons.get("Pause").setEnabled(false);
@@ -30,6 +35,7 @@ public class ControlWidget extends JPanel {
 		buttons.get("Stop").setEnabled(false);
 		buttons.get("Query").setEnabled(true);
 		buttons.get("Run").setEnabled(false);
+		buttons.get("Reset").setEnabled(true);
 
 	}
 
@@ -51,6 +57,7 @@ public class ControlWidget extends JPanel {
 			buttons.get("Stop").setEnabled(true);
 			buttons.get("Query").setEnabled(false);
 			buttons.get("Run").setEnabled(false);
+			buttons.get("Reset").setEnabled(false);
 		} else if (actionName == "Pause") {
 			buttons.get("Pause").setEnabled(false);
 			buttons.get("Resume").setEnabled(true);
@@ -64,12 +71,14 @@ public class ControlWidget extends JPanel {
 			buttons.get("Stop").setEnabled(false);
 			buttons.get("Query").setEnabled(true);
 			buttons.get("Run").setEnabled(false);
+			buttons.get("Reset").setEnabled(true);
 		} else if (actionName == "Query") {
 			buttons.get("Start").setEnabled(false);
 			buttons.get("Pause").setEnabled(false);
 			buttons.get("Resume").setEnabled(false);
 			buttons.get("Stop").setEnabled(false);
 			buttons.get("Run").setEnabled(true);
+			buttons.get("Reset").setEnabled(true);
 		} else if (actionName == "Run") {
 			buttons.get("Start").setEnabled(false);
 			buttons.get("Pause").setEnabled(true);
@@ -77,6 +86,7 @@ public class ControlWidget extends JPanel {
 			buttons.get("Stop").setEnabled(true);
 			buttons.get("Query").setEnabled(false);
 			buttons.get("Run").setEnabled(false);
+			buttons.get("Reset").setEnabled(true);
 		}
 	}
 }
