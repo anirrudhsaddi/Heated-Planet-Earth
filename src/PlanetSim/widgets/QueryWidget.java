@@ -7,6 +7,7 @@ import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -29,6 +30,7 @@ import javax.swing.event.ListSelectionListener;
 //import org.jdatepicker.impl.UtilCalendarModel;
 //import org.jdatepicker.impl.UtilDateModel;
 //import org.jdatepicker.*;
+
 
 
 
@@ -78,6 +80,7 @@ public class QueryWidget extends JPanel {
 	private UtilDateModel startModel, endModel; 
 	private JDatePanelImpl startDatepanel , endDatePanel ;
 	private JDatePickerImpl startDatePicker, endDatePicker ;
+	private Date 			startDate, endDate;
 
 	public QueryWidget(QueryEngine engine, SettingsWidget settings) {
 
@@ -377,18 +380,25 @@ public class QueryWidget extends JPanel {
 	}
 
 	public String GetComboBox(String name) {
-		return comboBoxes.get(name).toString();
+		return comboBoxes.get(name).getSelectedItem().toString();
 	}
 	
 	public Calendar getSelectedStartDate() {
 		
-		Calendar c = (Calendar) this.startDatePicker.getModel().getValue();
-		System.out.println("Start date in calendar format " + c);
-		return (Calendar) this.startDatePicker.getModel().getValue();
+		Calendar startCal = Calendar.getInstance();
+		startDate = (Date) this.startDatePicker.getModel().getValue();
+		startCal.setTime(startDate);
+		//return (Calendar) this.startDatePicker.getModel().getValue();
+		return startCal;
 	}
 	
 	public Calendar getSelectedEndDate() {
-		return (Calendar) this.endDatePicker.getModel().getValue();
+		
+		Calendar endCal = Calendar.getInstance();
+		endDate = (Date) this.endDatePicker.getModel().getValue();
+		endCal.setTime(endDate);
+		//return (Calendar) this.endDatePicker.getModel().getValue();
+		return endCal;
 	}
 	
 	private void ShowMessage(final String message) {

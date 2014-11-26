@@ -263,15 +263,15 @@ public class ControlGUI extends JFrame implements ActionListener {
 				final int startMinute = Integer.parseInt(queryWidget.GetComboBox("Start Minute"));
 				final int endHour = Integer.parseInt(queryWidget.GetComboBox("End Hour")); 
 				final int endMinute = Integer.parseInt(queryWidget.GetComboBox("End Minute"));
-
+				
 				final boolean minTemp = queryWidget.GetCheckBox("Minimum Temp");
 				final boolean maxTemp = queryWidget.GetCheckBox("Maximum Temp");
 				final boolean meanTime = queryWidget.GetCheckBox("Mean Time Temp");
 				final boolean meanRegion = queryWidget.GetCheckBox("Mean Region Temp");
 				final boolean actualValue = queryWidget.GetCheckBox("Actual Values");
-
+				
 				final int gs = Integer.parseInt(settingsWidget.getInputText("Grid Spacing"));
-
+				
 				ConfigureMessage msg = new ConfigureMessage();
 				msg.setGridSpacing(gs);
 
@@ -283,7 +283,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 				msg.setShowMeanTime(meanTime);
 				msg.setShowMeanRegion(meanRegion);
 				msg.setShowActualValue(actualValue);
-
+				
 				final Calendar start = queryWidget.getSelectedStartDate();
 				final Calendar end = queryWidget.getSelectedEndDate();
 
@@ -294,20 +294,18 @@ public class ControlGUI extends JFrame implements ActionListener {
 				end.add(Calendar.MINUTE, endMinute);
 				
 				long startDateTime = start.getTimeInMillis();
-			
 				long endDateTime = end.getTimeInMillis();
 				
-				System.out.println("starttime: " + startDateTime + "/endDateTime: " + endDateTime);
 
 				// TODO get the dates and times from query widget and convert
 				// them
 				// into calendars, send in millis
 
 				configure(msg, startDateTime, endDateTime);
-			//} catch (NumberFormatException nfe) {
-				//ShowMessage("Please correct input. All fields need numbers");
-			//} catch (IllegalArgumentException ex) {
-			//	ShowMessage("Please correct input. All fields need numbers");
+			} catch (NumberFormatException nfe) {
+				ShowMessage("Please correct input(nfe). All fields need numbers");
+			} catch (IllegalArgumentException ex) {
+				ShowMessage("Please correct input. All fields need numbers");
 			} catch (Exception ex) {
 				ShowMessage("Query run failed: " + ex);
 			}
