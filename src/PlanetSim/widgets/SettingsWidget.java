@@ -72,11 +72,15 @@ public class SettingsWidget extends JPanel {
 		return checkBoxPanel;
 	}
 
-	public Boolean GetDisplayAnimationStatus() {
+	public Boolean getDisplayAnimationStatus() {
 		return chckbxDisplayAnimation.isSelected();
 	}
 
-	public String GetInputText(String InputName) {
+	public String getInputText(String InputName) {
 		return inputs.get(InputName).getText();
+	}
+	
+	public void setInputText(String InputName, String value) {
+		inputs.get(InputName).setText(value);
 	}
 }

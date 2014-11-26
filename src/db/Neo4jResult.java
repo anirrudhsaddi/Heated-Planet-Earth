@@ -42,17 +42,16 @@ public class Neo4jResult implements IQueryResult {
 			return;
 
 		while (result.next()) {
+			
+			System.out.println(result);
 
 			this.queryName.add(checkColumnExists(result, "simulation") ? result.getString("simulation") : "");
 			this.gridSpacing.add(checkColumnExists(result, "gridSpacing") ? result.getInt("gridSpacing") : -1);
 			this.timeStep.add(checkColumnExists(result, "timeStep") ? result.getInt("timeStep") : -1);
-			this.simulationLength.add(checkColumnExists(result, "simulationLength") ? result.getInt("simulationLength")
-					: -1);
-			this.presentationInterval.add(checkColumnExists(result, "presentationInterval") ? result
-					.getFloat("presentationInterval") : -1);
+			this.simulationLength.add(checkColumnExists(result, "simulationLength") ? result.getInt("simulationLength"): -1);
+			this.presentationInterval.add(checkColumnExists(result, "presentationInterval") ? result.getFloat("presentationInterval") : -1);
 			this.axisTilt.add(checkColumnExists(result, "axisTilt") ? result.getFloat("axisTilt") : -1);
-			this.eccentricity.add(checkColumnExists(result, "orbitalEccentricity") ? result
-					.getFloat("orbitalEccentricity") : -1);
+			this.eccentricity.add(checkColumnExists(result, "orbitalEccentricity") ? result.getFloat("orbitalEccentricity") : -1);
 
 			if (checkColumnExists(result, "results")) {
 				this.nodes.add((List<String>) result.getObject("results"));

@@ -1,18 +1,18 @@
 package PlanetSim;
 
-import java.awt.List;
 import java.sql.SQLException;
-import java.util.concurrent.Future;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JList;
 
 import org.apache.james.mime4j.field.datetime.DateTime;
 
-import common.ThreadManager;
+import PlanetSim.widgets.QueryWidget;
 import db.IDBConnection;
 import db.IQueryResult;
 import db.SimulationDAO;
-import db.SimulationNeo4j;
 
 public class QueryEngine {
 
@@ -44,35 +44,32 @@ public class QueryEngine {
 
 	private final SimulationDAO	simDAO;
 
-	private String				simName;
-	private float				axialTilt;
-	private float				eccentricity;
-	private DateTime			startTime;
-	private DateTime			endTime;
-	private double				wLat;
-	private double				eLat;
-	private double				sLat;
-	private double				nLat;
-
 	public QueryEngine(SimulationDAO simDAO) throws SQLException {
 		
 		this.simDAO = simDAO;
 	}
+	
+	public void setSimulationName(String simulationName, int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float orbitalEccentricity) throws Exception {
+		
+		IQueryResult result = simDAO.setSimulationName(simulationName, gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, orbitalEccentricity);
+		
+		if (result.isEmpty())
+			throw new SQLException("No data was returned when setting the new Simulation: query failed");
+		if (result.isErrored())
+			throw result.getError();
+		
+	}
 
-	public JList<?> getSimulationList() {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public JList getSimulationList() throws SQLException {
 		
 		JList simList = new JList();
 		
 		IQueryResult rs = null;
-		try {
-			rs = simDAO.findNamedSimulations();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		rs = simDAO.findNamedSimulations();
 		
 		java.util.List<String> names= rs.getSimulationName();
-		simList.setListData(names.toArray(new Object[0]));
+		simList.setListData(names.toArray());
 		System.out.println("SimList size: " + simList.getModel().getSize() );
 		for(int i=0;i<simList.getModel().getSize();){
 			System.out.println("Element at "+ i +". " + simList.getModel().getElementAt(i));
@@ -81,63 +78,45 @@ public class QueryEngine {
 		return simList;
 
 	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public JList getSimulationsByData(int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float orbitalEccentricity) throws Exception {
+		
+		IQueryResult result = simDAO.findSimulationByData(gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, orbitalEccentricity).get();
+		
+		if (result.isEmpty())
+			return new JList();
+		if (result.isErrored())
+			throw result.getError();
+		
+		return new JList(result.getSimulationName().toArray());
+	}
 
-	private void getPhysicalParameters(String simulationName){
+	public Hashtable<String, String> getSimulationPhysicalParameters(String simulationName) throws Exception {
 		
-		IQueryResult result = null;
-		try {
-			result = (IQueryResult) simDAO.findSimulationByName(simulationName); //
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		IQueryResult result = simDAO.findSimulationByName(simulationName).get(); 
 		
-		//TODO: result has the physical parameters. Set them in the settings Wdiget at runtime!
+		if (result.isEmpty())
+			return new Hashtable<String, String>();
+		if (result.isErrored())
+			throw result.getError();
+		// HAS_PRESENTATION|:HAS_TIME|:HAS_GRID|:HAS_ECCENTRICITY|:HAS_AXIS|:HAS_LENGTH
 		
+		List<String> queryResult = result.getQueryList().get(0);
+		Hashtable<String, String> ret = new Hashtable<String, String>();
+		ret.put("Grid Spacing", String.valueOf(queryResult.get(2)));
+		ret.put("Simulation Time Step", String.valueOf(queryResult.get(1)));
+		ret.put("Simulation Length", String.valueOf(queryResult.get(5)));
+		ret.put("Presentation Rate", String.valueOf(queryResult.get(0)));
+		ret.put("Axis Tilt", String.valueOf(queryResult.get(4)));
+		ret.put("Orbital Eccentricity", String.valueOf(queryResult.get(3)));
+		return ret;
 		
 	}
 	
-	// probably don't need this since we do an anonymous instantiation on line 55
-	public void setConn(IDBConnection conn) {
-		this.conn = conn;
+	public void findTemperaturesAt(String name, long startDateTime, long endDateTime, int westLongitude,
+			int eastLongitude, int northLatitude, int southLatitude) throws Exception {
+		
+		simDAO.findTemperaturesAt(name, startDateTime, endDateTime, westLongitude, eastLongitude, northLatitude, southLatitude);
 	}
-
-	public void setSimName(String simName) {
-		this.simName = simName;
-	}
-
-	public void setAxialTilt(float axialTilt) {
-		this.axialTilt = axialTilt;
-	}
-
-	public void setEccentricity(float eccentricity) {
-		this.eccentricity = eccentricity;
-	}
-
-	public void setStartTime(DateTime startTime) {
-		this.startTime = startTime;
-	}
-
-	public void setEndTime(DateTime endTime) {
-		this.endTime = endTime;
-	}
-
-	public void setwLat(double wLat) {
-		this.wLat = wLat;
-	}
-
-	public void seteLat(double eLat) {
-		this.eLat = eLat;
-	}
-
-	public void setsLat(double sLat) {
-		this.sLat = sLat;
-	}
-
-	public void setnLat(double nLat) {
-		this.nLat = nLat;
-	}
-
-	// TODO: validate input to make sure that are valid
-
 }

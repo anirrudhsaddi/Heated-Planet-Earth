@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -14,6 +15,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -27,6 +29,10 @@ import javax.swing.event.ListSelectionListener;
 //import org.jdatepicker.impl.UtilCalendarModel;
 //import org.jdatepicker.impl.UtilDateModel;
 //import org.jdatepicker.*;
+
+
+
+
 
 
 
@@ -74,14 +80,16 @@ public class QueryWidget extends JPanel {
 	private JCheckBox					chckbxMinimumTemperature, chckbxMaximumTemperature,
 			chckbxMeanTemperatureOverTime, chckbxMeanTemperatureOverRegion, chckbxActualValues;
 	
+	private SettingsWidget settings;
 	private QueryEngine engine;
 
 	private HashMap<String, JTextField>	inputs				= new HashMap<String, JTextField>();
-	private HashMap<String, JCheckBox>	checkBoxes				= new HashMap<String, JCheckBox>();
+	private HashMap<String, JCheckBox>	checkBoxes			= new HashMap<String, JCheckBox>();
 	
-	public QueryWidget(QueryEngine engine) {
+	public QueryWidget(QueryEngine engine, SettingsWidget settings) {
 		
 		this.engine = engine;
+		this.settings = settings;
 
 		for (int i = 0; i < 24; i++)
 			hours[i] = i;
@@ -97,6 +105,7 @@ public class QueryWidget extends JPanel {
 		setBorder(BorderFactory.createTitledBorder("Query"));
 		setLayout(new GridLayout());
 		setAlignmentY(Component.RIGHT_ALIGNMENT);
+		setSize(600, 400);
 
 		JScrollPane listScrollPane = new JScrollPane(getJList());
 		listScrollPane.setPreferredSize(new Dimension(50, this.getHeight()));
@@ -105,8 +114,26 @@ public class QueryWidget extends JPanel {
 
 	}
 	
+	public void query(int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float orbitalEccentricity) {
+		
+		// If there are no name selections, find names by physical data
+		// otherwise, ignore - the valueChanged handler will populate the
+		// name's physical data
+		if (slBox.isSelectionEmpty()) {
+			try {
+				slBox = engine.getSimulationsByData(gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, orbitalEccentricity);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "Unable to query for a list of matching Simulations. Error(" +  e + ")");
+			}
+		} 
+	}
+	
 	public JList<?> updateQList(){
-		slBox = this.engine.getSimulationList();
+		try {
+			slBox = this.engine.getSimulationList();
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Unable update list of Simulation Names. Error(" +  e + ")");
+		}
 		return slBox;
 	}
 
@@ -117,8 +144,24 @@ public class QueryWidget extends JPanel {
 
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				String selection = (String) slBox.getSelectedValue();
-				System.out.println("Selection in Jlist: " + selection);
+				String simulationName = (String) slBox.getSelectedValue();
+				try {
+					
+					Hashtable<String, String> result = engine.getSimulationPhysicalParameters(simulationName);
+					
+					if (result.isEmpty()){
+						JOptionPane.showMessageDialog(null, "No data available");
+						return;
+					}
+						
+					for (String key : result.keySet()) {
+						settings.setInputText(key, result.get(key));
+					}
+					
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "Unable to query for Simulation Physical Data. Error(" +  e + ")");
+				}
+				
 				setFields(true);
 			}
 		});
@@ -143,8 +186,6 @@ public class QueryWidget extends JPanel {
 		lblStartTime.setBounds(10, 15, 130, 15);
 		inputPanel.add(lblStartTime);
 		
-		
-
 		// startTime = new JPanel();
 		// startTime.setBounds(145, 10, 114, 19);
 		// startTime.setEnabled(false);
@@ -169,6 +210,7 @@ public class QueryWidget extends JPanel {
 //		startDate = new JDatePanelImpl(new UtilCalendarModel((Calendar) Constants.START_DATE.clone()));
 //	    startDate.addDateSelectionConstraint(this.dateRangeConstraint);
 //		startDatePicker = new JDatePickerImpl(startDate);
+		
 		UtilDateModel startModel = new UtilDateModel();
 		JDatePanelImpl startDatepanel = new JDatePanelImpl(startModel);
 		JDatePickerImpl startDatePicker = new JDatePickerImpl(startDatepanel);

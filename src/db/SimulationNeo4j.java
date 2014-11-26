@@ -1,5 +1,6 @@
 package db;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,6 +21,8 @@ public final class SimulationNeo4j implements IDBConnection {
 	private static final String DB_PATH		= "neo4j/db/";
 	private static final String NAME		= "simulationDb";
 	private static final String URL 		= "jdbc:neo4j:instance:" + NAME;
+	
+	private static long current_db_size = 0;
 	
 	// Database connection object
 	private static GraphDatabaseService simulationDb;
@@ -51,6 +54,20 @@ public final class SimulationNeo4j implements IDBConnection {
 		} catch (SQLException e) {
 			throw new IllegalStateException("Unable to create a connection to the database " + NAME + ": " + e);
 		}
+		
+		current_db_size = folderSize(new java.io.File(DB_PATH));
+		System.out.printf("Size at DB start: %d bytes%n", current_db_size);
+	}
+	
+	private static long folderSize(File directory) {
+	    long length = 0;
+	    for (File file : directory.listFiles()) {
+	        if (file.isFile())
+	            length += file.length();
+	        else
+	            length += folderSize(file);
+	    }
+	    return length;
 	}
 	
 	public PreparedStatement createPreparedStatement(String queryName, String query) throws SQLException {
@@ -91,7 +108,12 @@ public final class SimulationNeo4j implements IDBConnection {
 		if (query == null) throw new IllegalArgumentException("Query string must not be null");
 		
 		Statement stmt = db.createStatement();
-		return stmt.executeQuery(query);
+		
+		long currNTime = System.nanoTime();
+		ResultSet result = stmt.executeQuery(query);
+		System.out.printf("query '%s' took %dms %n", query, (System.nanoTime() - currNTime) / 1000000);
+		
+		return result;
 	}
 	
 	private static void registerShutdownHook(final GraphDatabaseService db) {
@@ -102,6 +124,9 @@ public final class SimulationNeo4j implements IDBConnection {
 	    Runtime.getRuntime().addShutdownHook( new Thread() {
 	        @Override
 	        public void run() {
+	        	
+	        	long closing_size = folderSize(new java.io.File(DB_PATH));
+	        	System.out.printf("Size at DB close: %d bytes. Delta: %d bytes%n", closing_size, (closing_size - current_db_size));
 	        	db.shutdown();
 	        }
 	    } );

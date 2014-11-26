@@ -69,7 +69,6 @@ public class ControlWidget extends JPanel {
 			buttons.get("Pause").setEnabled(false);
 			buttons.get("Resume").setEnabled(false);
 			buttons.get("Stop").setEnabled(false);
-			buttons.get("Query").setEnabled(false);
 			buttons.get("Run").setEnabled(true);
 		} else if (actionName == "Run") {
 			buttons.get("Start").setEnabled(false);
