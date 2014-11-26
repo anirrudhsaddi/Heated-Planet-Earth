@@ -9,6 +9,8 @@ public interface ISimulationDAO {
 	
 	public IQueryResult findNamedSimulations() throws SQLException;
 	
+	public boolean doesSimulationExist(String name) throws SQLException;
+	
 	public boolean createOrMatchSimulationNode(String name) throws SQLException;
 	
 	public boolean createOrMatchTemperatureRelationship(String name, int latitude, int longitude, long datetime, double temperature) throws SQLException;

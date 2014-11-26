@@ -51,6 +51,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		this.conn.createPreparedStatement(Neo4jConstants.FIND_PRESENTATION_INTERVAL_KEY,
 				Neo4jConstants.FIND_PRESENTATION_INTERVAL_QUERY);
 
+		this.conn.createPreparedStatement(Neo4jConstants.FIND_SIMULATIONS_BY_NAME_KEY,
+				Neo4jConstants.FIND_SIMULATIONS_BY_NAME_QUERY);
 		this.conn.createPreparedStatement(Neo4jConstants.MATCH_NODE_BY_NAME_KEY,
 				Neo4jConstants.MATCH_NODE_BY_NAME_QUERY);
 		this.conn.createPreparedStatement(Neo4jConstants.MATCH_NODE_BY_DATA_KEY,
@@ -92,7 +94,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		this.conn.query(Neo4jConstants.CREATE_TIME_STEP_CONSTRAINT);
 		this.conn.query(Neo4jConstants.CREATE_PRESENTATION_INTERVAL_CONSTRAINT);
 		this.conn.query(Neo4jConstants.CREATE_SIMULATION_LENGTH_CONSTRAINT);
-		
+
 		Publisher.getInstance().subscribe(PersistMessage.class, this);
 	}
 
@@ -107,14 +109,11 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 
 		return new Neo4jResult(set);
 	}
-
-	// Tested
+	
 	@Override
-	public boolean createOrMatchSimulationNode(String name) throws SQLException {
-		
-		
+	public boolean doesSimulationExist(String name) throws SQLException {
 
-		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_SIMULATION_KEY);
+		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.FIND_SIMULATIONS_BY_NAME_KEY);
 		query.setString(1, name);
 
 		ResultSet set = conn.query(query);
@@ -128,10 +127,23 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 
 	// Tested
 	@Override
+	public boolean createOrMatchSimulationNode(String name) throws SQLException {
+
+		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_SIMULATION_KEY);
+		query.setString(1, name);
+
+		ResultSet set = conn.query(query);
+		if (!set.isBeforeFirst() || set == null)
+			return false;
+		set.next();
+		return name.equals(set.getString("simulation"));
+
+	}
+
+	// Tested
+	@Override
 	public boolean createOrMatchTemperatureRelationship(String name, int latitude, int longitude, long datetime,
 			double temperature) throws SQLException {
-		
-		
 
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_KEY);
 		query.setDouble(1, temperature);
@@ -166,8 +178,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	// Tested
 	@Override
 	public boolean createOrMatchAxisTiltRelationship(String name, float axisTilt) throws SQLException {
-		
-		
 
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_AXIS_TILT_KEY);
 		query.setFloat(1, axisTilt);
@@ -194,8 +204,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	@Override
 	public boolean createOrMatchOrbitalEccentricityRelationship(String name, float orbitalEccentricity)
 			throws SQLException {
-		
-		
 
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_ORBITAL_ECCENTRICITY_KEY);
 		query.setFloat(1, orbitalEccentricity);
@@ -221,8 +229,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	// Tested
 	@Override
 	public boolean createOrMatchGridSpacingRelationship(String name, int gridSpacing) throws SQLException {
-		
-		
 
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_GRID_SPACING_KEY);
 		query.setInt(1, gridSpacing);
@@ -248,8 +254,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	// Tested
 	@Override
 	public boolean createOrMatchTimeStepRelationship(String name, int timeStep) throws SQLException {
-		
-		
 
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_TIME_STEP_KEY);
 		query.setInt(1, timeStep);
@@ -276,8 +280,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	@Override
 	public boolean createOrMatchPresentationIntervalRelationship(String name, float presentationInterval)
 			throws SQLException {
-		
-		
 
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_PRESENTATION_INTERVAL_KEY);
 		query.setFloat(1, presentationInterval);
@@ -303,8 +305,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	// Tested
 	@Override
 	public boolean createOrMatchSimulationLengthRelationship(String name, int simulationLength) throws SQLException {
-		
-		
 
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_SIMULATION_LENGTH_KEY);
 		query.setInt(1, simulationLength);
@@ -331,8 +331,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	@Override
 	public IQueryResult setSimulationName(String name, int gridSpacing, int timeStep, int simulationLength,
 			float presentationInterval, float axisTilt, float orbitalEccentricity) throws Exception {
-		
-		
 
 		// First do findSimulationByName
 		Future<IQueryResult> f = findSimulationByData(gridSpacing, timeStep, simulationLength, presentationInterval,
@@ -388,8 +386,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	// Tested
 	@Override
 	public Future<IQueryResult> findSimulationByName(String name) throws SQLException {
-		
-		
 
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.MATCH_NODE_BY_NAME_KEY);
 
@@ -402,8 +398,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	@Override
 	public Future<IQueryResult> findSimulationByData(int gridSpacing, int timeStep, int simulationLength,
 			float presentationInterval, float axisTilt, float orbitalEccentricity) throws SQLException {
-		
-		
 
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.MATCH_NODE_BY_DATA_KEY);
 
@@ -421,8 +415,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	public void findTemperaturesAt(String name, long startDateTime, long endDateTime, int westLongitude,
 			int eastLongitude, int northLatitude, int southLatitude) throws SQLException, InterruptedException,
 			ExecutionException {
-		
-		
 
 		/*
 		 * If so, we then need to derive the end datetime from the simulation
@@ -524,7 +516,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 			this.pause();
 		} else if (msg instanceof ResumeMessage) {
 			this.resume();
-		} 
+		}
 	}
 
 	@Override
@@ -541,7 +533,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 
 	@Override
 	protected void performAction(Message inMsg) {
-		
+
 		System.out.println("performAction");
 
 		PersistMessage msg = (PersistMessage) inMsg;
@@ -552,7 +544,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		String name = msg.getSimulationName();
 
 		try {
-			
+
 			Iterator<Integer[]> gen = msg.genCoordinates();
 			while (gen.hasNext()) {
 
@@ -561,13 +553,13 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 				int latitude = coords[1];
 
 				double temperature = msg.getTemperature(longitude, latitude);
-				
-				System.out.println("Saving temp " + temperature + " at longitude " + longitude + ", latitude: " + latitude);
+
+				System.out.println("Saving temp " + temperature + " at longitude " + longitude + ", latitude: "
+						+ latitude);
 
 				query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_KEY);
 				query.setDouble(1, temperature);
 
-				
 				result = conn.query(query);
 				if (!result.isBeforeFirst() || result == null)
 					throw new SQLException("Unable to create or match temperature. Temperature Node " + temperature
@@ -593,7 +585,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 				result = conn.query(query);
 				if (!result.isBeforeFirst() || result == null)
 					throw new SQLException("Failed to execute query. Temperature Relationship does not exist");
-				
+
 				result.next();
 				System.out.println("Result from CREATE_TEMP_REL_KEY: " + result);
 
@@ -624,7 +616,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		public IQueryResult call() throws Exception {
 
 			try {
-				
+
 				IQueryResult r = new Neo4jResult(conn.query(query));
 				return r;
 			} catch (SQLException e) {

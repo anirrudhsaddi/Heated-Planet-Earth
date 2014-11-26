@@ -14,6 +14,7 @@ public interface Neo4jConstants {
 	
 
 	public static final String FIND_SIMULATIONS_KEY 				= "find_simulation_names";
+	public static final String FIND_SIMULATIONS_BY_NAME_KEY 		= "find_simulation_by_name";
 	public static final String FIND_TEMPERATURES_KEY 				= "find_temperature_values";
 	public static final String FIND_TIME_STEP_KEY 					= "find_time_step_values";
 	public static final String FIND_SIMULATION_LENGTH_KEY 			= "find_simulation_length_values";
@@ -23,6 +24,11 @@ public interface Neo4jConstants {
 	public static final String FIND_PRESENTATION_INTERVAL_KEY 		= "find_presentation_interval_values";
 
 	public static final String FIND_SIMULATIONS_QUERY 				= "MATCH (a: Simulation) "
+			+ "WITH a.name AS simulation "
+			+ "RETURN simulation";
+	
+	public static final String FIND_SIMULATIONS_BY_NAME_QUERY 		= "MATCH (a: Simulation) "
+			+ "WHERE a.name = {1} "
 			+ "WITH a.name AS simulation "
 			+ "RETURN simulation";
 	

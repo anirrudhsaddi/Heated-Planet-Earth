@@ -182,7 +182,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 				init();
 
-				if (!simDAO.createOrMatchSimulationNode(simulationName)) {
+				if (!simDAO.doesSimulationExist(simulationName)) {
 
 					Calendar end = (Calendar) Constants.START_DATE.clone();
 					end.add(Calendar.MONTH, simulationLength);
