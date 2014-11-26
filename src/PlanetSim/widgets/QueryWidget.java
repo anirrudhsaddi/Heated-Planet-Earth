@@ -22,27 +22,12 @@ import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-
 //import org.jdatepicker.constraints.RangeConstraint;
 //import org.jdatepicker.impl.JDatePanelImpl;
 //import org.jdatepicker.impl.JDatePickerImpl;
 //import org.jdatepicker.impl.UtilCalendarModel;
 //import org.jdatepicker.impl.UtilDateModel;
 //import org.jdatepicker.*;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -57,11 +42,11 @@ public class QueryWidget extends JPanel {
 
 	private final Integer[]				hours				= new Integer[24];
 	private final Integer[]				minutes				= new Integer[60];
-	
-	//private final RangeConstraint dateRangeConstraint;
-//	private JDatePanelImpl startDate;
-//	private JDatePanelImpl	endDate;
-	//private JDatePickerImpl startDatePicker, endDatePicker;
+
+	// private final RangeConstraint dateRangeConstraint;
+	// private JDatePanelImpl startDate;
+	// private JDatePanelImpl endDate;
+	// private JDatePickerImpl startDatePicker, endDatePicker;
 
 	private GridLayout					mainlayout			= new GridLayout(3, 0);
 
@@ -74,20 +59,20 @@ public class QueryWidget extends JPanel {
 	private JTextField					textFieldEastLatitude;
 	private JTextField					textFieldSimulationName;
 
-	private JList<?>					slBox = new JList();
-	private Vector<String> 				slBoxList;
+	private JList						slBox				= new JList();
+	private Vector<String>				slBoxList;
 
 	private JCheckBox					chckbxMinimumTemperature, chckbxMaximumTemperature,
 			chckbxMeanTemperatureOverTime, chckbxMeanTemperatureOverRegion, chckbxActualValues;
-	
-	private SettingsWidget settings;
-	private QueryEngine engine;
+
+	private SettingsWidget				settings;
+	private QueryEngine					engine;
 
 	private HashMap<String, JTextField>	inputs				= new HashMap<String, JTextField>();
 	private HashMap<String, JCheckBox>	checkBoxes			= new HashMap<String, JCheckBox>();
-	
+
 	public QueryWidget(QueryEngine engine, SettingsWidget settings) {
-		
+
 		this.engine = engine;
 		this.settings = settings;
 
@@ -96,76 +81,79 @@ public class QueryWidget extends JPanel {
 
 		for (int i = 0; i < 60; i++)
 			minutes[i] = i;
-		
+
 		Calendar startRange = (Calendar) Constants.START_DATE.clone();
 		Calendar endRange = (Calendar) Constants.START_DATE.clone();
 		endRange.add(Calendar.MONTH, Constants.MAX_SIM_LEN);
-	//	dateRangeConstraint = new RangeConstraint(startRange, endRange);
+		// dateRangeConstraint = new RangeConstraint(startRange, endRange);
 
 		setBorder(BorderFactory.createTitledBorder("Query"));
 		setLayout(new GridLayout());
 		setAlignmentY(Component.RIGHT_ALIGNMENT);
 		setSize(600, 400);
 
-		JScrollPane listScrollPane = new JScrollPane(getJList());
+		initJList();
+		JScrollPane listScrollPane = new JScrollPane(slBox);
 		listScrollPane.setPreferredSize(new Dimension(50, this.getHeight()));
 		add(listScrollPane, BorderLayout.EAST);
 		add(inputFields());
 
 	}
-	
-	public void query(int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float orbitalEccentricity) {
-		
+
+	public void query(int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt,
+			float orbitalEccentricity) {
+
 		// If there are no name selections, find names by physical data
 		// otherwise, ignore - the valueChanged handler will populate the
 		// name's physical data
 		if (slBox.isSelectionEmpty()) {
 			try {
-				slBox = engine.getSimulationsByData(gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, orbitalEccentricity);
+				slBox.setListData(engine.getSimulationsByData(gridSpacing, timeStep, simulationLength,
+						presentationInterval, axisTilt, orbitalEccentricity));
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Unable to query for a list of matching Simulations. Error(" +  e + ")");
+				JOptionPane.showMessageDialog(null, "Unable to query for a list of matching Simulations. Error(" + e
+						+ ")");
 			}
-		} 
-	}
-	
-	public JList<?> updateQList(){
-		try {
-			slBox = this.engine.getSimulationList();
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, "Unable update list of Simulation Names. Error(" +  e + ")");
 		}
-		return slBox;
 	}
 
-	private JList<?> getJList() {
-		
-		slBox =  this.updateQList();
+	public void updateQList() {
+		try {
+			slBox.setListData(this.engine.getSimulationList());
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Unable update list of Simulation Names. Error(" + e + ")");
+		}
+	}
+
+	private void initJList() {
+
+		this.updateQList();
 		slBox.addListSelectionListener(new ListSelectionListener() {
 
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
 				String simulationName = (String) slBox.getSelectedValue();
 				try {
-					
+
 					Hashtable<String, String> result = engine.getSimulationPhysicalParameters(simulationName);
-					
-					if (result.isEmpty()){
+
+					if (result.isEmpty()) {
 						JOptionPane.showMessageDialog(null, "No data available");
 						return;
 					}
-						
+
 					for (String key : result.keySet()) {
 						settings.setInputText(key, result.get(key));
 					}
-					
+
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "Unable to query for Simulation Physical Data. Error(" +  e + ")");
+					JOptionPane.showMessageDialog(null, "Unable to query for Simulation Physical Data. Error(" + e
+							+ ")");
 				}
-				
+
 				setFields(true);
 			}
 		});
-		return slBox;
 	}
 
 	private JPanel inputFields() {
@@ -177,15 +165,15 @@ public class QueryWidget extends JPanel {
 		JLabel lblHours = new JLabel("Hrs");
 		lblHours.setBounds(285, 0, 50, 10);
 		inputPanel.add(lblHours);
-		
+
 		JLabel lblMins = new JLabel("Mins");
 		lblMins.setBounds(335, 0, 50, 10);
 		inputPanel.add(lblMins);
-		
+
 		JLabel lblStartTime = new JLabel("Start Time");
 		lblStartTime.setBounds(10, 15, 130, 15);
 		inputPanel.add(lblStartTime);
-		
+
 		// startTime = new JPanel();
 		// startTime.setBounds(145, 10, 114, 19);
 		// startTime.setEnabled(false);
@@ -196,30 +184,32 @@ public class QueryWidget extends JPanel {
 
 		startHour = new JComboBox<Integer>(hours);
 		startMinute = new JComboBox<Integer>(minutes);
-		
-//		startDate = new JDatePanelImpl(new UtilCalendarModel((Calendar) Constants.START_DATE.clone()));
-//		startDate.addDateSelectionConstraint(this.dateRangeConstraint);
-//		startDatePicker = new JDatePickerImpl(startDate);
-		
-// 		startDatePicker.setBounds(145, 10, 95, 19);
-//		startHour.setBounds(250, 10, 10, 19);
-//		startMinute.setBounds(260, 10, 10, 19);
-//    	inputPanel.add(startHour);
-//		inputPanel.add(startMinute);
-//		inputPanel.add(startDatePicker);
-//		startDate = new JDatePanelImpl(new UtilCalendarModel((Calendar) Constants.START_DATE.clone()));
-//	    startDate.addDateSelectionConstraint(this.dateRangeConstraint);
-//		startDatePicker = new JDatePickerImpl(startDate);
-		
+
+		// startDate = new JDatePanelImpl(new UtilCalendarModel((Calendar)
+		// Constants.START_DATE.clone()));
+		// startDate.addDateSelectionConstraint(this.dateRangeConstraint);
+		// startDatePicker = new JDatePickerImpl(startDate);
+
+		// startDatePicker.setBounds(145, 10, 95, 19);
+		// startHour.setBounds(250, 10, 10, 19);
+		// startMinute.setBounds(260, 10, 10, 19);
+		// inputPanel.add(startHour);
+		// inputPanel.add(startMinute);
+		// inputPanel.add(startDatePicker);
+		// startDate = new JDatePanelImpl(new UtilCalendarModel((Calendar)
+		// Constants.START_DATE.clone()));
+		// startDate.addDateSelectionConstraint(this.dateRangeConstraint);
+		// startDatePicker = new JDatePickerImpl(startDate);
+
 		UtilDateModel startModel = new UtilDateModel();
 		JDatePanelImpl startDatepanel = new JDatePanelImpl(startModel);
 		JDatePickerImpl startDatePicker = new JDatePickerImpl(startDatepanel);
 		startDatePicker.setBounds(145, 10, 135, 25);
 		inputPanel.add(startDatePicker);
-		
+
 		startHour.setBounds(285, 10, 50, 25);
 		startMinute.setBounds(335, 10, 50, 25);
-    	inputPanel.add(startHour);
+		inputPanel.add(startHour);
 		inputPanel.add(startMinute);
 
 		endHour = new JComboBox<Integer>(hours);
@@ -229,16 +219,16 @@ public class QueryWidget extends JPanel {
 		JDatePickerImpl endDatePicker = new JDatePickerImpl(endDatePanel);
 		endDatePicker.setBounds(145, 40, 135, 25);
 		inputPanel.add(endDatePicker);
-		
+
 		endHour.setBounds(285, 40, 50, 25);
 		endMinute.setBounds(335, 40, 50, 25);
-    	inputPanel.add(endHour);
+		inputPanel.add(endHour);
 		inputPanel.add(endMinute);
-		
-		
-//		endDate = new JDatePanelImpl(new UtilCalendarModel((Calendar) Constants.START_DATE.clone()));
-//		endDate.addDateSelectionConstraint(this.dateRangeConstraint);
-//		endDatePicker = new JDatePickerImpl(endDate);
+
+		// endDate = new JDatePanelImpl(new UtilCalendarModel((Calendar)
+		// Constants.START_DATE.clone()));
+		// endDate.addDateSelectionConstraint(this.dateRangeConstraint);
+		// endDatePicker = new JDatePickerImpl(endDate);
 
 		JLabel lblEndTime = new JLabel("End Time");
 		lblEndTime.setBounds(10, 40, 130, 15);
@@ -310,28 +300,27 @@ public class QueryWidget extends JPanel {
 		chckbxMinimumTemperature.setBounds(10, 185, 249, 20);
 		inputPanel.add(chckbxMinimumTemperature);
 		checkBoxes.put("Minimum Temp", chckbxMinimumTemperature);
-		
-		
+
 		chckbxMaximumTemperature = new JCheckBox("Maximum Temperature");
 		chckbxMaximumTemperature.setBounds(10, 210, 249, 20);
 		inputPanel.add(chckbxMaximumTemperature);
 		checkBoxes.put("Maximum Temp", chckbxMaximumTemperature);
-		
+
 		chckbxMeanTemperatureOverTime = new JCheckBox("Mean Temperature over Time");
 		chckbxMeanTemperatureOverTime.setBounds(10, 235, 249, 23);
 		inputPanel.add(chckbxMeanTemperatureOverTime);
 		checkBoxes.put("Mean Time Temp", chckbxMeanTemperatureOverTime);
-		
+
 		chckbxMeanTemperatureOverRegion = new JCheckBox("Mean Temperature over Region");
 		chckbxMeanTemperatureOverRegion.setBounds(10, 260, 249, 23);
 		inputPanel.add(chckbxMeanTemperatureOverRegion);
 		checkBoxes.put("Mean Region Temp", chckbxMeanTemperatureOverRegion);
-		
+
 		chckbxActualValues = new JCheckBox("Actual Values");
 		chckbxActualValues.setBounds(10, 285, 249, 23);
 		inputPanel.add(chckbxActualValues);
 		checkBoxes.put("Actual Values", chckbxActualValues);
-		
+
 		return inputPanel;
 	}
 
@@ -372,16 +361,16 @@ public class QueryWidget extends JPanel {
 	public String GetUserInputs(String name) {
 		return inputs.get(name).getText();
 	}
-	
+
 	public boolean GetCheckBox(String name) {
 		return checkBoxes.get(name).isSelected();
 	}
-	
-//	public Calendar getSelectedStartDate() {
-//		return (Calendar) this.startDatePicker.getModel().getValue();
-//	}
-//	
-//	public Calendar getSelectedEndDate() {
-//		return (Calendar) this.endDatePicker.getModel().getValue();
-//	}
+
+	// public Calendar getSelectedStartDate() {
+	// return (Calendar) this.startDatePicker.getModel().getValue();
+	// }
+	//
+	// public Calendar getSelectedEndDate() {
+	// return (Calendar) this.endDatePicker.getModel().getValue();
+	// }
 }

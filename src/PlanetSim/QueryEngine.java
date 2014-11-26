@@ -60,36 +60,32 @@ public class QueryEngine {
 		
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public JList getSimulationList() throws SQLException {
-		
-		JList simList = new JList();
-		
-		IQueryResult rs = null;
-		rs = simDAO.findNamedSimulations();
-		
-		java.util.List<String> names= rs.getSimulationName();
-		simList.setListData(names.toArray());
-		System.out.println("SimList size: " + simList.getModel().getSize() );
-		for(int i=0;i<simList.getModel().getSize();){
-			System.out.println("Element at "+ i +". " + simList.getModel().getElementAt(i));
-			i++;
-		}
-		return simList;
+	public Object[] getSimulationList() throws Exception {
 
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public JList getSimulationsByData(int gridSpacing, int timeStep, int simulationLength, float presentationInterval, float axisTilt, float orbitalEccentricity) throws Exception {
-		
-		IQueryResult result = simDAO.findSimulationByData(gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt, orbitalEccentricity).get();
+		IQueryResult result = simDAO.findNamedSimulations();
 		
 		if (result.isEmpty())
-			return new JList();
+			return new Object[0];
+		
 		if (result.isErrored())
 			throw result.getError();
-		
-		return new JList(result.getSimulationName().toArray());
+
+		return result.getSimulationName().toArray();
+
+	}
+
+	public Object[] getSimulationsByData(int gridSpacing, int timeStep, int simulationLength,
+			float presentationInterval, float axisTilt, float orbitalEccentricity) throws Exception {
+
+		IQueryResult result = simDAO.findSimulationByData(gridSpacing, timeStep, simulationLength,
+				presentationInterval, axisTilt, orbitalEccentricity).get();
+
+		if (result.isEmpty())
+			return new Object[0];
+		if (result.isErrored())
+			throw result.getError();
+
+		return result.getSimulationName().toArray();
 	}
 
 	public Hashtable<String, String> getSimulationPhysicalParameters(String simulationName) throws Exception {
