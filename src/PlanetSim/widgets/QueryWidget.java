@@ -72,6 +72,10 @@ public class QueryWidget extends JPanel {
 
 	private HashMap<String, JTextField>	inputs				= new HashMap<String, JTextField>();
 	private HashMap<String, JCheckBox>	checkBoxes			= new HashMap<String, JCheckBox>();
+	
+	private UtilDateModel startModel, endModel; 
+	private JDatePanelImpl startDatepanel , endDatePanel ;
+	private JDatePickerImpl startDatePicker, endDatePicker ;
 
 	public QueryWidget(QueryEngine engine, SettingsWidget settings) {
 
@@ -201,9 +205,9 @@ public class QueryWidget extends JPanel {
 		// startDate.addDateSelectionConstraint(this.dateRangeConstraint);
 		// startDatePicker = new JDatePickerImpl(startDate);
 
-		UtilDateModel startModel = new UtilDateModel();
-		JDatePanelImpl startDatepanel = new JDatePanelImpl(startModel);
-		JDatePickerImpl startDatePicker = new JDatePickerImpl(startDatepanel);
+		startModel = new UtilDateModel();
+		 startDatepanel = new JDatePanelImpl(startModel);
+		startDatePicker = new JDatePickerImpl(startDatepanel);
 		startDatePicker.setBounds(145, 10, 135, 25);
 		inputPanel.add(startDatePicker);
 
@@ -214,9 +218,9 @@ public class QueryWidget extends JPanel {
 
 		endHour = new JComboBox<Integer>(hours);
 		endMinute = new JComboBox<Integer>(minutes);
-		UtilDateModel endModel = new UtilDateModel();
-		JDatePanelImpl endDatePanel = new JDatePanelImpl(endModel);
-		JDatePickerImpl endDatePicker = new JDatePickerImpl(endDatePanel);
+		endModel = new UtilDateModel();
+		endDatePanel = new JDatePanelImpl(endModel);
+		 endDatePicker = new JDatePickerImpl(endDatePanel);
 		endDatePicker.setBounds(145, 40, 135, 25);
 		inputPanel.add(endDatePicker);
 
@@ -366,13 +370,13 @@ public class QueryWidget extends JPanel {
 		return checkBoxes.get(name).isSelected();
 	}
 
-	// public Calendar getSelectedStartDate() {
-	// return (Calendar) this.startDatePicker.getModel().getValue();
-	// }
-	//
-	// public Calendar getSelectedEndDate() {
-	// return (Calendar) this.endDatePicker.getModel().getValue();
-	// }
+	public Calendar getSelectedStartDate() {
+		return (Calendar) this.startDatePicker.getModel().getValue();
+	}
+	
+	public Calendar getSelectedEndDate() {
+		return (Calendar) this.endDatePicker.getModel().getValue();
+	}
 	
 	private void ShowMessage(final String message) {
 	    EventQueue.invokeLater(new Runnable() {
