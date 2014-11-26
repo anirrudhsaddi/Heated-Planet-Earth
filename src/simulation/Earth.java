@@ -203,7 +203,7 @@ public final class Earth {
 		currentNumberOfSimulations++;
 
 		long totlaMinutesInSimulation = timeStep * currentNumberOfSimulations;
-		currentDate.add(Calendar.MINUTE, currentNumberOfSimulations);
+		currentDate.add(Calendar.MINUTE, timeStep);
 		if (totlaMinutesInSimulation % Constants.MINUTES_IN_A_MONTH == 0) {
 			currentMonthInSimulation++;
 		}
