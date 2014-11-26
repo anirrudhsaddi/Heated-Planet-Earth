@@ -3,9 +3,12 @@ package PlanetSim;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.Calendar;
 
@@ -25,12 +28,10 @@ import view.EarthDisplayEngine;
 import PlanetSim.widgets.ControlWidget;
 import PlanetSim.widgets.QueryWidget;
 import PlanetSim.widgets.SettingsWidget;
-
 import common.Buffer;
 import common.Constants;
 import common.Monitor;
 import common.ThreadManager;
-
 import db.SimulationDAO;
 import db.SimulationNeo4j;
 
@@ -63,6 +64,8 @@ public class ControlGUI extends JFrame implements ActionListener {
 	private float				axisTilt;
 	private float				eccentricity;
 
+	private SimulationDAO		simDAO;
+
 	public ControlGUI(int precision, int geoAccuracy, int temporalAccuracy) {
 
 		if (precision < Constants.PRECISION_MIN || precision > Constants.PRECISION_MAX)
@@ -83,19 +86,32 @@ public class ControlGUI extends JFrame implements ActionListener {
 		Constants.START_DATE.setTimeInMillis(0);
 		Constants.START_DATE.add(Calendar.DAY_OF_YEAR, 3);
 
-		SimulationDAO simDAO;
 		try {
 			simDAO = new SimulationDAO(new SimulationNeo4j());
 			ThreadManager.getManager().execute(simDAO);
 			queryEngine = new QueryEngine(simDAO);
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null,
-					"Unable to initialize Database backend. Please close application and try again.");
+			ShowMessage("Unable to initialize Database backend. Please close application and try again.");
+			return;
 		}
 
 		// make widgets
 		setupWindow();
 		pack();
+
+		this.addWindowListener(new WindowAdapter() {
+
+			public void windowClosing(WindowEvent e) {
+				int confirmed = JOptionPane.showConfirmDialog(rootPane, "Are you sure you want to exit the program?",
+						"Exit Program Message Box", JOptionPane.YES_NO_OPTION);
+
+				if (confirmed == JOptionPane.YES_OPTION) {
+					Publisher.getInstance().send(new StopMessage());
+					dispose();
+					System.exit(1);
+				}
+			}
+		});
 	}
 
 	private void setupWindow() {
@@ -118,15 +134,16 @@ public class ControlGUI extends JFrame implements ActionListener {
 		getContentPane().add(query());
 
 	}
-//
-//	private void lowerRightWindow() {
-//
-//		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-//		int x = (int) (dimension.getWidth() - this.getWidth());
-//		int y = (int) (dimension.getHeight() - this.getHeight());
-//		this.setLocation(x, y);
-//
-//	}
+
+	//
+	// private void lowerRightWindow() {
+	//
+	// Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+	// int x = (int) (dimension.getWidth() - this.getWidth());
+	// int y = (int) (dimension.getHeight() - this.getHeight());
+	// this.setLocation(x, y);
+	//
+	// }
 
 	private JPanel query() {
 
@@ -165,24 +182,31 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 				init();
 
-				Calendar end = (Calendar) Constants.START_DATE.clone();
-				end.add(Calendar.MONTH, simulationLength);
+				if (!simDAO.createOrMatchSimulationNode(simulationName)) {
 
-				ConfigureMessage msg = new ConfigureMessage();
+					Calendar end = (Calendar) Constants.START_DATE.clone();
+					end.add(Calendar.MONTH, simulationLength);
 
-				configure(msg, ((Calendar) Constants.START_DATE.clone()).getTimeInMillis(), end.getTimeInMillis());
+					ConfigureMessage msg = new ConfigureMessage();
 
-				// Quick off a simulation
-				Publisher.getInstance().send(new ProduceMessage());
+					configure(msg, ((Calendar) Constants.START_DATE.clone()).getTimeInMillis(), end.getTimeInMillis());
 
-				// do gui stuff to indicate start has occurred.
-				controlWidget.disableButtonsBasedOnAction(cmd);
-				queryWidget.setFields(false);
+					// Quick off a simulation
+					Publisher.getInstance().send(new ProduceMessage());
+
+					// do gui stuff to indicate start has occurred.
+					controlWidget.disableButtonsBasedOnAction(cmd);
+					queryWidget.setFields(false);
+				} else {
+					ShowMessage("Simulation Name already exists in the database");
+				}
 
 			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(null, "Please correct input. All fields need numbers");
+				ShowMessage("Please correct input. All fields need numbers");
 			} catch (IllegalArgumentException ex) {
-				JOptionPane.showMessageDialog(null, "Please correct input. All fields need numbers");
+				ShowMessage("Please correct input. All fields need numbers");
+			} catch (SQLException ex) {
+				ShowMessage("Query against Simulation name failed: " + ex);
 			}
 		} else if ("Pause".equals(cmd)) {
 
@@ -202,68 +226,90 @@ public class ControlGUI extends JFrame implements ActionListener {
 			queryWidget.setFields(true);
 
 		} else if ("Query".equals(cmd)) {
-			
-			init();
 
-			queryWidget.query(gs, timeStep, simulationLength, presentationInterval, axisTilt, eccentricity);
-			controlWidget.disableButtonsBasedOnAction(cmd);
+			try {
+
+				init();
+
+				queryWidget.query(gs, timeStep, simulationLength, presentationInterval, axisTilt, eccentricity);
+				controlWidget.disableButtonsBasedOnAction(cmd);
+
+			} catch (NumberFormatException nfe) {
+				ShowMessage("Please correct input. All fields need numbers");
+			} catch (IllegalArgumentException ex) {
+				ShowMessage("Please correct input. All fields need numbers");
+			} catch (Exception ex) {
+				ShowMessage("Query failed: " + ex);
+			}
 
 		} else if ("Run".equals(cmd)) {
-			
-			init();
 
-			final double wLat = Double.parseDouble(queryWidget.GetUserInputs("West Longitude"));
-			final double eLat = Double.parseDouble(queryWidget.GetUserInputs("East Longitude"));
-			final double sLat = Double.parseDouble(queryWidget.GetUserInputs("South Latitude"));
-			final double nLat = Double.parseDouble(queryWidget.GetUserInputs("North Latitude"));
+			try {
 
-			// Now retrieve the time constraints
-			final int startHour = Integer.parseInt(queryWidget.GetUserInputs("Start Hour"));
-			final int startMinute = Integer.parseInt(queryWidget.GetUserInputs("Start Minute"));
-			final int endHour = Integer.parseInt(queryWidget.GetUserInputs("End Hour"));
-			final int endMinute = Integer.parseInt(queryWidget.GetUserInputs("End Minute"));
+				init();
 
-			final boolean minTemp = queryWidget.GetCheckBox("Minimum Temp");
-			final boolean maxTemp = queryWidget.GetCheckBox("Maximum Temp");
-			final boolean meanTime = queryWidget.GetCheckBox("Mean Time Temp");
-			final boolean meanRegion = queryWidget.GetCheckBox("Mean Region Temp");
-			final boolean actualValue = queryWidget.GetCheckBox("Actual Values");
+				final double wLat = Double.parseDouble(queryWidget.GetUserInputs("West Longitude"));
+				final double eLat = Double.parseDouble(queryWidget.GetUserInputs("East Longitude"));
+				final double sLat = Double.parseDouble(queryWidget.GetUserInputs("South Latitude"));
+				final double nLat = Double.parseDouble(queryWidget.GetUserInputs("North Latitude"));
 
-			final int gs = Integer.parseInt(settingsWidget.getInputText("Grid Spacing"));
+				// Now retrieve the time constraints
+				final int startHour = Integer.parseInt(queryWidget.GetUserInputs("Start Hour"));
+				final int startMinute = Integer.parseInt(queryWidget.GetUserInputs("Start Minute"));
+				final int endHour = Integer.parseInt(queryWidget.GetUserInputs("End Hour"));
+				final int endMinute = Integer.parseInt(queryWidget.GetUserInputs("End Minute"));
 
-			ConfigureMessage msg = new ConfigureMessage();
-			msg.setGridSpacing(gs);
+				final boolean minTemp = queryWidget.GetCheckBox("Minimum Temp");
+				final boolean maxTemp = queryWidget.GetCheckBox("Maximum Temp");
+				final boolean meanTime = queryWidget.GetCheckBox("Mean Time Temp");
+				final boolean meanRegion = queryWidget.GetCheckBox("Mean Region Temp");
+				final boolean actualValue = queryWidget.GetCheckBox("Actual Values");
 
-			msg.setLatitude(nLat, sLat, eLat, wLat);
-			msg.setStartTime(startHour, startMinute);
-			msg.setEndTime(endHour, endMinute);
-			msg.setShowMinTemp(minTemp);
-			msg.setShowMaxTemp(maxTemp);
-			msg.setShowMeanTime(meanTime);
-			msg.setShowMeanRegion(meanRegion);
-			msg.setShowActualValue(actualValue);
+				final int gs = Integer.parseInt(settingsWidget.getInputText("Grid Spacing"));
 
-			// final Calendar start = queryWidget.getSelectedStartDate();
-			// final Calendar end = queryWidget.getSelectedEndDate();
+				ConfigureMessage msg = new ConfigureMessage();
+				msg.setGridSpacing(gs);
 
-			// start.add(Calendar.HOUR, startHour);
-			// start.add(Calendar.MINUTE, startMinute);
-			//
-			// end.add(Calendar.HOUR, endHour);
-			// end.add(Calendar.MINUTE, endMinute);
-			//
-			// long startDateTime = start.getTimeInMillis();
-			// long endDateTime = end.getTimeInMillis();
+				msg.setLatitude(nLat, sLat, eLat, wLat);
+				msg.setStartTime(startHour, startMinute);
+				msg.setEndTime(endHour, endMinute);
+				msg.setShowMinTemp(minTemp);
+				msg.setShowMaxTemp(maxTemp);
+				msg.setShowMeanTime(meanTime);
+				msg.setShowMeanRegion(meanRegion);
+				msg.setShowActualValue(actualValue);
 
-			// TODO get the dates and times from query widget and convert them
-			// into calendars, send in millis
+				// final Calendar start = queryWidget.getSelectedStartDate();
+				// final Calendar end = queryWidget.getSelectedEndDate();
 
-			// configure(msg, startDateTime, endDateTime);
+				// start.add(Calendar.HOUR, startHour);
+				// start.add(Calendar.MINUTE, startMinute);
+				//
+				// end.add(Calendar.HOUR, endHour);
+				// end.add(Calendar.MINUTE, endMinute);
+				//
+				// long startDateTime = start.getTimeInMillis();
+				// long endDateTime = end.getTimeInMillis();
+
+				// TODO get the dates and times from query widget and convert
+				// them
+				// into calendars, send in millis
+
+				// configure(msg, startDateTime, endDateTime);
+			} catch (NumberFormatException nfe) {
+				ShowMessage("Please correct input. All fields need numbers");
+			} catch (IllegalArgumentException ex) {
+				ShowMessage("Please correct input. All fields need numbers");
+			} catch (Exception ex) {
+				ShowMessage("Query run failed: " + ex);
+			}
+
 		}
 	}
 
 	private void init() {
 
+		simulationName = settingsWidget.getInputText("Simulation Name");
 		gs = Integer.parseInt(settingsWidget.getInputText("Grid Spacing"));
 		timeStep = Integer.parseInt(settingsWidget.getInputText("Simulation Time Step"));
 		simulationLength = Integer.parseInt(settingsWidget.getInputText("Simulation Length"));
@@ -271,12 +317,10 @@ public class ControlGUI extends JFrame implements ActionListener {
 		axisTilt = Float.parseFloat(settingsWidget.getInputText("Axis Tilt"));
 		eccentricity = Float.parseFloat(settingsWidget.getInputText("Orbital Eccentricity"));
 
-		// TODO set name
-		// TODO check name against the DAO
-		// TODO I thought we were going to let the user set the name?
-		simulationName = gs + "-" + timeStep + "-" + presentationInterval + "-" + simulationLength + "-" + axisTilt
-				+ "-" + count;
-		count++;
+		// simulationName = gs + "_" + timeStep + "_" + presentationInterval +
+		// "_" + simulationLength + "_" + axisTilt
+		// + "_" + count;
+		// count++;
 
 		if (gs < Constants.MIN_GRID_SPACING || gs > Constants.MAX_GRID_SPACING)
 			throw new IllegalArgumentException("Invalid grid spacing");
@@ -327,5 +371,14 @@ public class ControlGUI extends JFrame implements ActionListener {
 		msg.setStartTime(startDateTimeCal);
 
 		Publisher.getInstance().send(msg);
+	}
+
+	private void ShowMessage(final String message) {
+		EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				JOptionPane.showMessageDialog(rootPane, message);
+			}
+		});
 	}
 }

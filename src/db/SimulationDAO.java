@@ -121,6 +121,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!set.isBeforeFirst() || set == null)
 			return false;
 		set.next();
+		System.out.println("Set is: " + set);
 		return name.equals(set.getString("simulation"));
 
 	}
@@ -592,7 +593,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 				result = conn.query(query);
 				if (!result.isBeforeFirst() || result == null)
 					throw new SQLException("Failed to execute query. Temperature Relationship does not exist");
-
+				
 				result.next();
 				System.out.println("Result from CREATE_TEMP_REL_KEY: " + result);
 

@@ -30,6 +30,7 @@ public class SettingsWidget extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		setAlignmentY(Component.TOP_ALIGNMENT);
 
+		add(inputField("Simulation Name", ""));
 		add(inputField("Grid Spacing", Integer.toString(DEFAULT_GRID_SPACING)));
 		add(inputField("Simulation Time Step", Integer.toString(DEFAULT_TIME_STEP)));
 		add(inputField("Presentation Rate", Float.toString(DEFAULT_PRESENTATION)));

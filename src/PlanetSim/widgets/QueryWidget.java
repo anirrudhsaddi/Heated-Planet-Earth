@@ -3,6 +3,7 @@ package PlanetSim.widgets;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -28,6 +29,7 @@ import javax.swing.event.ListSelectionListener;
 //import org.jdatepicker.impl.UtilCalendarModel;
 //import org.jdatepicker.impl.UtilDateModel;
 //import org.jdatepicker.*;
+
 
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -111,8 +113,7 @@ public class QueryWidget extends JPanel {
 				slBox.setListData(engine.getSimulationsByData(gridSpacing, timeStep, simulationLength,
 						presentationInterval, axisTilt, orbitalEccentricity));
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Unable to query for a list of matching Simulations. Error(" + e
-						+ ")");
+				ShowMessage("Unable to query for a list of matching Simulations. Error(" + e + ")");
 			}
 		}
 	}
@@ -121,7 +122,7 @@ public class QueryWidget extends JPanel {
 		try {
 			slBox.setListData(this.engine.getSimulationList());
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Unable update list of Simulation Names. Error(" + e + ")");
+			ShowMessage("Unable update list of Simulation Names. Error(" + e + ")");
 		}
 	}
 
@@ -147,8 +148,7 @@ public class QueryWidget extends JPanel {
 					}
 
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "Unable to query for Simulation Physical Data. Error(" + e
-							+ ")");
+					ShowMessage("Unable to query for Simulation Physical Data. Error(" + e + ")");
 				}
 
 				setFields(true);
@@ -373,4 +373,13 @@ public class QueryWidget extends JPanel {
 	// public Calendar getSelectedEndDate() {
 	// return (Calendar) this.endDatePicker.getModel().getValue();
 	// }
+	
+	private void ShowMessage(final String message) {
+	    EventQueue.invokeLater(new Runnable() {
+	        @Override
+	        public void run() {
+	            JOptionPane.showMessageDialog(null, message);
+	        }
+	    });
+	}
 }

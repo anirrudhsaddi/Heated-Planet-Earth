@@ -25,43 +25,41 @@ import common.IMonitorCallback;
 
 public final class Earth {
 
-	private static Calendar currentDate, startDate;
+	private static Calendar						currentDate, startDate;
 
-	private static final int[] increments = { 6, 9, 10, 12, 15, 18, 20, 30, 36,
-			45, 60, 90, 180 };
+	private static final int[]					increments	= { 6, 9, 10, 12, 15, 18, 20, 30, 36, 45, 60, 90, 180 };
 
-	private final IMonitorCallback monitor;
+	private final IMonitorCallback				monitor;
 
-	private GridCell prime;
+	private GridCell							prime;
 
-	private String simulationName;
+	private String								simulationName;
 
-	private float axisTilt;
-	private float eccentricity;
+	private float								axisTilt;
+	private float								eccentricity;
 
-	private int currentNumberOfSimulations;
-	private int width;
-	private int height;
-	private int sunPositionCell;
-	private int currentMonthInSimulation;
-	private int timeStep;
-	private int gs;
+	private int									currentNumberOfSimulations;
+	private int									width;
+	private int									height;
+	private int									sunPositionCell;
+	private int									currentMonthInSimulation;
+	private int									timeStep;
+	private int									gs;
 
 	// persistance variables
-	private int precision;
-	private int totalDataToSave;
-	private int totalGridsToSave;
-	private int nth_data;
-	private int nth_grids;
-	
+	private int									precision;
+	private int									totalDataToSave;
+	private int									totalGridsToSave;
+	private int									nth_data;
+	private int									nth_grids;
+
 	// The user query can be thought of as producing a table in which there are
 	// rows
 	// corresponding to the times at which computations are made and columns
 	// corresponding to the grid cells.
 	// table DS has integer as time(rows), List<GridCell> is list of grid
 	// cells(columns)
-	private final Map<Calendar, List<GridCell>>	table = new TreeMap<Calendar, List<GridCell>>();
-
+	private final Map<Calendar, List<GridCell>>	table		= new TreeMap<Calendar, List<GridCell>>();
 
 	public Earth(IMonitorCallback monitor) {
 
@@ -84,7 +82,7 @@ public final class Earth {
 		this.precision = start.precision();
 		this.currentMonthInSimulation = 0;
 		this.startDate = start.getStartDate();
-		
+
 		currentDate = (Calendar) startDate.clone();
 
 		// The following could be done better - if we have time, we should do so
@@ -126,12 +124,11 @@ public final class Earth {
 		currentNumberOfSimulations = 0;
 
 		if (prime != null) {
-			prime.setGridProps(x, y, this.getLatitude(y), this.getLongitude(x),
-					this.gs, this.axisTilt, this.eccentricity);
+			prime.setGridProps(x, y, this.getLatitude(y), this.getLongitude(x), this.gs, this.axisTilt,
+					this.eccentricity);
 			prime.setTemp(Constants.INITIAL_TEMP);
 		} else
-			prime = new GridCell(Constants.INITIAL_TEMP, x, y,
-					this.getLatitude(y), this.getLongitude(x), this.gs,
+			prime = new GridCell(Constants.INITIAL_TEMP, x, y, this.getLatitude(y), this.getLongitude(x), this.gs,
 					this.axisTilt, this.eccentricity);
 
 		prime.setTop(null);
@@ -173,7 +170,7 @@ public final class Earth {
 		curr = prime;
 
 		for (x = 0; x < height; x++) {
-			
+
 			GridCell rowgrid = curr.getLeft();
 			for (y = 0; y < width; y++) {
 				totaltemp += rowgrid.calTsun(sunPositionCell, currentMonthInSimulation);
@@ -241,7 +238,8 @@ public final class Earth {
 
 				child = itr.next();
 				child.visited(true);
-				grid.setTemperature(child.getX(), child.getY(), child.calculateTemp(sunPositionCell, currentMonthInSimulation));
+				grid.setTemperature(child.getX(), child.getY(),
+						child.calculateTemp(sunPositionCell, currentMonthInSimulation));
 				bfs.add(child);
 
 				suntotal += child.getTSun();
@@ -260,13 +258,12 @@ public final class Earth {
 			c.swapTemp();
 			c = calcd.poll();
 		}
-		
-		
+
 		Publisher.getInstance().send(new DeliverMessage(grid));
 
 		// Determine if we need to persist this grid and, if so, send
 		// Message/payload
-		
+
 		// determine persisting based on temporalAccuracy
 		if (currentNumberOfSimulations % nth_data == 0)
 			persistGrid(grid);
@@ -281,15 +278,18 @@ public final class Earth {
 		// TODO this requires (longitude, latitude) coords, not (x, y)
 		int latitude, longitude;
 		for (int x = 0; x < width; x++) {
-			
+
 			longitude = this.getLongitude(x);
-			for (int y = 0; y < height; y++) {		
-				
+			System.out.println("longitude: " + longitude);
+			for (int y = 0; y < height; y++) {
+
 				// determine persisting based on geoAccuracy
-				if ((x+y) % nth_grids == 0) {
+				if ((x + y) % nth_grids == 0) {
 					latitude = this.getLatitude(y);
+					System.out.println("latitude: " + latitude);
 					valueToStore = new BigDecimal(grid.getTemperature(x, y));
-					msg.setTemperature(longitude, latitude, valueToStore.setScale(this.precision, BigDecimal.ROUND_HALF_UP).doubleValue());
+					msg.setTemperature(longitude, latitude,
+							valueToStore.setScale(this.precision, BigDecimal.ROUND_HALF_UP).doubleValue());
 				}
 			}
 		}
@@ -297,8 +297,7 @@ public final class Earth {
 		Publisher.getInstance().send(msg);
 	}
 
-	private void createRow(GridCell curr, GridCell next, GridCell bottom,
-			GridCell left, int y) {
+	private void createRow(GridCell curr, GridCell next, GridCell bottom, GridCell left, int y) {
 
 		for (int x = 1; x < width; x++) {
 
@@ -314,19 +313,15 @@ public final class Earth {
 		left.setRight(curr);
 	}
 
-	private void createRowCell(GridCell curr, GridCell next, GridCell bottom,
-			int x, int y) {
+	private void createRowCell(GridCell curr, GridCell next, GridCell bottom, int x, int y) {
 
 		if (curr.getLeft() != null) {
 			GridCell l = curr.getLeft();
 			l.setTemp(Constants.INITIAL_TEMP);
-			l.setGridProps(x, y, this.getLatitude(y), this.getLongitude(x),
-					this.gs, this.axisTilt, this.eccentricity);
+			l.setGridProps(x, y, this.getLatitude(y), this.getLongitude(x), this.gs, this.axisTilt, this.eccentricity);
 		} else {
-			next = new GridCell(null, bottom, null, curr,
-					Constants.INITIAL_TEMP, x, y, this.getLatitude(y),
-					this.getLongitude(x), this.gs, this.axisTilt,
-					this.eccentricity);
+			next = new GridCell(null, bottom, null, curr, Constants.INITIAL_TEMP, x, y, this.getLatitude(y),
+					this.getLongitude(x), this.gs, this.axisTilt, this.eccentricity);
 			curr.setLeft(next);
 			if (bottom != null) {
 				bottom.setTop(next);
@@ -339,13 +334,11 @@ public final class Earth {
 		if (bottom.getTop() != null) {
 			curr = bottom.getTop();
 			curr.setTemp(Constants.INITIAL_TEMP);
-			curr.setGridProps(0, y, this.getLatitude(y), this.getLongitude(0),
-					this.gs, this.axisTilt, this.eccentricity);
-		} else {
-			curr = new GridCell(null, bottom, null, null,
-					Constants.INITIAL_TEMP, 0, y, this.getLatitude(y),
-					this.getLongitude(0), this.gs, this.axisTilt,
+			curr.setGridProps(0, y, this.getLatitude(y), this.getLongitude(0), this.gs, this.axisTilt,
 					this.eccentricity);
+		} else {
+			curr = new GridCell(null, bottom, null, null, Constants.INITIAL_TEMP, 0, y, this.getLatitude(y),
+					this.getLongitude(0), this.gs, this.axisTilt, this.eccentricity);
 			bottom.setTop(curr);
 		}
 	}
@@ -357,15 +350,15 @@ public final class Earth {
 	private int getLongitude(int x) {
 		return x < (width / 2) ? -(x + 1) * this.gs : (360) - (x + 1) * this.gs;
 	}
-	
+
 	// TABLE DS related code
 	public void populateTable(ResultMessage msg) {
 		// Calendar time = new GregorianCalendar(0, 0, 0, 0, 0, 0);
 		Calendar c = ((Calendar) Constants.START_DATE.clone());
 		c.setTimeInMillis(0);
-		
+
 		List<GridCell> gridCells = new LinkedList<GridCell>();
-		
+
 		for (int i = msg.getNorthRegionBounds(); i <= msg.getSouthRegionBounds(); i++) {
 			for (int j = msg.getEastRegionBounds(); j <= msg.getWestRegionBounds(); j++) {
 				// check if this exists
@@ -376,35 +369,35 @@ public final class Earth {
 				}
 			}
 		}
-		
+
 		this.table.put(c, gridCells);
 	}
 
 	public void interpolateTable(ResultMessage msg) {
-		
-		 // TODO: result message should give output in a range of time
+
+		// TODO: result message should give output in a range of time
 		Calendar c = ((Calendar) Constants.START_DATE.clone());
 		c.setTimeInMillis(0);
 
 		List<GridCell> gridCells = new LinkedList<GridCell>();
 		GridCell thisCell = null;
-		
+
 		for (int i = msg.getNorthRegionBounds(); i <= msg.getSouthRegionBounds(); i++) {
 			for (int j = msg.getEastRegionBounds(); j <= msg.getWestRegionBounds(); j++) {
-				
+
 				Integer[] checkInts = new Integer[] { i, j };
 				if (msg.containsCoords(checkInts)) {
-					
+
 					thisCell = new GridCell(msg.getTemperature(i, j), i, j, i, j, 0, 0, 0);
 					gridCells.add(thisCell);
-					
+
 				} else if (thisCell != null) {
-					
+
 					double tempNearestCell = thisCell.getTemp();
 					int k = thisCell.getX(), l = thisCell.getY();
 					int dy = l - j, dx = k - i;
 					double mytemp = tempNearestCell * (dy / dx);
-					
+
 					// SplineInterpolator splineInterp = new
 					// SplineInterpolator();
 					thisCell = new GridCell(mytemp, i, j, i, j, 0, 0, 0);
@@ -414,26 +407,25 @@ public final class Earth {
 		}
 		this.table.put(c, gridCells);
 	}
-	
-	//In the situation when end date can not be found in DB, we have to run a new simmulation
+
+	// In the situation when end date can not be found in DB, we have to run a
+	// new simmulation
 	public void simulateFromTable(ResultMessage msg) {
-		//Simulation should start with the parameters for this particular query 
-		//these parameters are not available in result message.
-		//this.configure(null);  //Already Configured
-		//Set the prime grid member, but unable to populate the other cells with temp values from DB
-		prime = new GridCell(msg.getTemperature(0, 0), 0, 0,
-				this.getLatitude(0), this.getLongitude(0), this.gs,
+		// Simulation should start with the parameters for this particular query
+		// these parameters are not available in result message.
+		// this.configure(null); //Already Configured
+		// Set the prime grid member, but unable to populate the other cells
+		// with temp values from DB
+		prime = new GridCell(msg.getTemperature(0, 0), 0, 0, this.getLatitude(0), this.getLongitude(0), this.gs,
 				this.axisTilt, this.eccentricity);
 		this.start();
-		//generate data gets called from Produce Msg
-		/*try {
-			this.generate();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+		// generate data gets called from Produce Msg
+		/*
+		 * try { this.generate(); } catch (InterruptedException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); }
+		 */
 	}
-	
+
 	public void setDisplayMsg(DisplayMessage msg) {
 		msg.setTable(table);
 		msg.setMaxTemp(this.getMax());
@@ -446,7 +438,7 @@ public final class Earth {
 	// that is, the smallest temperature in the entire table and the time and
 	// location where it occurred
 	public GridCell getMin() {
-		
+
 		GridCell result = new GridCell(Constants.MAX_TEMP, 0, 0, 0, 0, 0, 0, 0);
 		for (Map.Entry<Calendar, List<GridCell>> entry : this.table.entrySet()) {
 			Calendar time = entry.getKey();
@@ -465,10 +457,10 @@ public final class Earth {
 	// that is, the largest temperature in the table and the time and location
 	// where it occurred
 	public GridCell getMax() {
-		
+
 		GridCell result = new GridCell(Constants.MIN_TEMP, 0, 0, 0, 0, 0, 0, 0);
 		for (Map.Entry<Calendar, List<GridCell>> entry : this.table.entrySet()) {
-			
+
 			Calendar time = entry.getKey();
 			List<GridCell> gridCells = entry.getValue();
 			for (GridCell mycell : gridCells) {
@@ -478,7 +470,7 @@ public final class Earth {
 				}
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -486,10 +478,10 @@ public final class Earth {
 	// that is, for each row in the table, what was its mean temperature across
 	// all of the columns. (The denominator is the number of columns.)
 	public List<Double> getMeanTempOverRegion() {
-		
+
 		List<Double> meanTemps = new LinkedList<Double>();
 		for (Map.Entry<Calendar, List<GridCell>> entry : this.table.entrySet()) {
-			
+
 			// Integer time = entry.getKey();
 			List<GridCell> gridCells = entry.getValue();
 			double temperatures = 0;
@@ -499,7 +491,7 @@ public final class Earth {
 			temperatures /= gridCells.size();
 			meanTemps.add(temperatures);
 		}
-		
+
 		return meanTemps;
 	}
 
@@ -507,10 +499,10 @@ public final class Earth {
 	// that is, for each column in the table, what was its mean temperature down
 	// all rows. (The denominator is the number of rows.
 	public List<Double> getMeanTempOverTime() {
-		
+
 		List<Double> meanTemps = new LinkedList<Double>();
 		for (Map.Entry<Calendar, List<GridCell>> entry : this.table.entrySet()) {
-			
+
 			// Integer time = entry.getKey();
 			List<GridCell> gridCells = entry.getValue();
 			int i = 0;
@@ -518,12 +510,12 @@ public final class Earth {
 				meanTemps.set(i++, meanTemps.get(i) + mycell.getTemp());
 			}
 		}
-		
+
 		int i = 0;
 		for (Map.Entry<Calendar, List<GridCell>> entry : this.table.entrySet()) {
 			meanTemps.set(i++, meanTemps.get(i) / this.table.size());
 		}
-		
+
 		return meanTemps;
 	}
 }
