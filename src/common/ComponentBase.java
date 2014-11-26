@@ -49,23 +49,14 @@ public abstract class ComponentBase implements MessageListener, Runnable {
 		}
 	}
 
-	public void process() {
-		
-		//System.out.println(this.getClass() + " is in process");
-
-		if (msgQueue.isEmpty()) return;
-
-		performAction(msgQueue.poll());
-	}
-
 	@Override
 	public void run() {
 
 		while (!Thread.currentThread().isInterrupted() && !stopped.get()) {
 			
 			// TODO try to use wait/notify
-			if(!paused.get()){
-				process();
+			if (!paused.get() && !msgQueue.isEmpty()) {
+				performAction(msgQueue.poll());
 			}
 		}
 	}

@@ -527,7 +527,21 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	}
 
 	@Override
+	public void run() {
+
+		while (!Thread.currentThread().isInterrupted() && !stopped.get()) {
+
+			// TODO try to use wait/notify
+			if (!paused.get() && !msgQueue.isEmpty()) {
+				performAction(msgQueue.poll());
+			}
+		}
+	}
+
+	@Override
 	protected void performAction(Message inMsg) {
+		
+		System.out.println("performAction");
 
 		PersistMessage msg = (PersistMessage) inMsg;
 		ResultSet result;
@@ -546,6 +560,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 				int latitude = coords[1];
 
 				double temperature = msg.getTemperature(longitude, latitude);
+				
+				System.out.println("Saving temp " + temperature + " at longitude " + longitude + ", latitude: " + latitude);
 
 				query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_KEY);
 				query.setDouble(1, temperature);
@@ -556,6 +572,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 					throw new SQLException("Unable to create or match temperature. Temperature Node " + temperature
 							+ " does not exist.");
 				result.next();
+				System.out.println("Result from CREATE_TEMP_KEY: " + result);
 
 				try {
 					result.getDouble("temperature");
@@ -577,6 +594,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 					throw new SQLException("Failed to execute query. Temperature Relationship does not exist");
 
 				result.next();
+				System.out.println("Result from CREATE_TEMP_REL_KEY: " + result);
 
 				try {
 					if (result.getDouble("temperature") != temperature)

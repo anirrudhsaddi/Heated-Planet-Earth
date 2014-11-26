@@ -100,7 +100,11 @@ public final class SimulationNeo4j implements IDBConnection {
 		
 		if (stmt == null) throw new IllegalArgumentException("PreparedStatement must not be null");
 		
-		return stmt.executeQuery();
+		long currNTime = System.nanoTime();
+		ResultSet result = stmt.executeQuery();
+		System.out.printf("Prepared query took %dms %n", (System.nanoTime() - currNTime) / 1000000);
+		
+		return result;
 	}
 	
 	public ResultSet query(String query) throws SQLException {

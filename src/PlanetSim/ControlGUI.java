@@ -3,9 +3,7 @@ package PlanetSim;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -17,20 +15,22 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import messaging.Publisher;
+import messaging.events.ConfigureMessage;
 import messaging.events.PauseMessage;
 import messaging.events.ProduceMessage;
 import messaging.events.ResumeMessage;
-import messaging.events.ConfigureMessage;
 import messaging.events.StopMessage;
 import simulation.EarthEngine;
 import view.EarthDisplayEngine;
 import PlanetSim.widgets.ControlWidget;
 import PlanetSim.widgets.QueryWidget;
 import PlanetSim.widgets.SettingsWidget;
+
 import common.Buffer;
 import common.Constants;
 import common.Monitor;
 import common.ThreadManager;
+
 import db.SimulationDAO;
 import db.SimulationNeo4j;
 
