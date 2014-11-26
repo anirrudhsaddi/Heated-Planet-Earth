@@ -104,12 +104,12 @@ public class EarthDisplayEngine extends ComponentBase {
 	}
 
 	@Override
-	public void stop() {
-
+	public void stop() {		
+		
 		super.stop();
 
 		// destructor when done with class
-		display.close();
+		// display.close();
 	}
 
 	private void start(ConfigureMessage msg) {

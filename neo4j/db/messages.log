@@ -53611,3 +53611,1618 @@ Storage files: (filename : modification date - size)
 2014-11-26 04:14:58.002+0000 INFO  [org.neo4j]: NeoStore closed
 2014-11-26 04:14:58.002+0000 INFO  [org.neo4j]: --- STOPPING diagnostics START ---
 2014-11-26 04:14:58.002+0000 INFO  [org.neo4j]: --- STOPPING diagnostics END ---
+2014-11-26 04:19:29.208+0000 INFO  [org.neo4j]: No locking implementation specified, defaulting to 'community'
+2014-11-26 04:19:29.309+0000 INFO  [org.neo4j]: --- INITIALIZED diagnostics START ---
+2014-11-26 04:19:29.310+0000 INFO  [org.neo4j]: Neo4j Kernel properties:
+    adaptive_cache_heap_ratio=0.77
+    neostore.propertystore.db.mapped_memory=90M
+    neostore.nodestore.db.mapped_memory=25M
+    neostore.propertystore.db.index.mapped_memory=1M
+    adaptive_cache_manager_increase_ratio=1.1
+    org.neo4j.server.database.location='db/simulation.db'
+    adaptive_cache_worker_sleep_time=3000
+    neostore.propertystore.db.strings.mapped_memory=130M
+    min_relationship_cache_size=0
+    store_dir=neo4j/db/
+    neostore.relationshipstore.db.mapped_memory=50M
+    adaptive_cache_manager_decrease_ratio=1.15
+    neostore.propertystore.db.arrays.mapped_memory=130M
+    max_node_cache_size=1500
+    use_adaptive_cache=YES
+    max_relationship_cache_size=3500
+    min_node_cache_size=0
+    neostore.propertystore.db.index.keys.mapped_memory=1M
+    ephemeral=false
+2014-11-26 04:19:29.314+0000 INFO  [org.neo4j]: Diagnostics providers:
+    org.neo4j.kernel.configuration.Config
+    org.neo4j.kernel.info.DiagnosticsManager
+    SYSTEM_MEMORY
+    JAVA_MEMORY
+    OPERATING_SYSTEM
+    JAVA_VIRTUAL_MACHINE
+    CLASSPATH
+    LIBRARY_PATH
+    SYSTEM_PROPERTIES
+    NETWORK
+2014-11-26 04:19:29.315+0000 INFO  [org.neo4j]: System memory information:
+    Total Physical memory: 8.00 GB
+    Free Physical memory: 1.11 GB
+    Committed virtual memory: 4.83 GB
+    Total swap space: 0.00 B
+    Free swap space: 0.00 B
+2014-11-26 04:19:29.322+0000 INFO  [org.neo4j]: JVM memory information:
+    Free  memory: 104.34 MB
+    Total memory: 123.00 MB
+    Max   memory: 1.78 GB
+    Garbage Collector: PS Scavenge: [PS Eden Space, PS Survivor Space]
+    Garbage Collector: PS MarkSweep: [PS Eden Space, PS Survivor Space, PS Old Gen, PS Perm Gen]
+    Memory Pool: Code Cache (Non-heap memory): committed=2.44 MB, used=557.38 kB, max=48.00 MB, threshold=0.00 B
+    Memory Pool: PS Eden Space (Heap memory): committed=33.00 MB, used=18.66 MB, max=673.00 MB, threshold=?
+    Memory Pool: PS Survivor Space (Heap memory): committed=5.00 MB, used=0.00 B, max=5.00 MB, threshold=?
+    Memory Pool: PS Old Gen (Heap memory): committed=85.00 MB, used=0.00 B, max=1.33 GB, threshold=0.00 B
+    Memory Pool: PS Perm Gen (Non-heap memory): committed=21.00 MB, used=9.83 MB, max=82.00 MB, threshold=0.00 B
+2014-11-26 04:19:29.330+0000 INFO  [org.neo4j]: Operating system information:
+    Operating System: Mac OS X; version: 10.10.1; arch: x86_64; cpus: 8
+    Max number of file descriptors: 10240
+    Number of open file descriptors: 44
+    Process id: 23515@theMOB.local
+    Byte order: LITTLE_ENDIAN
+    Local timezone: America/New_York
+2014-11-26 04:19:29.842+0000 INFO  [org.neo4j]: JVM information:
+    VM Name: Java HotSpot(TM) 64-Bit Server VM
+    VM Vendor: Oracle Corporation
+    VM Version: 24.55-b03
+    JIT compiler: HotSpot 64-Bit Tiered Compilers
+    VM Arguments: [-Dfile.encoding=US-ASCII]
+2014-11-26 04:19:29.845+0000 INFO  [org.neo4j]: Java classpath:
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-udc-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-jmx-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-graph-matching-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-cypher-compiler-2.0-2.0.3.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/localedata.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/dnsns.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-cypher-compiler-2.1-2.1.5.jar
+     [loader.1] file:/System/Library/Java/Extensions/MRJToolkit.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/lucene-core-3.6.2.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/resources.jar
+     [classpath + loader.0] file:/Applications/eclipse/plugins/org.junit_4.11.0.v201303080030/junit.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/geronimo-jta_1.1_spec-1.1.1.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/charsets.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/org.apache.servicemix.bundles.jline-0.9.94_1.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/scala-library-2.10.4.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/parboiled-scala_2.10-1.1.6.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/sunec.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-graph-algo-2.1.5.jar
+     [classpath + loader.0] file:/Applications/eclipse/plugins/org.hamcrest.core_1.3.0.v201303031735.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-shell-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-lucene-index-2.1.5.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/sunpkcs11.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-kernel-2.1.5.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/rt.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/opencsv-2.0.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/server-api-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-primitive-collections-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-cypher-compiler-1.9-2.0.3.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/concurrentlinkedhashmap-lru-1.3.1.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/sunjce_provider.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/parboiled-core-1.1.6.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/jsse.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/classes
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/jce.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/sunrsasign.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/jfr.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/zipfs.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-cypher-commons-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-jdbc-2.0.1-SNAPSHOT-jar-with-dependencies.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/java/jdatepicker-1.3.2.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-cypher-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/bin/
+2014-11-26 04:19:29.847+0000 INFO  [org.neo4j]: Library path:
+    /Users/goof_troop/Library/Java/Extensions
+    /Library/Java/Extensions
+    /Network/Library/Java/Extensions
+    /System/Library/Java/Extensions
+    /usr/lib/java
+    /Users/goof_troop/Documents/workspace/CS6310P3
+2014-11-26 04:19:29.848+0000 INFO  [org.neo4j]: System.properties:
+    sun.boot.library.path = /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib
+    gopherProxySet = false
+    path.separator = :
+    file.encoding.pkg = sun.io
+    user.country = US
+    sun.java.launcher = SUN_STANDARD
+    sun.os.patch.level = unknown
+    user.dir = /Users/goof_troop/Documents/workspace/CS6310P3
+    sun.jnu.encoding = UTF-8
+    sun.awt.enableExtraMouseButtons = true
+    sun.management.compiler = HotSpot 64-Bit Tiered Compilers
+    http.nonProxyHosts = local|*.local|169.254/16|*.169.254/16
+    user.home = /Users/goof_troop
+    user.timezone = America/New_York
+    file.encoding = US-ASCII
+    user.name = goof_troop
+    sun.java.command = PlanetSim.Demo
+    sun.arch.data.model = 64
+    user.language = en
+    awt.toolkit = sun.lwawt.macosx.LWCToolkit
+    file.separator = /
+    sun.font.fontmanager = sun.font.CFontManager
+    sun.io.unicode.encoding = UnicodeBig
+    sun.cpu.endian = little
+    socksNonProxyHosts = local|*.local|169.254/16|*.169.254/16
+    ftp.nonProxyHosts = local|*.local|169.254/16|*.169.254/16
+    sun.cpu.isalist = 
+2014-11-26 04:19:29.849+0000 INFO  [org.neo4j]: Network information:
+    Interface utun0:
+        address: fde0:6905:23df:545a:a9eb:89c1:c884:939b
+        address: fe80:0:0:0:a9eb:89c1:c884:939b%11
+    Interface en3:
+        address: fe80:0:0:0:426c:8fff:fe3f:4bf2%7
+        address: 192.168.1.38
+    Interface lo0:
+        address: fe80:0:0:0:0:0:0:1%1
+        address: 0:0:0:0:0:0:0:1
+        address: 127.0.0.1
+2014-11-26 04:19:29.856+0000 INFO  [org.neo4j]: --- INITIALIZED diagnostics END ---
+2014-11-26 04:19:30.033+0000 INFO  [org.neo4j]: [neo4j/db/neostore.relationshiptypestore.db.names] brickCount=0 brickSize=0b mappedMem=0b (storeSize=342b)
+2014-11-26 04:19:30.034+0000 INFO  [org.neo4j]: [neo4j/db/neostore.relationshiptypestore.db] brickCount=0 brickSize=0b mappedMem=0b (storeSize=35b)
+2014-11-26 04:19:30.034+0000 INFO  [org.neo4j]: [neo4j/db/neostore.labeltokenstore.db.names] brickCount=0 brickSize=0b mappedMem=0b (storeSize=380b)
+2014-11-26 04:19:30.035+0000 INFO  [org.neo4j]: [neo4j/db/neostore.labeltokenstore.db] brickCount=0 brickSize=0b mappedMem=0b (storeSize=40b)
+2014-11-26 04:19:30.035+0000 INFO  [org.neo4j]: [neo4j/db/neostore.propertystore.db.strings] brickCount=0 brickSize=136192b mappedMem=136314880b (storeSize=256b)
+2014-11-26 04:19:30.036+0000 INFO  [org.neo4j]: [neo4j/db/neostore.propertystore.db.index.keys] brickCount=0 brickSize=1026b mappedMem=1048576b (storeSize=266b)
+2014-11-26 04:19:30.036+0000 INFO  [org.neo4j]: [neo4j/db/neostore.propertystore.db.index] brickCount=0 brickSize=1044b mappedMem=1048576b (storeSize=45b)
+2014-11-26 04:19:30.038+0000 INFO  [org.neo4j]: [neo4j/db/neostore.propertystore.db.arrays] brickCount=0 brickSize=136192b mappedMem=136314880b (storeSize=256b)
+2014-11-26 04:19:30.054+0000 INFO  [org.neo4j]: [neo4j/db/neostore.propertystore.db] brickCount=0 brickSize=94341b mappedMem=94371840b (storeSize=9553b)
+2014-11-26 04:19:30.113+0000 INFO  [org.neo4j]: [neo4j/db/neostore.relationshipstore.db] brickCount=5 brickSize=52428b mappedMem=52428800b (storeSize=273530b)
+2014-11-26 04:19:30.113+0000 INFO  [org.neo4j]: [neo4j/db/neostore.nodestore.db.labels] brickCount=0 brickSize=0b mappedMem=0b (storeSize=136b)
+2014-11-26 04:19:30.133+0000 INFO  [org.neo4j]: [neo4j/db/neostore.nodestore.db] brickCount=1 brickSize=26205b mappedMem=26214400b (storeSize=46560b)
+2014-11-26 04:19:30.135+0000 INFO  [org.neo4j]: [neo4j/db/neostore.schemastore.db] brickCount=0 brickSize=0b mappedMem=0b (storeSize=1152b)
+2014-11-26 04:19:30.137+0000 INFO  [org.neo4j]: [neo4j/db/neostore.relationshipgroupstore.db] brickCount=0 brickSize=0b mappedMem=0b (storeSize=575b)
+2014-11-26 04:19:30.137+0000 INFO  [org.neo4j]: [neo4j/db/neostore] brickCount=0 brickSize=0b mappedMem=0b (storeSize=81b)
+2014-11-26 04:19:30.362+0000 INFO  [org.neo4j]: IndexingService.initIndexes: index on :label[0](property[0]) is ONLINE
+2014-11-26 04:19:30.379+0000 INFO  [org.neo4j]: IndexingService.initIndexes: index on :label[1](property[1]) is ONLINE
+2014-11-26 04:19:30.390+0000 INFO  [org.neo4j]: IndexingService.initIndexes: index on :label[2](property[1]) is ONLINE
+2014-11-26 04:19:30.398+0000 INFO  [org.neo4j]: IndexingService.initIndexes: index on :label[3](property[1]) is ONLINE
+2014-11-26 04:19:30.405+0000 INFO  [org.neo4j]: IndexingService.initIndexes: index on :label[4](property[1]) is ONLINE
+2014-11-26 04:19:30.411+0000 INFO  [org.neo4j]: IndexingService.initIndexes: index on :label[5](property[1]) is ONLINE
+2014-11-26 04:19:30.420+0000 INFO  [org.neo4j]: IndexingService.initIndexes: index on :label[6](property[1]) is ONLINE
+2014-11-26 04:19:30.427+0000 INFO  [org.neo4j]: IndexingService.initIndexes: index on :label[7](property[1]) is ONLINE
+2014-11-26 04:19:30.434+0000 INFO  [org.neo4j]: Non clean shutdown detected on log [neo4j/db/nioneo_logical.log.2]. Recovery started ...
+2014-11-26 04:19:30.441+0000 INFO  [org.neo4j]: [neo4j/db/nioneo_logical.log.2] logVersion=95 with committed tx=79
+2014-11-26 04:19:30.536+0000 INFO  [org.neo4j]: [neo4j/db/nioneo_logical.log.2] entries found=23 lastEntryPos=1595
+2014-11-26 04:19:30.536+0000 INFO  [org.neo4j]: Opened logical log [neo4j/db/nioneo_logical.log.2] version=95, lastTxId=80 (recovered)
+2014-11-26 04:19:30.536+0000 INFO  [org.neo4j]: XaResourceManager[nioneo_logical.log] sorting 0 xids
+2014-11-26 04:19:30.537+0000 INFO  [org.neo4j]: XaResourceManager[nioneo_logical.log] checkRecoveryComplete 0 xids
+2014-11-26 04:19:30.547+0000 INFO  [org.neo4j]: XaResourceManager[nioneo_logical.log] recovery completed.
+2014-11-26 04:19:30.547+0000 INFO  [org.neo4j]: Recovery on log [neo4j/db/nioneo_logical.log.2] completed.
+2014-11-26 04:19:30.553+0000 INFO  [org.neo4j]: TM opening log: neo4j/db/tm_tx_log.1
+2014-11-26 04:19:30.554+0000 INFO  [org.neo4j]: Unresolved transactions found in neo4j/db/tm_tx_log.1, recovery started... 
+2014-11-26 04:19:30.596+0000 INFO  [org.neo4j]: IndexingService.start: index on :label[0](property[0]) is ONLINE
+2014-11-26 04:19:30.596+0000 INFO  [org.neo4j]: IndexingService.start: index on :label[1](property[1]) is ONLINE
+2014-11-26 04:19:30.597+0000 INFO  [org.neo4j]: IndexingService.start: index on :label[2](property[1]) is ONLINE
+2014-11-26 04:19:30.597+0000 INFO  [org.neo4j]: IndexingService.start: index on :label[3](property[1]) is ONLINE
+2014-11-26 04:19:30.597+0000 INFO  [org.neo4j]: IndexingService.start: index on :label[4](property[1]) is ONLINE
+2014-11-26 04:19:30.598+0000 INFO  [org.neo4j]: IndexingService.start: index on :label[5](property[1]) is ONLINE
+2014-11-26 04:19:30.598+0000 INFO  [org.neo4j]: IndexingService.start: index on :label[6](property[1]) is ONLINE
+2014-11-26 04:19:30.598+0000 INFO  [org.neo4j]: IndexingService.start: index on :label[7](property[1]) is ONLINE
+2014-11-26 04:19:30.615+0000 INFO  [org.neo4j]: Rotating [neo4j/db/nioneo_logical.log.2] @ version=95 to neo4j/db/nioneo_logical.log.1 from position 1595
+2014-11-26 04:19:30.616+0000 INFO  [org.neo4j]: Rotate: old log scanned, newLog @ pos=16
+2014-11-26 04:19:30.624+0000 INFO  [org.neo4j]: Log rotated, newLog @ pos=16, version 96 and last tx 80
+2014-11-26 04:19:30.624+0000 INFO  [org.neo4j]: Recovery completed, all transactions have been resolved to a consistent state.
+2014-11-26 04:19:30.625+0000 INFO  [org.neo4j]: Kernel health set to OK
+2014-11-26 04:19:30.641+0000 INFO  [org.neo4j]: Opened logical log [neo4j/db/index/lucene.log.1] version=97, lastTxId=1 (clean)
+2014-11-26 04:19:30.650+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:Versions START ---
+2014-11-26 04:19:30.650+0000 INFO  [org.neo4j]: Graph Database: org.neo4j.kernel.EmbeddedGraphDatabase StoreId{creationTime=1416686332962, randomId=6163862793200438382, storeVersion=14406081294923270, upgradeTime=1416686332962, upgradeId=6163862793200438382}
+2014-11-26 04:19:30.650+0000 INFO  [org.neo4j]: Kernel version: Neo4j - Graph Database Kernel (neo4j-kernel), version: 2.1.5
+2014-11-26 04:19:30.650+0000 INFO  [org.neo4j]: Neo4j component versions:
+2014-11-26 04:19:30.656+0000 INFO  [org.neo4j]:   Neo4j - Lucene Index (neo4j-lucene-index), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:19:30.656+0000 INFO  [org.neo4j]:   Neo4j - JMX support (neo4j-jmx), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:19:30.656+0000 INFO  [org.neo4j]:   Neo4j - Graph Matching (neo4j-graph-matching), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:19:30.656+0000 INFO  [org.neo4j]:   Neo4j Server API (server-api), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:19:30.656+0000 INFO  [org.neo4j]:   Neo4j - Graph Database Kernel (neo4j-kernel), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:19:30.656+0000 INFO  [org.neo4j]:   Neo4j - Cypher (neo4j-cypher), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:19:30.656+0000 INFO  [org.neo4j]:   Neo4j - Graph Algorithms (neo4j-graph-algo), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:19:30.656+0000 INFO  [org.neo4j]:   Neo4j - Cypher Compiler 2.0 (neo4j-cypher-compiler-2.0), version: 2.0.3; revision: 2.0.3:2.0-maint:72/307c563c11b75fdc71cfa6df05daf9b08d6c37dc
+2014-11-26 04:19:30.656+0000 INFO  [org.neo4j]:   Neo4j - Generic shell (neo4j-shell), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:19:30.656+0000 INFO  [org.neo4j]:   Neo4j - Cypher Compiler 1.9 (neo4j-cypher-compiler-1.9), version: 2.0.3; revision: 2.0.3:2.0-maint:72/307c563c11b75fdc71cfa6df05daf9b08d6c37dc
+2014-11-26 04:19:30.656+0000 INFO  [org.neo4j]:   neo4j-udc, version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:19:30.657+0000 INFO  [org.neo4j]:   Neo4j - Cypher Commons (neo4j-cypher-commons), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:19:30.657+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:Versions END ---
+2014-11-26 04:19:30.659+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_VERSIONS START ---
+2014-11-26 04:19:30.659+0000 INFO  [org.neo4j]: Store versions:
+    Store versions:
+      NeoStore v0.A.3
+      SchemaStore v0.A.3
+      NodeStore v0.A.3
+      RelationshipStore v0.A.3
+      RelationshipTypeStore v0.A.3
+      LabelTokenStore v0.A.3
+      PropertyStore v0.A.3
+      PropertyIndexStore v0.A.3
+      StringPropertyStore v0.A.3
+      ArrayPropertyStore v0.A.3
+      RelationshipGroupStore v0.A.3
+2014-11-26 04:19:30.659+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_VERSIONS END ---
+2014-11-26 04:19:30.659+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_ID_USAGE START ---
+2014-11-26 04:19:30.659+0000 INFO  [org.neo4j]: Id usage:
+    Id usage:
+      SchemaStore: used=18 high=17
+      NodeStore: used=3104 high=3103
+      RelationshipStore: used=8045 high=8044
+      RelationshipTypeStore: used=7 high=6
+      LabelTokenStore: used=8 high=7
+      PropertyStore: used=233 high=232
+      PropertyIndexStore: used=5 high=4
+      StringPropertyStore: used=2 high=1
+      ArrayPropertyStore: used=2 high=1
+      RelationshipGroupStore: used=23 high=22
+2014-11-26 04:19:30.661+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_ID_USAGE END ---
+2014-11-26 04:19:30.661+0000 INFO  [org.neo4j]: --- STARTED diagnostics for PERSISTENCE_WINDOW_POOL_STATS START ---
+2014-11-26 04:19:30.661+0000 INFO  [org.neo4j]: --- STARTED diagnostics for PERSISTENCE_WINDOW_POOL_STATS END ---
+2014-11-26 04:19:30.661+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:StoreFiles START ---
+2014-11-26 04:19:30.661+0000 INFO  [org.neo4j]: Disk space on partition (Total / Free / Free %): 499046809600 / 111548993536 / 22
+Storage files: (filename : modification date - size)
+      active_tx_log: 2014-11-22T16:12:17-0500 - 11.00 B
+      index:
+        lucene-store.db: 2014-11-25T23:14:57-0500 - 40.00 B
+        lucene.log.1: 2014-11-25T23:19:30-0500 - 16.00 B
+        lucene.log.active: 2014-11-25T23:19:30-0500 - 4.00 B
+        lucene.log.v0: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v1: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v10: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v11: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v12: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v13: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v14: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v15: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v16: 2014-11-24T17:45:26-0500 - 16.00 B
+        lucene.log.v17: 2014-11-24T18:23:08-0500 - 16.00 B
+        lucene.log.v18: 2014-11-24T18:24:11-0500 - 16.00 B
+        lucene.log.v19: 2014-11-24T18:25:15-0500 - 16.00 B
+        lucene.log.v2: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v20: 2014-11-24T21:04:40-0500 - 16.00 B
+        lucene.log.v21: 2014-11-24T21:05:56-0500 - 16.00 B
+        lucene.log.v22: 2014-11-24T21:18:42-0500 - 16.00 B
+        lucene.log.v23: 2014-11-24T21:33:48-0500 - 16.00 B
+        lucene.log.v24: 2014-11-24T21:36:05-0500 - 16.00 B
+        lucene.log.v25: 2014-11-24T21:45:09-0500 - 16.00 B
+        lucene.log.v26: 2014-11-24T21:45:50-0500 - 16.00 B
+        lucene.log.v27: 2014-11-24T21:47:58-0500 - 16.00 B
+        lucene.log.v28: 2014-11-24T21:49:58-0500 - 16.00 B
+        lucene.log.v29: 2014-11-24T22:03:11-0500 - 16.00 B
+        lucene.log.v3: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v30: 2014-11-24T22:03:54-0500 - 16.00 B
+        lucene.log.v31: 2014-11-24T22:04:35-0500 - 16.00 B
+        lucene.log.v32: 2014-11-24T22:06:05-0500 - 16.00 B
+        lucene.log.v33: 2014-11-24T22:06:50-0500 - 16.00 B
+        lucene.log.v34: 2014-11-24T22:07:10-0500 - 16.00 B
+        lucene.log.v35: 2014-11-24T22:07:26-0500 - 16.00 B
+        lucene.log.v36: 2014-11-24T22:13:13-0500 - 16.00 B
+        lucene.log.v37: 2014-11-24T22:29:08-0500 - 16.00 B
+        lucene.log.v38: 2014-11-24T22:38:27-0500 - 16.00 B
+        lucene.log.v39: 2014-11-24T22:42:27-0500 - 16.00 B
+        lucene.log.v4: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v40: 2014-11-24T22:44:22-0500 - 16.00 B
+        lucene.log.v41: 2014-11-24T23:04:53-0500 - 16.00 B
+        lucene.log.v42: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v43: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v44: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v45: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v46: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v47: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v48: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v49: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v5: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v50: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v51: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v52: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v53: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v54: 2014-11-25T18:48:36-0500 - 16.00 B
+        lucene.log.v55: 2014-11-25T18:49:33-0500 - 16.00 B
+        lucene.log.v56: 2014-11-25T19:00:47-0500 - 16.00 B
+        lucene.log.v57: 2014-11-25T19:02:13-0500 - 16.00 B
+        lucene.log.v58: 2014-11-25T19:03:02-0500 - 16.00 B
+        lucene.log.v59: 2014-11-25T19:03:23-0500 - 16.00 B
+        lucene.log.v6: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v60: 2014-11-25T19:03:55-0500 - 16.00 B
+        lucene.log.v61: 2014-11-25T20:10:30-0500 - 16.00 B
+        lucene.log.v62: 2014-11-25T20:14:16-0500 - 16.00 B
+        lucene.log.v63: 2014-11-25T20:22:28-0500 - 16.00 B
+        lucene.log.v64: 2014-11-25T20:23:54-0500 - 16.00 B
+        lucene.log.v65: 2014-11-25T20:26:05-0500 - 16.00 B
+        lucene.log.v66: 2014-11-25T20:57:20-0500 - 16.00 B
+        lucene.log.v67: 2014-11-25T21:10:07-0500 - 16.00 B
+        lucene.log.v68: 2014-11-25T21:11:31-0500 - 16.00 B
+        lucene.log.v69: 2014-11-25T21:13:43-0500 - 16.00 B
+        lucene.log.v7: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v70: 2014-11-25T21:44:02-0500 - 16.00 B
+        lucene.log.v71: 2014-11-25T21:47:48-0500 - 16.00 B
+        lucene.log.v72: 2014-11-25T21:49:20-0500 - 16.00 B
+        lucene.log.v73: 2014-11-25T21:51:27-0500 - 16.00 B
+        lucene.log.v74: 2014-11-25T21:52:52-0500 - 16.00 B
+        lucene.log.v75: 2014-11-25T21:53:20-0500 - 16.00 B
+        lucene.log.v76: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v77: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v78: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v79: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v8: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v80: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v81: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v82: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v83: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v84: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v85: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v86: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v87: 2014-11-25T22:46:36-0500 - 16.00 B
+        lucene.log.v88: 2014-11-25T22:51:05-0500 - 16.00 B
+        lucene.log.v89: 2014-11-25T22:53:03-0500 - 16.00 B
+        lucene.log.v9: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v90: 2014-11-25T22:56:38-0500 - 16.00 B
+        lucene.log.v91: 2014-11-25T23:03:31-0500 - 16.00 B
+        lucene.log.v92: 2014-11-25T23:04:15-0500 - 16.00 B
+        lucene.log.v93: 2014-11-25T23:07:03-0500 - 16.00 B
+        lucene.log.v94: 2014-11-25T23:11:26-0500 - 16.00 B
+        lucene.log.v95: 2014-11-25T23:13:15-0500 - 16.00 B
+        lucene.log.v96: 2014-11-25T23:14:57-0500 - 16.00 B
+      - Total: 2014-11-25T23:19:30-0500 - 1.57 kB
+      lock: 2014-11-25T23:19:30-0500 - 0.00 B
+      messages.log: 2014-11-25T23:19:30-0500 - 3.63 MB
+      neostore: 2014-11-25T23:19:30-0500 - 81.00 B
+      neostore.id: 2014-11-25T23:19:30-0500 - 9.00 B
+      neostore.labeltokenstore.db: 2014-11-25T23:19:30-0500 - 40.00 B
+      neostore.labeltokenstore.db.id: 2014-11-25T23:19:30-0500 - 9.00 B
+      neostore.labeltokenstore.db.names: 2014-11-25T23:19:30-0500 - 380.00 B
+      neostore.labeltokenstore.db.names.id: 2014-11-25T23:19:30-0500 - 9.00 B
+      neostore.nodestore.db: 2014-11-25T23:19:30-0500 - 51.18 kB
+      neostore.nodestore.db.id: 2014-11-25T23:19:30-0500 - 9.00 B
+      neostore.nodestore.db.labels: 2014-11-25T23:19:30-0500 - 136.00 B
+      neostore.nodestore.db.labels.id: 2014-11-25T23:19:30-0500 - 9.00 B
+      neostore.propertystore.db: 2014-11-25T23:19:30-0500 - 92.13 kB
+      neostore.propertystore.db.arrays: 2014-11-25T23:19:30-0500 - 256.00 B
+      neostore.propertystore.db.arrays.id: 2014-11-25T23:19:30-0500 - 9.00 B
+      neostore.propertystore.db.id: 2014-11-25T23:19:30-0500 - 9.00 B
+      neostore.propertystore.db.index: 2014-11-25T23:19:30-0500 - 45.00 B
+      neostore.propertystore.db.index.id: 2014-11-25T23:19:30-0500 - 9.00 B
+      neostore.propertystore.db.index.keys: 2014-11-25T23:19:30-0500 - 266.00 B
+      neostore.propertystore.db.index.keys.id: 2014-11-25T23:19:30-0500 - 9.00 B
+      neostore.propertystore.db.strings: 2014-11-25T23:19:30-0500 - 256.00 B
+      neostore.propertystore.db.strings.id: 2014-11-25T23:19:30-0500 - 9.00 B
+      neostore.relationshipgroupstore.db: 2014-11-25T23:19:30-0500 - 575.00 B
+      neostore.relationshipgroupstore.db.id: 2014-11-25T23:19:30-0500 - 9.00 B
+      neostore.relationshipstore.db: 2014-11-25T23:19:30-0500 - 267.12 kB
+      neostore.relationshipstore.db.id: 2014-11-25T23:19:30-0500 - 9.00 B
+      neostore.relationshiptypestore.db: 2014-11-25T23:19:30-0500 - 35.00 B
+      neostore.relationshiptypestore.db.id: 2014-11-25T23:19:30-0500 - 9.00 B
+      neostore.relationshiptypestore.db.names: 2014-11-25T23:19:30-0500 - 342.00 B
+      neostore.relationshiptypestore.db.names.id: 2014-11-25T23:19:30-0500 - 9.00 B
+      neostore.schemastore.db: 2014-11-25T23:19:30-0500 - 1.13 kB
+      neostore.schemastore.db.id: 2014-11-25T23:19:30-0500 - 9.00 B
+      nioneo_logical.log.1: 2014-11-25T23:19:30-0500 - 16.00 B
+      nioneo_logical.log.active: 2014-11-25T23:19:30-0500 - 4.00 B
+      nioneo_logical.log.v0: 2014-11-22T16:12:17-0500 - 7.93 kB
+      nioneo_logical.log.v1: 2014-11-22T16:12:17-0500 - 257.00 B
+      nioneo_logical.log.v10: 2014-11-22T16:12:17-0500 - 7.25 kB
+      nioneo_logical.log.v11: 2014-11-22T16:12:17-0500 - 3.95 kB
+      nioneo_logical.log.v12: 2014-11-22T16:12:17-0500 - 3.95 kB
+      nioneo_logical.log.v13: 2014-11-22T16:12:17-0500 - 3.95 kB
+      nioneo_logical.log.v14: 2014-11-22T16:12:17-0500 - 3.95 kB
+      nioneo_logical.log.v15: 2014-11-22T16:12:17-0500 - 3.95 kB
+      nioneo_logical.log.v16: 2014-11-24T18:22:44-0500 - 16.00 B
+      nioneo_logical.log.v17: 2014-11-24T18:24:07-0500 - 16.00 B
+      nioneo_logical.log.v18: 2014-11-24T18:24:11-0500 - 3.95 kB
+      nioneo_logical.log.v19: 2014-11-24T18:25:15-0500 - 3.95 kB
+      nioneo_logical.log.v2: 2014-11-22T16:12:17-0500 - 16.00 B
+      nioneo_logical.log.v20: 2014-11-24T21:04:40-0500 - 16.00 B
+      nioneo_logical.log.v21: 2014-11-24T21:05:56-0500 - 16.00 B
+      nioneo_logical.log.v22: 2014-11-24T21:18:42-0500 - 16.00 B
+      nioneo_logical.log.v23: 2014-11-24T21:33:48-0500 - 16.00 B
+      nioneo_logical.log.v24: 2014-11-24T21:36:05-0500 - 16.00 B
+      nioneo_logical.log.v25: 2014-11-24T21:45:09-0500 - 16.00 B
+      nioneo_logical.log.v26: 2014-11-24T21:45:50-0500 - 16.00 B
+      nioneo_logical.log.v27: 2014-11-24T21:47:58-0500 - 16.00 B
+      nioneo_logical.log.v28: 2014-11-24T21:49:58-0500 - 16.00 B
+      nioneo_logical.log.v29: 2014-11-24T22:03:11-0500 - 16.00 B
+      nioneo_logical.log.v3: 2014-11-22T16:12:17-0500 - 16.00 B
+      nioneo_logical.log.v30: 2014-11-24T22:03:54-0500 - 16.00 B
+      nioneo_logical.log.v31: 2014-11-24T22:04:35-0500 - 16.00 B
+      nioneo_logical.log.v32: 2014-11-24T22:06:05-0500 - 16.00 B
+      nioneo_logical.log.v33: 2014-11-24T22:06:50-0500 - 16.00 B
+      nioneo_logical.log.v34: 2014-11-24T22:07:10-0500 - 16.00 B
+      nioneo_logical.log.v35: 2014-11-24T22:07:26-0500 - 16.00 B
+      nioneo_logical.log.v36: 2014-11-24T22:13:13-0500 - 16.00 B
+      nioneo_logical.log.v37: 2014-11-24T22:29:08-0500 - 16.00 B
+      nioneo_logical.log.v38: 2014-11-24T22:38:27-0500 - 16.00 B
+      nioneo_logical.log.v39: 2014-11-24T22:42:27-0500 - 16.00 B
+      nioneo_logical.log.v4: 2014-11-22T16:12:17-0500 - 1.49 kB
+      nioneo_logical.log.v40: 2014-11-24T22:44:22-0500 - 16.00 B
+      nioneo_logical.log.v41: 2014-11-24T23:04:53-0500 - 16.00 B
+      nioneo_logical.log.v42: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v43: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v44: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v45: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v46: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v47: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v48: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v49: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v5: 2014-11-22T16:12:17-0500 - 16.00 B
+      nioneo_logical.log.v50: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v51: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v52: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v53: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v54: 2014-11-25T18:48:36-0500 - 16.00 B
+      nioneo_logical.log.v55: 2014-11-25T18:49:33-0500 - 16.00 B
+      nioneo_logical.log.v56: 2014-11-25T19:00:47-0500 - 16.00 B
+      nioneo_logical.log.v57: 2014-11-25T19:02:13-0500 - 16.00 B
+      nioneo_logical.log.v58: 2014-11-25T19:03:02-0500 - 16.00 B
+      nioneo_logical.log.v59: 2014-11-25T19:03:23-0500 - 16.00 B
+      nioneo_logical.log.v6: 2014-11-22T16:12:17-0500 - 16.00 B
+      nioneo_logical.log.v60: 2014-11-25T19:03:55-0500 - 16.00 B
+      nioneo_logical.log.v61: 2014-11-25T20:10:30-0500 - 16.00 B
+      nioneo_logical.log.v62: 2014-11-25T20:14:16-0500 - 16.00 B
+      nioneo_logical.log.v63: 2014-11-25T20:22:28-0500 - 16.00 B
+      nioneo_logical.log.v64: 2014-11-25T20:23:54-0500 - 16.00 B
+      nioneo_logical.log.v65: 2014-11-25T20:26:05-0500 - 16.00 B
+      nioneo_logical.log.v66: 2014-11-25T21:10:07-0500 - 16.00 B
+      nioneo_logical.log.v67: 2014-11-25T21:11:31-0500 - 16.00 B
+      nioneo_logical.log.v68: 2014-11-25T21:13:43-0500 - 16.00 B
+      nioneo_logical.log.v69: 2014-11-25T21:44:02-0500 - 16.00 B
+      nioneo_logical.log.v7: 2014-11-22T16:12:17-0500 - 2.08 kB
+      nioneo_logical.log.v70: 2014-11-25T21:47:48-0500 - 16.00 B
+      nioneo_logical.log.v71: 2014-11-25T21:49:20-0500 - 16.00 B
+      nioneo_logical.log.v72: 2014-11-25T21:51:27-0500 - 16.00 B
+      nioneo_logical.log.v73: 2014-11-25T21:52:52-0500 - 3.08 kB
+      nioneo_logical.log.v74: 2014-11-25T21:53:20-0500 - 498.00 B
+      nioneo_logical.log.v75: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v76: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v77: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v78: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v79: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v8: 2014-11-22T16:12:17-0500 - 3.83 kB
+      nioneo_logical.log.v80: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v81: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v82: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v83: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v84: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v85: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v86: 2014-11-25T22:50:44-0500 - 16.00 B
+      nioneo_logical.log.v87: 2014-11-25T22:51:05-0500 - 16.00 B
+      nioneo_logical.log.v88: 2014-11-25T22:53:03-0500 - 16.00 B
+      nioneo_logical.log.v89: 2014-11-25T22:56:38-0500 - 257.00 B
+      nioneo_logical.log.v9: 2014-11-22T16:12:17-0500 - 6.63 kB
+      nioneo_logical.log.v90: 2014-11-25T23:03:42-0500 - 16.00 B
+      nioneo_logical.log.v91: 2014-11-25T23:06:24-0500 - 16.00 B
+      nioneo_logical.log.v92: 2014-11-25T23:10:20-0500 - 16.00 B
+      nioneo_logical.log.v93: 2014-11-25T23:12:18-0500 - 2.84 kB
+      nioneo_logical.log.v94: 2014-11-25T23:13:20-0500 - 1.52 kB
+      nioneo_logical.log.v95: 2014-11-25T23:19:30-0500 - 1.56 kB
+      schema:
+        index:
+          lucene:
+            1:
+              _1.fdt: 2014-11-22T16:12:17-0500 - 10.00 B
+              _1.fdx: 2014-11-22T16:12:17-0500 - 12.00 B
+              _1.fnm: 2014-11-22T16:12:17-0500 - 18.00 B
+              _1.frq: 2014-11-22T16:12:17-0500 - 2.00 B
+              _1.nrm: 2014-11-22T16:12:17-0500 - 4.00 B
+              _1.tii: 2014-11-22T16:12:17-0500 - 35.00 B
+              _1.tis: 2014-11-22T16:12:17-0500 - 50.00 B
+              _3.fdt: 2014-11-25T23:13:20-0500 - 10.00 B
+              _3.fdx: 2014-11-25T23:13:20-0500 - 12.00 B
+              _3.fnm: 2014-11-25T23:13:20-0500 - 18.00 B
+              _3.frq: 2014-11-25T23:13:20-0500 - 2.00 B
+              _3.nrm: 2014-11-25T23:13:20-0500 - 4.00 B
+              _3.tii: 2014-11-25T23:13:20-0500 - 35.00 B
+              _3.tis: 2014-11-25T23:13:20-0500 - 43.00 B
+              _5.fdt: 2014-11-25T23:19:30-0500 - 12.00 B
+              _5.fdx: 2014-11-25T23:19:30-0500 - 12.00 B
+              _5.fnm: 2014-11-25T23:19:30-0500 - 18.00 B
+              _5.frq: 2014-11-25T23:19:30-0500 - 2.00 B
+              _5.nrm: 2014-11-25T23:19:30-0500 - 4.00 B
+              _5.tii: 2014-11-25T23:19:30-0500 - 35.00 B
+              _5.tis: 2014-11-25T23:19:30-0500 - 47.00 B
+              failure-message: 2014-11-22T16:12:17-0500 - 16.00 kB
+              segments.gen: 2014-11-25T23:19:30-0500 - 20.00 B
+              segments_7: 2014-11-25T23:19:30-0500 - 682.00 B
+              write.lock: 2014-11-25T23:19:30-0500 - 0.00 B
+            - Total: 2014-11-25T23:19:30-0500 - 17.06 kB
+            11:
+              _1.fdt: 2014-11-22T16:12:17-0500 - 10.00 B
+              _1.fdx: 2014-11-22T16:12:17-0500 - 12.00 B
+              _1.fnm: 2014-11-22T16:12:17-0500 - 18.00 B
+              _1.frq: 2014-11-22T16:12:17-0500 - 2.00 B
+              _1.nrm: 2014-11-22T16:12:17-0500 - 4.00 B
+              _1.tii: 2014-11-22T16:12:17-0500 - 35.00 B
+              _1.tis: 2014-11-22T16:12:17-0500 - 49.00 B
+              _3.fdt: 2014-11-25T23:13:20-0500 - 10.00 B
+              _3.fdx: 2014-11-25T23:13:20-0500 - 12.00 B
+              _3.fnm: 2014-11-25T23:13:20-0500 - 18.00 B
+              _3.frq: 2014-11-25T23:13:20-0500 - 2.00 B
+              _3.nrm: 2014-11-25T23:13:20-0500 - 4.00 B
+              _3.tii: 2014-11-25T23:13:20-0500 - 35.00 B
+              _3.tis: 2014-11-25T23:13:20-0500 - 49.00 B
+              _5.fdt: 2014-11-25T23:19:30-0500 - 12.00 B
+              _5.fdx: 2014-11-25T23:19:30-0500 - 12.00 B
+              _5.fnm: 2014-11-25T23:19:30-0500 - 18.00 B
+              _5.frq: 2014-11-25T23:19:30-0500 - 2.00 B
+              _5.nrm: 2014-11-25T23:19:30-0500 - 4.00 B
+              _5.tii: 2014-11-25T23:19:30-0500 - 35.00 B
+              _5.tis: 2014-11-25T23:19:30-0500 - 51.00 B
+              failure-message: 2014-11-22T16:12:17-0500 - 16.00 kB
+              segments.gen: 2014-11-25T23:19:30-0500 - 20.00 B
+              segments_7: 2014-11-25T23:19:30-0500 - 682.00 B
+              write.lock: 2014-11-25T23:19:30-0500 - 0.00 B
+            - Total: 2014-11-25T23:19:30-0500 - 17.07 kB
+            13:
+              _2.fdt: 2014-11-25T23:13:20-0500 - 10.00 B
+              _2.fdx: 2014-11-25T23:13:20-0500 - 12.00 B
+              _2.fnm: 2014-11-25T23:13:20-0500 - 18.00 B
+              _2.frq: 2014-11-25T23:13:20-0500 - 2.00 B
+              _2.nrm: 2014-11-25T23:13:20-0500 - 4.00 B
+              _2.tii: 2014-11-25T23:13:20-0500 - 35.00 B
+              _2.tis: 2014-11-25T23:13:20-0500 - 49.00 B
+              _4.fdt: 2014-11-25T23:19:30-0500 - 12.00 B
+              _4.fdx: 2014-11-25T23:19:30-0500 - 12.00 B
+              _4.fnm: 2014-11-25T23:19:30-0500 - 18.00 B
+              _4.frq: 2014-11-25T23:19:30-0500 - 2.00 B
+              _4.nrm: 2014-11-25T23:19:30-0500 - 4.00 B
+              _4.tii: 2014-11-25T23:19:30-0500 - 35.00 B
+              _4.tis: 2014-11-25T23:19:30-0500 - 51.00 B
+              failure-message: 2014-11-22T16:12:17-0500 - 16.00 kB
+              segments.gen: 2014-11-25T23:19:30-0500 - 20.00 B
+              segments_6: 2014-11-25T23:19:30-0500 - 470.00 B
+              write.lock: 2014-11-25T23:19:30-0500 - 0.00 B
+            - Total: 2014-11-25T23:19:30-0500 - 16.74 kB
+            15:
+              _1.fdt: 2014-11-22T16:12:17-0500 - 10.00 B
+              _1.fdx: 2014-11-22T16:12:17-0500 - 12.00 B
+              _1.fnm: 2014-11-22T16:12:17-0500 - 18.00 B
+              _1.frq: 2014-11-22T16:12:17-0500 - 2.00 B
+              _1.nrm: 2014-11-22T16:12:17-0500 - 4.00 B
+              _1.tii: 2014-11-22T16:12:17-0500 - 35.00 B
+              _1.tis: 2014-11-22T16:12:17-0500 - 49.00 B
+              _4.fdt: 2014-11-25T23:19:30-0500 - 10.00 B
+              _4.fdx: 2014-11-25T23:19:30-0500 - 12.00 B
+              _4.fnm: 2014-11-25T23:19:30-0500 - 18.00 B
+              _4.frq: 2014-11-25T23:19:30-0500 - 2.00 B
+              _4.nrm: 2014-11-25T23:19:30-0500 - 4.00 B
+              _4.tii: 2014-11-25T23:19:30-0500 - 35.00 B
+              _4.tis: 2014-11-25T23:19:30-0500 - 49.00 B
+              failure-message: 2014-11-22T16:12:17-0500 - 16.00 kB
+              segments.gen: 2014-11-25T23:19:30-0500 - 20.00 B
+              segments_6: 2014-11-25T23:19:30-0500 - 470.00 B
+              write.lock: 2014-11-25T23:19:30-0500 - 0.00 B
+            - Total: 2014-11-25T23:19:30-0500 - 16.73 kB
+            3:
+              _u.fdt: 2014-11-25T23:10:49-0500 - 172.00 B
+              _u.fdx: 2014-11-25T23:10:49-0500 - 228.00 B
+              _u.fnm: 2014-11-25T23:10:49-0500 - 18.00 B
+              _u.frq: 2014-11-25T23:10:49-0500 - 56.00 B
+              _u.tii: 2014-11-25T23:10:49-0500 - 72.00 B
+              _u.tis: 2014-11-25T23:10:49-0500 - 597.00 B
+              _u_1.del: 2014-11-25T23:12:18-0500 - 34.00 B
+              _w.fdt: 2014-11-25T23:12:18-0500 - 76.00 B
+              _w.fdx: 2014-11-25T23:12:18-0500 - 100.00 B
+              _w.fnm: 2014-11-25T23:12:18-0500 - 18.00 B
+              _w.frq: 2014-11-25T23:12:18-0500 - 24.00 B
+              _w.nrm: 2014-11-25T23:12:18-0500 - 4.00 B
+              _w.tii: 2014-11-25T23:12:18-0500 - 53.00 B
+              _w.tis: 2014-11-25T23:12:18-0500 - 272.00 B
+              failure-message: 2014-11-22T16:12:17-0500 - 16.00 kB
+              segments.gen: 2014-11-25T23:12:18-0500 - 20.00 B
+              segments_7: 2014-11-25T23:12:18-0500 - 508.00 B
+              write.lock: 2014-11-25T23:19:30-0500 - 0.00 B
+            - Total: 2014-11-25T23:19:30-0500 - 18.20 kB
+            5:
+              _1.fdt: 2014-11-22T16:12:17-0500 - 10.00 B
+              _1.fdx: 2014-11-22T16:12:17-0500 - 12.00 B
+              _1.fnm: 2014-11-22T16:12:17-0500 - 18.00 B
+              _1.frq: 2014-11-22T16:12:17-0500 - 2.00 B
+              _1.nrm: 2014-11-22T16:12:17-0500 - 4.00 B
+              _1.tii: 2014-11-22T16:12:17-0500 - 35.00 B
+              _1.tis: 2014-11-22T16:12:17-0500 - 49.00 B
+              _4.fdt: 2014-11-25T23:19:30-0500 - 10.00 B
+              _4.fdx: 2014-11-25T23:19:30-0500 - 12.00 B
+              _4.fnm: 2014-11-25T23:19:30-0500 - 18.00 B
+              _4.frq: 2014-11-25T23:19:30-0500 - 2.00 B
+              _4.nrm: 2014-11-25T23:19:30-0500 - 4.00 B
+              _4.tii: 2014-11-25T23:19:30-0500 - 35.00 B
+              _4.tis: 2014-11-25T23:19:30-0500 - 49.00 B
+              failure-message: 2014-11-22T16:12:17-0500 - 16.00 kB
+              segments.gen: 2014-11-25T23:19:30-0500 - 20.00 B
+              segments_6: 2014-11-25T23:19:30-0500 - 470.00 B
+              write.lock: 2014-11-25T23:19:30-0500 - 0.00 B
+            - Total: 2014-11-25T23:19:30-0500 - 16.73 kB
+            7:
+              _1.fdt: 2014-11-22T16:12:17-0500 - 10.00 B
+              _1.fdx: 2014-11-22T16:12:17-0500 - 12.00 B
+              _1.fnm: 2014-11-22T16:12:17-0500 - 18.00 B
+              _1.frq: 2014-11-22T16:12:17-0500 - 2.00 B
+              _1.nrm: 2014-11-22T16:12:17-0500 - 4.00 B
+              _1.tii: 2014-11-22T16:12:17-0500 - 35.00 B
+              _1.tis: 2014-11-22T16:12:17-0500 - 49.00 B
+              _4.fdt: 2014-11-25T23:19:30-0500 - 10.00 B
+              _4.fdx: 2014-11-25T23:19:30-0500 - 12.00 B
+              _4.fnm: 2014-11-25T23:19:30-0500 - 18.00 B
+              _4.frq: 2014-11-25T23:19:30-0500 - 2.00 B
+              _4.nrm: 2014-11-25T23:19:30-0500 - 4.00 B
+              _4.tii: 2014-11-25T23:19:30-0500 - 35.00 B
+              _4.tis: 2014-11-25T23:19:30-0500 - 49.00 B
+              failure-message: 2014-11-22T16:12:17-0500 - 16.00 kB
+              segments.gen: 2014-11-25T23:19:30-0500 - 20.00 B
+              segments_6: 2014-11-25T23:19:30-0500 - 470.00 B
+              write.lock: 2014-11-25T23:19:30-0500 - 0.00 B
+            - Total: 2014-11-25T23:19:30-0500 - 16.73 kB
+            9:
+              _3.fdt: 2014-11-25T23:19:30-0500 - 10.00 B
+              _3.fdx: 2014-11-25T23:19:30-0500 - 12.00 B
+              _3.fnm: 2014-11-25T23:19:30-0500 - 18.00 B
+              _3.frq: 2014-11-25T23:19:30-0500 - 2.00 B
+              _3.nrm: 2014-11-25T23:19:30-0500 - 4.00 B
+              _3.tii: 2014-11-25T23:19:30-0500 - 35.00 B
+              _3.tis: 2014-11-25T23:19:30-0500 - 49.00 B
+              failure-message: 2014-11-22T16:12:17-0500 - 16.00 kB
+              segments.gen: 2014-11-25T23:19:30-0500 - 20.00 B
+              segments_5: 2014-11-25T23:19:30-0500 - 258.00 B
+              write.lock: 2014-11-25T23:19:30-0500 - 0.00 B
+            - Total: 2014-11-25T23:19:30-0500 - 16.40 kB
+          - Total: 2014-11-22T16:12:17-0500 - 135.66 kB
+        - Total: 2014-11-22T16:12:17-0500 - 135.66 kB
+        label:
+          lucene:
+            _18.fdt: 2014-11-25T23:13:20-0500 - 45.00 B
+            _18.fdx: 2014-11-25T23:13:20-0500 - 12.00 B
+            _18.fnm: 2014-11-25T23:13:20-0500 - 44.00 B
+            _18.frq: 2014-11-25T23:13:20-0500 - 7.00 B
+            _18.nrm: 2014-11-25T23:13:20-0500 - 4.00 B
+            _18.tii: 2014-11-25T23:13:20-0500 - 35.00 B
+            _18.tis: 2014-11-25T23:13:20-0500 - 73.00 B
+            _1a.fdt: 2014-11-25T23:19:30-0500 - 28.00 B
+            _1a.fdx: 2014-11-25T23:19:30-0500 - 12.00 B
+            _1a.fnm: 2014-11-25T23:19:30-0500 - 44.00 B
+            _1a.frq: 2014-11-25T23:19:30-0500 - 4.00 B
+            _1a.nrm: 2014-11-25T23:19:30-0500 - 4.00 B
+            _1a.tii: 2014-11-25T23:19:30-0500 - 35.00 B
+            _1a.tis: 2014-11-25T23:19:30-0500 - 53.00 B
+            _9.fdt: 2014-11-25T21:52:50-0500 - 57.00 B
+            _9.fdx: 2014-11-25T21:52:50-0500 - 12.00 B
+            _9.fnm: 2014-11-25T21:52:50-0500 - 44.00 B
+            _9.frq: 2014-11-25T21:52:50-0500 - 9.00 B
+            _9.nrm: 2014-11-25T21:52:50-0500 - 4.00 B
+            _9.tii: 2014-11-25T21:52:50-0500 - 35.00 B
+            _9.tis: 2014-11-25T21:52:50-0500 - 87.00 B
+            _y.fdt: 2014-11-25T23:12:18-0500 - 15.00 B
+            _y.fdx: 2014-11-25T23:12:18-0500 - 12.00 B
+            _y.fnm: 2014-11-25T23:12:18-0500 - 44.00 B
+            _y.frq: 2014-11-25T23:12:18-0500 - 2.00 B
+            _y.nrm: 2014-11-25T23:12:18-0500 - 4.00 B
+            _y.tii: 2014-11-25T23:12:18-0500 - 35.00 B
+            _y.tis: 2014-11-25T23:12:18-0500 - 37.00 B
+            segments.gen: 2014-11-25T23:19:30-0500 - 20.00 B
+            segments_d: 2014-11-25T23:19:30-0500 - 882.00 B
+            write.lock: 2014-11-25T23:19:30-0500 - 0.00 B
+          - Total: 2014-11-25T23:19:30-0500 - 1.66 kB
+        - Total: 2014-11-22T16:12:17-0500 - 1.66 kB
+      - Total: 2014-11-22T16:12:17-0500 - 137.32 kB
+      store_lock: 2014-11-22T16:12:17-0500 - 0.00 B
+      tm_tx_log.1: 2014-11-25T23:19:30-0500 - 0.00 B
+2014-11-26 04:19:30.741+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:StoreFiles END ---
+2014-11-26 04:19:30.762+0000 INFO  [org.neo4j]: Database is now ready
+2014-11-26 04:20:19.651+0000 INFO  [org.neo4j]: Shutdown started
+2014-11-26 04:20:37.818+0000 INFO  [org.neo4j]: No locking implementation specified, defaulting to 'community'
+2014-11-26 04:20:37.926+0000 INFO  [org.neo4j]: --- INITIALIZED diagnostics START ---
+2014-11-26 04:20:37.930+0000 INFO  [org.neo4j]: Neo4j Kernel properties:
+    adaptive_cache_heap_ratio=0.77
+    neostore.propertystore.db.mapped_memory=90M
+    neostore.nodestore.db.mapped_memory=25M
+    neostore.propertystore.db.index.mapped_memory=1M
+    adaptive_cache_manager_increase_ratio=1.1
+    org.neo4j.server.database.location='db/simulation.db'
+    adaptive_cache_worker_sleep_time=3000
+    neostore.propertystore.db.strings.mapped_memory=130M
+    min_relationship_cache_size=0
+    store_dir=neo4j/db/
+    neostore.relationshipstore.db.mapped_memory=50M
+    adaptive_cache_manager_decrease_ratio=1.15
+    neostore.propertystore.db.arrays.mapped_memory=130M
+    max_node_cache_size=1500
+    use_adaptive_cache=YES
+    max_relationship_cache_size=3500
+    min_node_cache_size=0
+    neostore.propertystore.db.index.keys.mapped_memory=1M
+    ephemeral=false
+2014-11-26 04:20:37.936+0000 INFO  [org.neo4j]: Diagnostics providers:
+    org.neo4j.kernel.configuration.Config
+    org.neo4j.kernel.info.DiagnosticsManager
+    SYSTEM_MEMORY
+    JAVA_MEMORY
+    OPERATING_SYSTEM
+    JAVA_VIRTUAL_MACHINE
+    CLASSPATH
+    LIBRARY_PATH
+    SYSTEM_PROPERTIES
+    NETWORK
+2014-11-26 04:20:37.937+0000 INFO  [org.neo4j]: System memory information:
+    Total Physical memory: 8.00 GB
+    Free Physical memory: 431.05 MB
+    Committed virtual memory: 4.83 GB
+    Total swap space: 0.00 B
+    Free swap space: 0.00 B
+2014-11-26 04:20:37.947+0000 INFO  [org.neo4j]: JVM memory information:
+    Free  memory: 104.33 MB
+    Total memory: 123.00 MB
+    Max   memory: 1.78 GB
+    Garbage Collector: PS Scavenge: [PS Eden Space, PS Survivor Space]
+    Garbage Collector: PS MarkSweep: [PS Eden Space, PS Survivor Space, PS Old Gen, PS Perm Gen]
+    Memory Pool: Code Cache (Non-heap memory): committed=2.44 MB, used=578.00 kB, max=48.00 MB, threshold=0.00 B
+    Memory Pool: PS Eden Space (Heap memory): committed=33.00 MB, used=18.67 MB, max=673.00 MB, threshold=?
+    Memory Pool: PS Survivor Space (Heap memory): committed=5.00 MB, used=0.00 B, max=5.00 MB, threshold=?
+    Memory Pool: PS Old Gen (Heap memory): committed=85.00 MB, used=0.00 B, max=1.33 GB, threshold=0.00 B
+    Memory Pool: PS Perm Gen (Non-heap memory): committed=21.00 MB, used=9.83 MB, max=82.00 MB, threshold=0.00 B
+2014-11-26 04:20:37.956+0000 INFO  [org.neo4j]: Operating system information:
+    Operating System: Mac OS X; version: 10.10.1; arch: x86_64; cpus: 8
+    Max number of file descriptors: 10240
+    Number of open file descriptors: 44
+    Process id: 23600@theMOB.local
+    Byte order: LITTLE_ENDIAN
+    Local timezone: America/New_York
+2014-11-26 04:20:37.974+0000 INFO  [org.neo4j]: JVM information:
+    VM Name: Java HotSpot(TM) 64-Bit Server VM
+    VM Vendor: Oracle Corporation
+    VM Version: 24.55-b03
+    JIT compiler: HotSpot 64-Bit Tiered Compilers
+    VM Arguments: [-Dfile.encoding=US-ASCII]
+2014-11-26 04:20:37.977+0000 INFO  [org.neo4j]: Java classpath:
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-udc-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-jmx-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-graph-matching-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-cypher-compiler-2.0-2.0.3.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/localedata.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/dnsns.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-cypher-compiler-2.1-2.1.5.jar
+     [loader.1] file:/System/Library/Java/Extensions/MRJToolkit.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/lucene-core-3.6.2.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/resources.jar
+     [classpath + loader.0] file:/Applications/eclipse/plugins/org.junit_4.11.0.v201303080030/junit.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/geronimo-jta_1.1_spec-1.1.1.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/charsets.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/org.apache.servicemix.bundles.jline-0.9.94_1.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/scala-library-2.10.4.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/parboiled-scala_2.10-1.1.6.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/sunec.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-graph-algo-2.1.5.jar
+     [classpath + loader.0] file:/Applications/eclipse/plugins/org.hamcrest.core_1.3.0.v201303031735.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-shell-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-lucene-index-2.1.5.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/sunpkcs11.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-kernel-2.1.5.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/rt.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/opencsv-2.0.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/server-api-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-primitive-collections-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-cypher-compiler-1.9-2.0.3.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/concurrentlinkedhashmap-lru-1.3.1.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/sunjce_provider.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/parboiled-core-1.1.6.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/jsse.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/classes
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/jce.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/sunrsasign.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/jfr.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/zipfs.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-cypher-commons-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-jdbc-2.0.1-SNAPSHOT-jar-with-dependencies.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/java/jdatepicker-1.3.2.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-cypher-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/bin/
+2014-11-26 04:20:37.980+0000 INFO  [org.neo4j]: Library path:
+    /Users/goof_troop/Library/Java/Extensions
+    /Library/Java/Extensions
+    /Network/Library/Java/Extensions
+    /System/Library/Java/Extensions
+    /usr/lib/java
+    /Users/goof_troop/Documents/workspace/CS6310P3
+2014-11-26 04:20:37.980+0000 INFO  [org.neo4j]: System.properties:
+    sun.boot.library.path = /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib
+    gopherProxySet = false
+    path.separator = :
+    file.encoding.pkg = sun.io
+    user.country = US
+    sun.java.launcher = SUN_STANDARD
+    sun.os.patch.level = unknown
+    user.dir = /Users/goof_troop/Documents/workspace/CS6310P3
+    sun.jnu.encoding = UTF-8
+    sun.awt.enableExtraMouseButtons = true
+    sun.management.compiler = HotSpot 64-Bit Tiered Compilers
+    http.nonProxyHosts = local|*.local|169.254/16|*.169.254/16
+    user.home = /Users/goof_troop
+    user.timezone = America/New_York
+    file.encoding = US-ASCII
+    user.name = goof_troop
+    sun.java.command = PlanetSim.Demo
+    sun.arch.data.model = 64
+    user.language = en
+    awt.toolkit = sun.lwawt.macosx.LWCToolkit
+    file.separator = /
+    sun.font.fontmanager = sun.font.CFontManager
+    sun.io.unicode.encoding = UnicodeBig
+    sun.cpu.endian = little
+    socksNonProxyHosts = local|*.local|169.254/16|*.169.254/16
+    ftp.nonProxyHosts = local|*.local|169.254/16|*.169.254/16
+    sun.cpu.isalist = 
+2014-11-26 04:20:37.981+0000 INFO  [org.neo4j]: Network information:
+    Interface utun0:
+        address: fde0:6905:23df:545a:a9eb:89c1:c884:939b
+        address: fe80:0:0:0:a9eb:89c1:c884:939b%11
+    Interface en3:
+        address: fe80:0:0:0:426c:8fff:fe3f:4bf2%7
+        address: 192.168.1.38
+    Interface lo0:
+        address: fe80:0:0:0:0:0:0:1%1
+        address: 0:0:0:0:0:0:0:1
+        address: 127.0.0.1
+2014-11-26 04:20:37.990+0000 INFO  [org.neo4j]: --- INITIALIZED diagnostics END ---
+2014-11-26 04:20:38.152+0000 INFO  [org.neo4j]: Startup failed: Component 'org.neo4j.kernel.StoreLockerLifecycleAdapter@a299ee7' was successfully initialized, but failed to start. Please see attached cause exception.: Unable to obtain lock on store lock file: neo4j/db/store_lock. Please ensure no other process is using this database, and that the directory is writable (required even for read-only access): Unable to lock org.neo4j.kernel.impl.nioneo.store.StoreFileChannel@77b050fd
+2014-11-26 04:20:38.152+0000 INFO  [org.neo4j]: Shutdown started
+2014-11-26 04:20:38.152+0000 INFO  [org.neo4j]: --- SHUTDOWN diagnostics START ---
+2014-11-26 04:20:38.152+0000 INFO  [org.neo4j]: --- SHUTDOWN diagnostics END ---
+2014-11-26 04:20:19.651+0000 INFO  [org.neo4j]: Database is now unavailable
+2014-11-26 04:20:39.657+0000 INFO  [org.neo4j]: Closed log neo4j/db/index/lucene.log
+2014-11-26 04:20:39.657+0000 INFO  [org.neo4j]: TM shutting down
+2014-11-26 04:20:39.657+0000 INFO  [org.neo4j]: Close invoked with 1 running transaction(s). 
+2014-11-26 04:20:39.658+0000 INFO  [org.neo4j]: Dirty log: neo4j/db/nioneo_logical.log.1 now closed. Recovery will be started automatically next time it is opened.
+2014-11-26 04:20:39.671+0000 INFO  [org.neo4j]: neo4j/db/neostore.relationshiptypestore.db.names hit=0 miss=14 switches=0 ooe=0
+2014-11-26 04:20:39.672+0000 INFO  [org.neo4j]: neo4j/db/neostore.relationshiptypestore.db hit=0 miss=7 switches=0 ooe=0
+2014-11-26 04:20:39.672+0000 INFO  [org.neo4j]: neo4j/db/neostore.labeltokenstore.db.names hit=0 miss=16 switches=0 ooe=0
+2014-11-26 04:20:39.673+0000 INFO  [org.neo4j]: neo4j/db/neostore.labeltokenstore.db hit=0 miss=8 switches=0 ooe=0
+2014-11-26 04:20:39.673+0000 INFO  [org.neo4j]: neo4j/db/neostore.propertystore.db.strings hit=0 miss=0 switches=0 ooe=0
+2014-11-26 04:20:39.675+0000 INFO  [org.neo4j]: neo4j/db/neostore.propertystore.db.index.keys hit=10 miss=0 switches=0 ooe=0
+2014-11-26 04:20:39.677+0000 INFO  [org.neo4j]: neo4j/db/neostore.propertystore.db.index hit=5 miss=0 switches=0 ooe=0
+2014-11-26 04:20:39.677+0000 INFO  [org.neo4j]: neo4j/db/neostore.propertystore.db.arrays hit=0 miss=0 switches=0 ooe=0
+2014-11-26 04:20:39.678+0000 INFO  [org.neo4j]: neo4j/db/neostore.propertystore.db hit=26 miss=0 switches=0 ooe=0
+2014-11-26 04:20:39.679+0000 INFO  [org.neo4j]: neo4j/db/neostore.relationshipstore.db hit=13 miss=40 switches=0 ooe=0
+2014-11-26 04:20:39.680+0000 INFO  [org.neo4j]: neo4j/db/neostore.nodestore.db.labels hit=0 miss=0 switches=0 ooe=0
+2014-11-26 04:20:39.680+0000 INFO  [org.neo4j]: neo4j/db/neostore.nodestore.db hit=16 miss=42 switches=0 ooe=0
+2014-11-26 04:20:39.681+0000 INFO  [org.neo4j]: neo4j/db/neostore.schemastore.db hit=0 miss=66 switches=0 ooe=0
+2014-11-26 04:20:39.681+0000 INFO  [org.neo4j]: neo4j/db/neostore.relationshipgroupstore.db hit=0 miss=0 switches=0 ooe=0
+2014-11-26 04:20:39.682+0000 INFO  [org.neo4j]: neo4j/db/neostore hit=0 miss=26 switches=0 ooe=0
+2014-11-26 04:20:39.683+0000 INFO  [org.neo4j]: NeoStore closed
+2014-11-26 04:20:39.683+0000 INFO  [org.neo4j]: --- STOPPING diagnostics START ---
+2014-11-26 04:20:39.683+0000 INFO  [org.neo4j]: --- STOPPING diagnostics END ---
+2014-11-26 04:20:43.546+0000 INFO  [org.neo4j]: No locking implementation specified, defaulting to 'community'
+2014-11-26 04:20:43.647+0000 INFO  [org.neo4j]: --- INITIALIZED diagnostics START ---
+2014-11-26 04:20:43.649+0000 INFO  [org.neo4j]: Neo4j Kernel properties:
+    adaptive_cache_heap_ratio=0.77
+    neostore.propertystore.db.mapped_memory=90M
+    neostore.nodestore.db.mapped_memory=25M
+    neostore.propertystore.db.index.mapped_memory=1M
+    adaptive_cache_manager_increase_ratio=1.1
+    org.neo4j.server.database.location='db/simulation.db'
+    adaptive_cache_worker_sleep_time=3000
+    neostore.propertystore.db.strings.mapped_memory=130M
+    min_relationship_cache_size=0
+    store_dir=neo4j/db/
+    neostore.relationshipstore.db.mapped_memory=50M
+    adaptive_cache_manager_decrease_ratio=1.15
+    neostore.propertystore.db.arrays.mapped_memory=130M
+    max_node_cache_size=1500
+    use_adaptive_cache=YES
+    max_relationship_cache_size=3500
+    min_node_cache_size=0
+    neostore.propertystore.db.index.keys.mapped_memory=1M
+    ephemeral=false
+2014-11-26 04:20:43.652+0000 INFO  [org.neo4j]: Diagnostics providers:
+    org.neo4j.kernel.configuration.Config
+    org.neo4j.kernel.info.DiagnosticsManager
+    SYSTEM_MEMORY
+    JAVA_MEMORY
+    OPERATING_SYSTEM
+    JAVA_VIRTUAL_MACHINE
+    CLASSPATH
+    LIBRARY_PATH
+    SYSTEM_PROPERTIES
+    NETWORK
+2014-11-26 04:20:43.653+0000 INFO  [org.neo4j]: System memory information:
+    Total Physical memory: 8.00 GB
+    Free Physical memory: 1.07 GB
+    Committed virtual memory: 4.82 GB
+    Total swap space: 0.00 B
+    Free swap space: 0.00 B
+2014-11-26 04:20:43.660+0000 INFO  [org.neo4j]: JVM memory information:
+    Free  memory: 104.34 MB
+    Total memory: 123.00 MB
+    Max   memory: 1.78 GB
+    Garbage Collector: PS Scavenge: [PS Eden Space, PS Survivor Space]
+    Garbage Collector: PS MarkSweep: [PS Eden Space, PS Survivor Space, PS Old Gen, PS Perm Gen]
+    Memory Pool: Code Cache (Non-heap memory): committed=2.44 MB, used=557.38 kB, max=48.00 MB, threshold=0.00 B
+    Memory Pool: PS Eden Space (Heap memory): committed=33.00 MB, used=18.66 MB, max=673.00 MB, threshold=?
+    Memory Pool: PS Survivor Space (Heap memory): committed=5.00 MB, used=0.00 B, max=5.00 MB, threshold=?
+    Memory Pool: PS Old Gen (Heap memory): committed=85.00 MB, used=0.00 B, max=1.33 GB, threshold=0.00 B
+    Memory Pool: PS Perm Gen (Non-heap memory): committed=21.00 MB, used=9.83 MB, max=82.00 MB, threshold=0.00 B
+2014-11-26 04:20:43.668+0000 INFO  [org.neo4j]: Operating system information:
+    Operating System: Mac OS X; version: 10.10.1; arch: x86_64; cpus: 8
+    Max number of file descriptors: 10240
+    Number of open file descriptors: 44
+    Process id: 23609@theMOB.local
+    Byte order: LITTLE_ENDIAN
+    Local timezone: America/New_York
+2014-11-26 04:20:43.686+0000 INFO  [org.neo4j]: JVM information:
+    VM Name: Java HotSpot(TM) 64-Bit Server VM
+    VM Vendor: Oracle Corporation
+    VM Version: 24.55-b03
+    JIT compiler: HotSpot 64-Bit Tiered Compilers
+    VM Arguments: [-Dfile.encoding=US-ASCII]
+2014-11-26 04:20:43.688+0000 INFO  [org.neo4j]: Java classpath:
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-udc-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-jmx-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-graph-matching-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-cypher-compiler-2.0-2.0.3.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/localedata.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/dnsns.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-cypher-compiler-2.1-2.1.5.jar
+     [loader.1] file:/System/Library/Java/Extensions/MRJToolkit.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/lucene-core-3.6.2.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/resources.jar
+     [classpath + loader.0] file:/Applications/eclipse/plugins/org.junit_4.11.0.v201303080030/junit.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/geronimo-jta_1.1_spec-1.1.1.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/charsets.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/org.apache.servicemix.bundles.jline-0.9.94_1.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/scala-library-2.10.4.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/parboiled-scala_2.10-1.1.6.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/sunec.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-graph-algo-2.1.5.jar
+     [classpath + loader.0] file:/Applications/eclipse/plugins/org.hamcrest.core_1.3.0.v201303031735.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-shell-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-lucene-index-2.1.5.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/sunpkcs11.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-kernel-2.1.5.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/rt.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/opencsv-2.0.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/server-api-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-primitive-collections-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-cypher-compiler-1.9-2.0.3.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/concurrentlinkedhashmap-lru-1.3.1.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/sunjce_provider.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/parboiled-core-1.1.6.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/jsse.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/classes
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/jce.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/sunrsasign.jar
+     [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/jfr.jar
+     [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib/ext/zipfs.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-cypher-commons-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-jdbc-2.0.1-SNAPSHOT-jar-with-dependencies.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/java/jdatepicker-1.3.2.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/resource/neo4j/neo4j-cypher-2.1.5.jar
+     [classpath + loader.0] file:/Users/goof_troop/Documents/workspace/CS6310P3/bin/
+2014-11-26 04:20:43.690+0000 INFO  [org.neo4j]: Library path:
+    /Users/goof_troop/Library/Java/Extensions
+    /Library/Java/Extensions
+    /Network/Library/Java/Extensions
+    /System/Library/Java/Extensions
+    /usr/lib/java
+    /Users/goof_troop/Documents/workspace/CS6310P3
+2014-11-26 04:20:43.691+0000 INFO  [org.neo4j]: System.properties:
+    sun.boot.library.path = /Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home/jre/lib
+    gopherProxySet = false
+    path.separator = :
+    file.encoding.pkg = sun.io
+    user.country = US
+    sun.java.launcher = SUN_STANDARD
+    sun.os.patch.level = unknown
+    user.dir = /Users/goof_troop/Documents/workspace/CS6310P3
+    sun.jnu.encoding = UTF-8
+    sun.awt.enableExtraMouseButtons = true
+    sun.management.compiler = HotSpot 64-Bit Tiered Compilers
+    http.nonProxyHosts = local|*.local|169.254/16|*.169.254/16
+    user.home = /Users/goof_troop
+    user.timezone = America/New_York
+    file.encoding = US-ASCII
+    user.name = goof_troop
+    sun.java.command = PlanetSim.Demo
+    sun.arch.data.model = 64
+    user.language = en
+    awt.toolkit = sun.lwawt.macosx.LWCToolkit
+    file.separator = /
+    sun.font.fontmanager = sun.font.CFontManager
+    sun.io.unicode.encoding = UnicodeBig
+    sun.cpu.endian = little
+    socksNonProxyHosts = local|*.local|169.254/16|*.169.254/16
+    ftp.nonProxyHosts = local|*.local|169.254/16|*.169.254/16
+    sun.cpu.isalist = 
+2014-11-26 04:20:43.692+0000 INFO  [org.neo4j]: Network information:
+    Interface utun0:
+        address: fde0:6905:23df:545a:a9eb:89c1:c884:939b
+        address: fe80:0:0:0:a9eb:89c1:c884:939b%11
+    Interface en3:
+        address: fe80:0:0:0:426c:8fff:fe3f:4bf2%7
+        address: 192.168.1.38
+    Interface lo0:
+        address: fe80:0:0:0:0:0:0:1%1
+        address: 0:0:0:0:0:0:0:1
+        address: 127.0.0.1
+2014-11-26 04:20:43.700+0000 INFO  [org.neo4j]: --- INITIALIZED diagnostics END ---
+2014-11-26 04:20:43.893+0000 INFO  [org.neo4j]: [neo4j/db/neostore.relationshiptypestore.db.names] brickCount=0 brickSize=0b mappedMem=0b (storeSize=342b)
+2014-11-26 04:20:43.895+0000 INFO  [org.neo4j]: [neo4j/db/neostore.relationshiptypestore.db] brickCount=0 brickSize=0b mappedMem=0b (storeSize=35b)
+2014-11-26 04:20:43.896+0000 INFO  [org.neo4j]: [neo4j/db/neostore.labeltokenstore.db.names] brickCount=0 brickSize=0b mappedMem=0b (storeSize=380b)
+2014-11-26 04:20:43.897+0000 INFO  [org.neo4j]: [neo4j/db/neostore.labeltokenstore.db] brickCount=0 brickSize=0b mappedMem=0b (storeSize=40b)
+2014-11-26 04:20:43.897+0000 INFO  [org.neo4j]: [neo4j/db/neostore.propertystore.db.strings] brickCount=0 brickSize=136192b mappedMem=136314880b (storeSize=256b)
+2014-11-26 04:20:43.898+0000 INFO  [org.neo4j]: [neo4j/db/neostore.propertystore.db.index.keys] brickCount=0 brickSize=1026b mappedMem=1048576b (storeSize=266b)
+2014-11-26 04:20:43.899+0000 INFO  [org.neo4j]: [neo4j/db/neostore.propertystore.db.index] brickCount=0 brickSize=1044b mappedMem=1048576b (storeSize=45b)
+2014-11-26 04:20:43.900+0000 INFO  [org.neo4j]: [neo4j/db/neostore.propertystore.db.arrays] brickCount=0 brickSize=136192b mappedMem=136314880b (storeSize=256b)
+2014-11-26 04:20:43.915+0000 INFO  [org.neo4j]: [neo4j/db/neostore.propertystore.db] brickCount=0 brickSize=94341b mappedMem=94371840b (storeSize=9594b)
+2014-11-26 04:20:43.996+0000 INFO  [org.neo4j]: [neo4j/db/neostore.relationshipstore.db] brickCount=7 brickSize=52428b mappedMem=52428800b (storeSize=401030b)
+2014-11-26 04:20:43.996+0000 INFO  [org.neo4j]: [neo4j/db/neostore.nodestore.db.labels] brickCount=0 brickSize=0b mappedMem=0b (storeSize=136b)
+2014-11-26 04:20:44.019+0000 INFO  [org.neo4j]: [neo4j/db/neostore.nodestore.db] brickCount=2 brickSize=26205b mappedMem=26214400b (storeSize=68055b)
+2014-11-26 04:20:44.020+0000 INFO  [org.neo4j]: [neo4j/db/neostore.schemastore.db] brickCount=0 brickSize=0b mappedMem=0b (storeSize=1152b)
+2014-11-26 04:20:44.022+0000 INFO  [org.neo4j]: [neo4j/db/neostore.relationshipgroupstore.db] brickCount=0 brickSize=0b mappedMem=0b (storeSize=750b)
+2014-11-26 04:20:44.023+0000 INFO  [org.neo4j]: [neo4j/db/neostore] brickCount=0 brickSize=0b mappedMem=0b (storeSize=81b)
+2014-11-26 04:20:44.252+0000 INFO  [org.neo4j]: IndexingService.initIndexes: index on :label[0](property[0]) is ONLINE
+2014-11-26 04:20:44.271+0000 INFO  [org.neo4j]: IndexingService.initIndexes: index on :label[1](property[1]) is ONLINE
+2014-11-26 04:20:44.278+0000 INFO  [org.neo4j]: IndexingService.initIndexes: index on :label[2](property[1]) is ONLINE
+2014-11-26 04:20:44.287+0000 INFO  [org.neo4j]: IndexingService.initIndexes: index on :label[3](property[1]) is ONLINE
+2014-11-26 04:20:44.295+0000 INFO  [org.neo4j]: IndexingService.initIndexes: index on :label[4](property[1]) is ONLINE
+2014-11-26 04:20:44.302+0000 INFO  [org.neo4j]: IndexingService.initIndexes: index on :label[5](property[1]) is ONLINE
+2014-11-26 04:20:44.310+0000 INFO  [org.neo4j]: IndexingService.initIndexes: index on :label[6](property[1]) is ONLINE
+2014-11-26 04:20:44.320+0000 INFO  [org.neo4j]: IndexingService.initIndexes: index on :label[7](property[1]) is ONLINE
+2014-11-26 04:20:44.327+0000 INFO  [org.neo4j]: Non clean shutdown detected on log [neo4j/db/nioneo_logical.log.1]. Recovery started ...
+2014-11-26 04:20:44.333+0000 INFO  [org.neo4j]: [neo4j/db/nioneo_logical.log.1] logVersion=96 with committed tx=80
+2014-11-26 04:20:44.434+0000 INFO  [org.neo4j]: [neo4j/db/nioneo_logical.log.1] entries found=23 lastEntryPos=1631
+2014-11-26 04:20:44.434+0000 INFO  [org.neo4j]: Opened logical log [neo4j/db/nioneo_logical.log.1] version=96, lastTxId=81 (recovered)
+2014-11-26 04:20:44.434+0000 INFO  [org.neo4j]: XaResourceManager[nioneo_logical.log] sorting 0 xids
+2014-11-26 04:20:44.435+0000 INFO  [org.neo4j]: XaResourceManager[nioneo_logical.log] checkRecoveryComplete 0 xids
+2014-11-26 04:20:44.445+0000 INFO  [org.neo4j]: XaResourceManager[nioneo_logical.log] recovery completed.
+2014-11-26 04:20:44.445+0000 INFO  [org.neo4j]: Recovery on log [neo4j/db/nioneo_logical.log.1] completed.
+2014-11-26 04:20:44.454+0000 INFO  [org.neo4j]: TM opening log: neo4j/db/tm_tx_log.1
+2014-11-26 04:20:44.455+0000 INFO  [org.neo4j]: Unresolved transactions found in neo4j/db/tm_tx_log.1, recovery started... 
+2014-11-26 04:20:44.497+0000 INFO  [org.neo4j]: IndexingService.start: index on :label[0](property[0]) is ONLINE
+2014-11-26 04:20:44.498+0000 INFO  [org.neo4j]: IndexingService.start: index on :label[1](property[1]) is ONLINE
+2014-11-26 04:20:44.498+0000 INFO  [org.neo4j]: IndexingService.start: index on :label[2](property[1]) is ONLINE
+2014-11-26 04:20:44.498+0000 INFO  [org.neo4j]: IndexingService.start: index on :label[3](property[1]) is ONLINE
+2014-11-26 04:20:44.499+0000 INFO  [org.neo4j]: IndexingService.start: index on :label[4](property[1]) is ONLINE
+2014-11-26 04:20:44.499+0000 INFO  [org.neo4j]: IndexingService.start: index on :label[5](property[1]) is ONLINE
+2014-11-26 04:20:44.499+0000 INFO  [org.neo4j]: IndexingService.start: index on :label[6](property[1]) is ONLINE
+2014-11-26 04:20:44.499+0000 INFO  [org.neo4j]: IndexingService.start: index on :label[7](property[1]) is ONLINE
+2014-11-26 04:20:44.517+0000 INFO  [org.neo4j]: Rotating [neo4j/db/nioneo_logical.log.1] @ version=96 to neo4j/db/nioneo_logical.log.2 from position 1631
+2014-11-26 04:20:44.518+0000 INFO  [org.neo4j]: Rotate: old log scanned, newLog @ pos=16
+2014-11-26 04:20:44.526+0000 INFO  [org.neo4j]: Log rotated, newLog @ pos=16, version 97 and last tx 81
+2014-11-26 04:20:44.527+0000 INFO  [org.neo4j]: Recovery completed, all transactions have been resolved to a consistent state.
+2014-11-26 04:20:44.527+0000 INFO  [org.neo4j]: Kernel health set to OK
+2014-11-26 04:20:44.542+0000 INFO  [org.neo4j]: Opened logical log [neo4j/db/index/lucene.log.1] version=98, lastTxId=1 (clean)
+2014-11-26 04:20:44.552+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:Versions START ---
+2014-11-26 04:20:44.552+0000 INFO  [org.neo4j]: Graph Database: org.neo4j.kernel.EmbeddedGraphDatabase StoreId{creationTime=1416686332962, randomId=6163862793200438382, storeVersion=14406081294923270, upgradeTime=1416686332962, upgradeId=6163862793200438382}
+2014-11-26 04:20:44.552+0000 INFO  [org.neo4j]: Kernel version: Neo4j - Graph Database Kernel (neo4j-kernel), version: 2.1.5
+2014-11-26 04:20:44.552+0000 INFO  [org.neo4j]: Neo4j component versions:
+2014-11-26 04:20:44.557+0000 INFO  [org.neo4j]:   Neo4j - Lucene Index (neo4j-lucene-index), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:20:44.557+0000 INFO  [org.neo4j]:   Neo4j - JMX support (neo4j-jmx), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:20:44.557+0000 INFO  [org.neo4j]:   Neo4j - Graph Matching (neo4j-graph-matching), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:20:44.557+0000 INFO  [org.neo4j]:   Neo4j Server API (server-api), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:20:44.557+0000 INFO  [org.neo4j]:   Neo4j - Graph Database Kernel (neo4j-kernel), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:20:44.557+0000 INFO  [org.neo4j]:   Neo4j - Cypher (neo4j-cypher), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:20:44.557+0000 INFO  [org.neo4j]:   Neo4j - Graph Algorithms (neo4j-graph-algo), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:20:44.558+0000 INFO  [org.neo4j]:   Neo4j - Cypher Compiler 2.0 (neo4j-cypher-compiler-2.0), version: 2.0.3; revision: 2.0.3:2.0-maint:72/307c563c11b75fdc71cfa6df05daf9b08d6c37dc
+2014-11-26 04:20:44.558+0000 INFO  [org.neo4j]:   Neo4j - Generic shell (neo4j-shell), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:20:44.558+0000 INFO  [org.neo4j]:   Neo4j - Cypher Compiler 1.9 (neo4j-cypher-compiler-1.9), version: 2.0.3; revision: 2.0.3:2.0-maint:72/307c563c11b75fdc71cfa6df05daf9b08d6c37dc
+2014-11-26 04:20:44.558+0000 INFO  [org.neo4j]:   neo4j-udc, version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:20:44.558+0000 INFO  [org.neo4j]:   Neo4j - Cypher Commons (neo4j-cypher-commons), version: 2.1.5; revision: 2.1.5:2.1-maint:529/45c3cc04946c2b0e243e48c8252e40cb85931744
+2014-11-26 04:20:44.558+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:Versions END ---
+2014-11-26 04:20:44.560+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_VERSIONS START ---
+2014-11-26 04:20:44.560+0000 INFO  [org.neo4j]: Store versions:
+    Store versions:
+      NeoStore v0.A.3
+      SchemaStore v0.A.3
+      NodeStore v0.A.3
+      RelationshipStore v0.A.3
+      RelationshipTypeStore v0.A.3
+      LabelTokenStore v0.A.3
+      PropertyStore v0.A.3
+      PropertyIndexStore v0.A.3
+      StringPropertyStore v0.A.3
+      ArrayPropertyStore v0.A.3
+      RelationshipGroupStore v0.A.3
+2014-11-26 04:20:44.561+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_VERSIONS END ---
+2014-11-26 04:20:44.561+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_ID_USAGE START ---
+2014-11-26 04:20:44.561+0000 INFO  [org.neo4j]: Id usage:
+    Id usage:
+      SchemaStore: used=18 high=17
+      NodeStore: used=4537 high=4536
+      RelationshipStore: used=11795 high=11794
+      RelationshipTypeStore: used=7 high=6
+      LabelTokenStore: used=8 high=7
+      PropertyStore: used=234 high=233
+      PropertyIndexStore: used=5 high=4
+      StringPropertyStore: used=2 high=1
+      ArrayPropertyStore: used=2 high=1
+      RelationshipGroupStore: used=30 high=29
+2014-11-26 04:20:44.562+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_ID_USAGE END ---
+2014-11-26 04:20:44.562+0000 INFO  [org.neo4j]: --- STARTED diagnostics for PERSISTENCE_WINDOW_POOL_STATS START ---
+2014-11-26 04:20:44.562+0000 INFO  [org.neo4j]: --- STARTED diagnostics for PERSISTENCE_WINDOW_POOL_STATS END ---
+2014-11-26 04:20:44.562+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:StoreFiles START ---
+2014-11-26 04:20:44.563+0000 INFO  [org.neo4j]: Disk space on partition (Total / Free / Free %): 499046809600 / 111548551168 / 22
+Storage files: (filename : modification date - size)
+      active_tx_log: 2014-11-22T16:12:17-0500 - 11.00 B
+      index:
+        lucene-store.db: 2014-11-25T23:20:39-0500 - 40.00 B
+        lucene.log.1: 2014-11-25T23:20:44-0500 - 16.00 B
+        lucene.log.active: 2014-11-25T23:20:44-0500 - 4.00 B
+        lucene.log.v0: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v1: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v10: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v11: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v12: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v13: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v14: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v15: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v16: 2014-11-24T17:45:26-0500 - 16.00 B
+        lucene.log.v17: 2014-11-24T18:23:08-0500 - 16.00 B
+        lucene.log.v18: 2014-11-24T18:24:11-0500 - 16.00 B
+        lucene.log.v19: 2014-11-24T18:25:15-0500 - 16.00 B
+        lucene.log.v2: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v20: 2014-11-24T21:04:40-0500 - 16.00 B
+        lucene.log.v21: 2014-11-24T21:05:56-0500 - 16.00 B
+        lucene.log.v22: 2014-11-24T21:18:42-0500 - 16.00 B
+        lucene.log.v23: 2014-11-24T21:33:48-0500 - 16.00 B
+        lucene.log.v24: 2014-11-24T21:36:05-0500 - 16.00 B
+        lucene.log.v25: 2014-11-24T21:45:09-0500 - 16.00 B
+        lucene.log.v26: 2014-11-24T21:45:50-0500 - 16.00 B
+        lucene.log.v27: 2014-11-24T21:47:58-0500 - 16.00 B
+        lucene.log.v28: 2014-11-24T21:49:58-0500 - 16.00 B
+        lucene.log.v29: 2014-11-24T22:03:11-0500 - 16.00 B
+        lucene.log.v3: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v30: 2014-11-24T22:03:54-0500 - 16.00 B
+        lucene.log.v31: 2014-11-24T22:04:35-0500 - 16.00 B
+        lucene.log.v32: 2014-11-24T22:06:05-0500 - 16.00 B
+        lucene.log.v33: 2014-11-24T22:06:50-0500 - 16.00 B
+        lucene.log.v34: 2014-11-24T22:07:10-0500 - 16.00 B
+        lucene.log.v35: 2014-11-24T22:07:26-0500 - 16.00 B
+        lucene.log.v36: 2014-11-24T22:13:13-0500 - 16.00 B
+        lucene.log.v37: 2014-11-24T22:29:08-0500 - 16.00 B
+        lucene.log.v38: 2014-11-24T22:38:27-0500 - 16.00 B
+        lucene.log.v39: 2014-11-24T22:42:27-0500 - 16.00 B
+        lucene.log.v4: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v40: 2014-11-24T22:44:22-0500 - 16.00 B
+        lucene.log.v41: 2014-11-24T23:04:53-0500 - 16.00 B
+        lucene.log.v42: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v43: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v44: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v45: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v46: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v47: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v48: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v49: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v5: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v50: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v51: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v52: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v53: 2014-11-24T23:39:36-0500 - 16.00 B
+        lucene.log.v54: 2014-11-25T18:48:36-0500 - 16.00 B
+        lucene.log.v55: 2014-11-25T18:49:33-0500 - 16.00 B
+        lucene.log.v56: 2014-11-25T19:00:47-0500 - 16.00 B
+        lucene.log.v57: 2014-11-25T19:02:13-0500 - 16.00 B
+        lucene.log.v58: 2014-11-25T19:03:02-0500 - 16.00 B
+        lucene.log.v59: 2014-11-25T19:03:23-0500 - 16.00 B
+        lucene.log.v6: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v60: 2014-11-25T19:03:55-0500 - 16.00 B
+        lucene.log.v61: 2014-11-25T20:10:30-0500 - 16.00 B
+        lucene.log.v62: 2014-11-25T20:14:16-0500 - 16.00 B
+        lucene.log.v63: 2014-11-25T20:22:28-0500 - 16.00 B
+        lucene.log.v64: 2014-11-25T20:23:54-0500 - 16.00 B
+        lucene.log.v65: 2014-11-25T20:26:05-0500 - 16.00 B
+        lucene.log.v66: 2014-11-25T20:57:20-0500 - 16.00 B
+        lucene.log.v67: 2014-11-25T21:10:07-0500 - 16.00 B
+        lucene.log.v68: 2014-11-25T21:11:31-0500 - 16.00 B
+        lucene.log.v69: 2014-11-25T21:13:43-0500 - 16.00 B
+        lucene.log.v7: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v70: 2014-11-25T21:44:02-0500 - 16.00 B
+        lucene.log.v71: 2014-11-25T21:47:48-0500 - 16.00 B
+        lucene.log.v72: 2014-11-25T21:49:20-0500 - 16.00 B
+        lucene.log.v73: 2014-11-25T21:51:27-0500 - 16.00 B
+        lucene.log.v74: 2014-11-25T21:52:52-0500 - 16.00 B
+        lucene.log.v75: 2014-11-25T21:53:20-0500 - 16.00 B
+        lucene.log.v76: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v77: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v78: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v79: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v8: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v80: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v81: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v82: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v83: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v84: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v85: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v86: 2014-11-25T22:44:18-0500 - 16.00 B
+        lucene.log.v87: 2014-11-25T22:46:36-0500 - 16.00 B
+        lucene.log.v88: 2014-11-25T22:51:05-0500 - 16.00 B
+        lucene.log.v89: 2014-11-25T22:53:03-0500 - 16.00 B
+        lucene.log.v9: 2014-11-22T16:12:17-0500 - 16.00 B
+        lucene.log.v90: 2014-11-25T22:56:38-0500 - 16.00 B
+        lucene.log.v91: 2014-11-25T23:03:31-0500 - 16.00 B
+        lucene.log.v92: 2014-11-25T23:04:15-0500 - 16.00 B
+        lucene.log.v93: 2014-11-25T23:07:03-0500 - 16.00 B
+        lucene.log.v94: 2014-11-25T23:11:26-0500 - 16.00 B
+        lucene.log.v95: 2014-11-25T23:13:15-0500 - 16.00 B
+        lucene.log.v96: 2014-11-25T23:14:57-0500 - 16.00 B
+        lucene.log.v97: 2014-11-25T23:20:39-0500 - 16.00 B
+      - Total: 2014-11-25T23:20:44-0500 - 1.59 kB
+      lock: 2014-11-25T23:20:44-0500 - 0.00 B
+      messages.log: 2014-11-25T23:20:44-0500 - 3.68 MB
+      neostore: 2014-11-25T23:20:44-0500 - 81.00 B
+      neostore.id: 2014-11-25T23:20:44-0500 - 9.00 B
+      neostore.labeltokenstore.db: 2014-11-25T23:20:43-0500 - 40.00 B
+      neostore.labeltokenstore.db.id: 2014-11-25T23:20:43-0500 - 9.00 B
+      neostore.labeltokenstore.db.names: 2014-11-25T23:20:43-0500 - 380.00 B
+      neostore.labeltokenstore.db.names.id: 2014-11-25T23:20:43-0500 - 9.00 B
+      neostore.nodestore.db: 2014-11-25T23:20:44-0500 - 66.46 kB
+      neostore.nodestore.db.id: 2014-11-25T23:20:44-0500 - 9.00 B
+      neostore.nodestore.db.labels: 2014-11-25T23:20:43-0500 - 136.00 B
+      neostore.nodestore.db.labels.id: 2014-11-25T23:20:43-0500 - 9.00 B
+      neostore.propertystore.db: 2014-11-25T23:20:44-0500 - 92.13 kB
+      neostore.propertystore.db.arrays: 2014-11-25T23:20:43-0500 - 256.00 B
+      neostore.propertystore.db.arrays.id: 2014-11-25T23:20:43-0500 - 9.00 B
+      neostore.propertystore.db.id: 2014-11-25T23:20:43-0500 - 9.00 B
+      neostore.propertystore.db.index: 2014-11-25T23:20:43-0500 - 45.00 B
+      neostore.propertystore.db.index.id: 2014-11-25T23:20:43-0500 - 9.00 B
+      neostore.propertystore.db.index.keys: 2014-11-25T23:20:43-0500 - 266.00 B
+      neostore.propertystore.db.index.keys.id: 2014-11-25T23:20:43-0500 - 9.00 B
+      neostore.propertystore.db.strings: 2014-11-25T23:20:43-0500 - 256.00 B
+      neostore.propertystore.db.strings.id: 2014-11-25T23:20:43-0500 - 9.00 B
+      neostore.relationshipgroupstore.db: 2014-11-25T23:20:44-0500 - 750.00 B
+      neostore.relationshipgroupstore.db.id: 2014-11-25T23:20:44-0500 - 9.00 B
+      neostore.relationshipstore.db: 2014-11-25T23:20:44-0500 - 391.63 kB
+      neostore.relationshipstore.db.id: 2014-11-25T23:20:43-0500 - 9.00 B
+      neostore.relationshiptypestore.db: 2014-11-25T23:20:43-0500 - 35.00 B
+      neostore.relationshiptypestore.db.id: 2014-11-25T23:20:43-0500 - 9.00 B
+      neostore.relationshiptypestore.db.names: 2014-11-25T23:20:43-0500 - 342.00 B
+      neostore.relationshiptypestore.db.names.id: 2014-11-25T23:20:43-0500 - 9.00 B
+      neostore.schemastore.db: 2014-11-25T23:20:44-0500 - 1.13 kB
+      neostore.schemastore.db.id: 2014-11-25T23:20:44-0500 - 9.00 B
+      nioneo_logical.log.2: 2014-11-25T23:20:44-0500 - 16.00 B
+      nioneo_logical.log.active: 2014-11-25T23:20:44-0500 - 4.00 B
+      nioneo_logical.log.v0: 2014-11-22T16:12:17-0500 - 7.93 kB
+      nioneo_logical.log.v1: 2014-11-22T16:12:17-0500 - 257.00 B
+      nioneo_logical.log.v10: 2014-11-22T16:12:17-0500 - 7.25 kB
+      nioneo_logical.log.v11: 2014-11-22T16:12:17-0500 - 3.95 kB
+      nioneo_logical.log.v12: 2014-11-22T16:12:17-0500 - 3.95 kB
+      nioneo_logical.log.v13: 2014-11-22T16:12:17-0500 - 3.95 kB
+      nioneo_logical.log.v14: 2014-11-22T16:12:17-0500 - 3.95 kB
+      nioneo_logical.log.v15: 2014-11-22T16:12:17-0500 - 3.95 kB
+      nioneo_logical.log.v16: 2014-11-24T18:22:44-0500 - 16.00 B
+      nioneo_logical.log.v17: 2014-11-24T18:24:07-0500 - 16.00 B
+      nioneo_logical.log.v18: 2014-11-24T18:24:11-0500 - 3.95 kB
+      nioneo_logical.log.v19: 2014-11-24T18:25:15-0500 - 3.95 kB
+      nioneo_logical.log.v2: 2014-11-22T16:12:17-0500 - 16.00 B
+      nioneo_logical.log.v20: 2014-11-24T21:04:40-0500 - 16.00 B
+      nioneo_logical.log.v21: 2014-11-24T21:05:56-0500 - 16.00 B
+      nioneo_logical.log.v22: 2014-11-24T21:18:42-0500 - 16.00 B
+      nioneo_logical.log.v23: 2014-11-24T21:33:48-0500 - 16.00 B
+      nioneo_logical.log.v24: 2014-11-24T21:36:05-0500 - 16.00 B
+      nioneo_logical.log.v25: 2014-11-24T21:45:09-0500 - 16.00 B
+      nioneo_logical.log.v26: 2014-11-24T21:45:50-0500 - 16.00 B
+      nioneo_logical.log.v27: 2014-11-24T21:47:58-0500 - 16.00 B
+      nioneo_logical.log.v28: 2014-11-24T21:49:58-0500 - 16.00 B
+      nioneo_logical.log.v29: 2014-11-24T22:03:11-0500 - 16.00 B
+      nioneo_logical.log.v3: 2014-11-22T16:12:17-0500 - 16.00 B
+      nioneo_logical.log.v30: 2014-11-24T22:03:54-0500 - 16.00 B
+      nioneo_logical.log.v31: 2014-11-24T22:04:35-0500 - 16.00 B
+      nioneo_logical.log.v32: 2014-11-24T22:06:05-0500 - 16.00 B
+      nioneo_logical.log.v33: 2014-11-24T22:06:50-0500 - 16.00 B
+      nioneo_logical.log.v34: 2014-11-24T22:07:10-0500 - 16.00 B
+      nioneo_logical.log.v35: 2014-11-24T22:07:26-0500 - 16.00 B
+      nioneo_logical.log.v36: 2014-11-24T22:13:13-0500 - 16.00 B
+      nioneo_logical.log.v37: 2014-11-24T22:29:08-0500 - 16.00 B
+      nioneo_logical.log.v38: 2014-11-24T22:38:27-0500 - 16.00 B
+      nioneo_logical.log.v39: 2014-11-24T22:42:27-0500 - 16.00 B
+      nioneo_logical.log.v4: 2014-11-22T16:12:17-0500 - 1.49 kB
+      nioneo_logical.log.v40: 2014-11-24T22:44:22-0500 - 16.00 B
+      nioneo_logical.log.v41: 2014-11-24T23:04:53-0500 - 16.00 B
+      nioneo_logical.log.v42: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v43: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v44: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v45: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v46: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v47: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v48: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v49: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v5: 2014-11-22T16:12:17-0500 - 16.00 B
+      nioneo_logical.log.v50: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v51: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v52: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v53: 2014-11-24T23:39:36-0500 - 16.00 B
+      nioneo_logical.log.v54: 2014-11-25T18:48:36-0500 - 16.00 B
+      nioneo_logical.log.v55: 2014-11-25T18:49:33-0500 - 16.00 B
+      nioneo_logical.log.v56: 2014-11-25T19:00:47-0500 - 16.00 B
+      nioneo_logical.log.v57: 2014-11-25T19:02:13-0500 - 16.00 B
+      nioneo_logical.log.v58: 2014-11-25T19:03:02-0500 - 16.00 B
+      nioneo_logical.log.v59: 2014-11-25T19:03:23-0500 - 16.00 B
+      nioneo_logical.log.v6: 2014-11-22T16:12:17-0500 - 16.00 B
+      nioneo_logical.log.v60: 2014-11-25T19:03:55-0500 - 16.00 B
+      nioneo_logical.log.v61: 2014-11-25T20:10:30-0500 - 16.00 B
+      nioneo_logical.log.v62: 2014-11-25T20:14:16-0500 - 16.00 B
+      nioneo_logical.log.v63: 2014-11-25T20:22:28-0500 - 16.00 B
+      nioneo_logical.log.v64: 2014-11-25T20:23:54-0500 - 16.00 B
+      nioneo_logical.log.v65: 2014-11-25T20:26:05-0500 - 16.00 B
+      nioneo_logical.log.v66: 2014-11-25T21:10:07-0500 - 16.00 B
+      nioneo_logical.log.v67: 2014-11-25T21:11:31-0500 - 16.00 B
+      nioneo_logical.log.v68: 2014-11-25T21:13:43-0500 - 16.00 B
+      nioneo_logical.log.v69: 2014-11-25T21:44:02-0500 - 16.00 B
+      nioneo_logical.log.v7: 2014-11-22T16:12:17-0500 - 2.08 kB
+      nioneo_logical.log.v70: 2014-11-25T21:47:48-0500 - 16.00 B
+      nioneo_logical.log.v71: 2014-11-25T21:49:20-0500 - 16.00 B
+      nioneo_logical.log.v72: 2014-11-25T21:51:27-0500 - 16.00 B
+      nioneo_logical.log.v73: 2014-11-25T21:52:52-0500 - 3.08 kB
+      nioneo_logical.log.v74: 2014-11-25T21:53:20-0500 - 498.00 B
+      nioneo_logical.log.v75: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v76: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v77: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v78: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v79: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v8: 2014-11-22T16:12:17-0500 - 3.83 kB
+      nioneo_logical.log.v80: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v81: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v82: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v83: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v84: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v85: 2014-11-25T22:44:18-0500 - 16.00 B
+      nioneo_logical.log.v86: 2014-11-25T22:50:44-0500 - 16.00 B
+      nioneo_logical.log.v87: 2014-11-25T22:51:05-0500 - 16.00 B
+      nioneo_logical.log.v88: 2014-11-25T22:53:03-0500 - 16.00 B
+      nioneo_logical.log.v89: 2014-11-25T22:56:38-0500 - 257.00 B
+      nioneo_logical.log.v9: 2014-11-22T16:12:17-0500 - 6.63 kB
+      nioneo_logical.log.v90: 2014-11-25T23:03:42-0500 - 16.00 B
+      nioneo_logical.log.v91: 2014-11-25T23:06:24-0500 - 16.00 B
+      nioneo_logical.log.v92: 2014-11-25T23:10:20-0500 - 16.00 B
+      nioneo_logical.log.v93: 2014-11-25T23:12:18-0500 - 2.84 kB
+      nioneo_logical.log.v94: 2014-11-25T23:13:20-0500 - 1.52 kB
+      nioneo_logical.log.v95: 2014-11-25T23:19:30-0500 - 1.56 kB
+      nioneo_logical.log.v96: 2014-11-25T23:20:44-0500 - 1.59 kB
+      schema:
+        index:
+          lucene:
+            1:
+              _1.fdt: 2014-11-22T16:12:17-0500 - 10.00 B
+              _1.fdx: 2014-11-22T16:12:17-0500 - 12.00 B
+              _1.fnm: 2014-11-22T16:12:17-0500 - 18.00 B
+              _1.frq: 2014-11-22T16:12:17-0500 - 2.00 B
+              _1.nrm: 2014-11-22T16:12:17-0500 - 4.00 B
+              _1.tii: 2014-11-22T16:12:17-0500 - 35.00 B
+              _1.tis: 2014-11-22T16:12:17-0500 - 50.00 B
+              _3.fdt: 2014-11-25T23:13:20-0500 - 10.00 B
+              _3.fdx: 2014-11-25T23:13:20-0500 - 12.00 B
+              _3.fnm: 2014-11-25T23:13:20-0500 - 18.00 B
+              _3.frq: 2014-11-25T23:13:20-0500 - 2.00 B
+              _3.nrm: 2014-11-25T23:13:20-0500 - 4.00 B
+              _3.tii: 2014-11-25T23:13:20-0500 - 35.00 B
+              _3.tis: 2014-11-25T23:13:20-0500 - 43.00 B
+              _5.fdt: 2014-11-25T23:19:30-0500 - 12.00 B
+              _5.fdx: 2014-11-25T23:19:30-0500 - 12.00 B
+              _5.fnm: 2014-11-25T23:19:30-0500 - 18.00 B
+              _5.frq: 2014-11-25T23:19:30-0500 - 2.00 B
+              _5.nrm: 2014-11-25T23:19:30-0500 - 4.00 B
+              _5.tii: 2014-11-25T23:19:30-0500 - 35.00 B
+              _5.tis: 2014-11-25T23:19:30-0500 - 47.00 B
+              _7.fdt: 2014-11-25T23:20:44-0500 - 12.00 B
+              _7.fdx: 2014-11-25T23:20:44-0500 - 12.00 B
+              _7.fnm: 2014-11-25T23:20:44-0500 - 18.00 B
+              _7.frq: 2014-11-25T23:20:44-0500 - 2.00 B
+              _7.nrm: 2014-11-25T23:20:44-0500 - 4.00 B
+              _7.tii: 2014-11-25T23:20:44-0500 - 35.00 B
+              _7.tis: 2014-11-25T23:20:44-0500 - 48.00 B
+              failure-message: 2014-11-22T16:12:17-0500 - 16.00 kB
+              segments.gen: 2014-11-25T23:20:44-0500 - 20.00 B
+              segments_9: 2014-11-25T23:20:44-0500 - 894.00 B
+              write.lock: 2014-11-25T23:20:44-0500 - 0.00 B
+            - Total: 2014-11-25T23:20:44-0500 - 17.40 kB
+            11:
+              _1.fdt: 2014-11-22T16:12:17-0500 - 10.00 B
+              _1.fdx: 2014-11-22T16:12:17-0500 - 12.00 B
+              _1.fnm: 2014-11-22T16:12:17-0500 - 18.00 B
+              _1.frq: 2014-11-22T16:12:17-0500 - 2.00 B
+              _1.nrm: 2014-11-22T16:12:17-0500 - 4.00 B
+              _1.tii: 2014-11-22T16:12:17-0500 - 35.00 B
+              _1.tis: 2014-11-22T16:12:17-0500 - 49.00 B
+              _3.fdt: 2014-11-25T23:13:20-0500 - 10.00 B
+              _3.fdx: 2014-11-25T23:13:20-0500 - 12.00 B
+              _3.fnm: 2014-11-25T23:13:20-0500 - 18.00 B
+              _3.frq: 2014-11-25T23:13:20-0500 - 2.00 B
+              _3.nrm: 2014-11-25T23:13:20-0500 - 4.00 B
+              _3.tii: 2014-11-25T23:13:20-0500 - 35.00 B
+              _3.tis: 2014-11-25T23:13:20-0500 - 49.00 B
+              _6.fdt: 2014-11-25T23:20:44-0500 - 12.00 B
+              _6.fdx: 2014-11-25T23:20:44-0500 - 12.00 B
+              _6.fnm: 2014-11-25T23:20:44-0500 - 18.00 B
+              _6.frq: 2014-11-25T23:20:44-0500 - 2.00 B
+              _6.nrm: 2014-11-25T23:20:44-0500 - 4.00 B
+              _6.tii: 2014-11-25T23:20:44-0500 - 35.00 B
+              _6.tis: 2014-11-25T23:20:44-0500 - 51.00 B
+              failure-message: 2014-11-22T16:12:17-0500 - 16.00 kB
+              segments.gen: 2014-11-25T23:20:44-0500 - 20.00 B
+              segments_8: 2014-11-25T23:20:44-0500 - 682.00 B
+              write.lock: 2014-11-25T23:20:44-0500 - 0.00 B
+            - Total: 2014-11-25T23:20:44-0500 - 17.07 kB
+            13:
+              _4.fdt: 2014-11-25T23:19:30-0500 - 12.00 B
+              _4.fdx: 2014-11-25T23:19:30-0500 - 12.00 B
+              _4.fnm: 2014-11-25T23:19:30-0500 - 18.00 B
+              _4.frq: 2014-11-25T23:19:30-0500 - 2.00 B
+              _4.nrm: 2014-11-25T23:19:30-0500 - 4.00 B
+              _4.tii: 2014-11-25T23:19:30-0500 - 35.00 B
+              _4.tis: 2014-11-25T23:19:30-0500 - 51.00 B
+              _5.fdt: 2014-11-25T23:20:44-0500 - 10.00 B
+              _5.fdx: 2014-11-25T23:20:44-0500 - 12.00 B
+              _5.fnm: 2014-11-25T23:20:44-0500 - 18.00 B
+              _5.frq: 2014-11-25T23:20:44-0500 - 2.00 B
+              _5.nrm: 2014-11-25T23:20:44-0500 - 4.00 B
+              _5.tii: 2014-11-25T23:20:44-0500 - 35.00 B
+              _5.tis: 2014-11-25T23:20:44-0500 - 49.00 B
+              failure-message: 2014-11-22T16:12:17-0500 - 16.00 kB
+              segments.gen: 2014-11-25T23:20:44-0500 - 20.00 B
+              segments_7: 2014-11-25T23:20:44-0500 - 470.00 B
+              write.lock: 2014-11-25T23:20:44-0500 - 0.00 B
+            - Total: 2014-11-25T23:20:44-0500 - 16.74 kB
+            15:
+              _1.fdt: 2014-11-22T16:12:17-0500 - 10.00 B
+              _1.fdx: 2014-11-22T16:12:17-0500 - 12.00 B
+              _1.fnm: 2014-11-22T16:12:17-0500 - 18.00 B
+              _1.frq: 2014-11-22T16:12:17-0500 - 2.00 B
+              _1.nrm: 2014-11-22T16:12:17-0500 - 4.00 B
+              _1.tii: 2014-11-22T16:12:17-0500 - 35.00 B
+              _1.tis: 2014-11-22T16:12:17-0500 - 49.00 B
+              _5.fdt: 2014-11-25T23:20:44-0500 - 10.00 B
+              _5.fdx: 2014-11-25T23:20:44-0500 - 12.00 B
+              _5.fnm: 2014-11-25T23:20:44-0500 - 18.00 B
+              _5.frq: 2014-11-25T23:20:44-0500 - 2.00 B
+              _5.nrm: 2014-11-25T23:20:44-0500 - 4.00 B
+              _5.tii: 2014-11-25T23:20:44-0500 - 35.00 B
+              _5.tis: 2014-11-25T23:20:44-0500 - 49.00 B
+              failure-message: 2014-11-22T16:12:17-0500 - 16.00 kB
+              segments.gen: 2014-11-25T23:20:44-0500 - 20.00 B
+              segments_7: 2014-11-25T23:20:44-0500 - 470.00 B
+              write.lock: 2014-11-25T23:20:44-0500 - 0.00 B
+            - Total: 2014-11-25T23:20:44-0500 - 16.73 kB
+            3:
+              _u.fdt: 2014-11-25T23:10:49-0500 - 172.00 B
+              _u.fdx: 2014-11-25T23:10:49-0500 - 228.00 B
+              _u.fnm: 2014-11-25T23:10:49-0500 - 18.00 B
+              _u.frq: 2014-11-25T23:10:49-0500 - 56.00 B
+              _u.tii: 2014-11-25T23:10:49-0500 - 72.00 B
+              _u.tis: 2014-11-25T23:10:49-0500 - 597.00 B
+              _u_1.del: 2014-11-25T23:12:18-0500 - 34.00 B
+              _w.fdt: 2014-11-25T23:12:18-0500 - 76.00 B
+              _w.fdx: 2014-11-25T23:12:18-0500 - 100.00 B
+              _w.fnm: 2014-11-25T23:12:18-0500 - 18.00 B
+              _w.frq: 2014-11-25T23:12:18-0500 - 24.00 B
+              _w.nrm: 2014-11-25T23:12:18-0500 - 4.00 B
+              _w.tii: 2014-11-25T23:12:18-0500 - 53.00 B
+              _w.tis: 2014-11-25T23:12:18-0500 - 272.00 B
+              failure-message: 2014-11-22T16:12:17-0500 - 16.00 kB
+              segments.gen: 2014-11-25T23:12:18-0500 - 20.00 B
+              segments_7: 2014-11-25T23:12:18-0500 - 508.00 B
+              write.lock: 2014-11-25T23:20:44-0500 - 0.00 B
+            - Total: 2014-11-25T23:20:44-0500 - 18.20 kB
+            5:
+              _1.fdt: 2014-11-22T16:12:17-0500 - 10.00 B
+              _1.fdx: 2014-11-22T16:12:17-0500 - 12.00 B
+              _1.fnm: 2014-11-22T16:12:17-0500 - 18.00 B
+              _1.frq: 2014-11-22T16:12:17-0500 - 2.00 B
+              _1.nrm: 2014-11-22T16:12:17-0500 - 4.00 B
+              _1.tii: 2014-11-22T16:12:17-0500 - 35.00 B
+              _1.tis: 2014-11-22T16:12:17-0500 - 49.00 B
+              _5.fdt: 2014-11-25T23:20:44-0500 - 10.00 B
+              _5.fdx: 2014-11-25T23:20:44-0500 - 12.00 B
+              _5.fnm: 2014-11-25T23:20:44-0500 - 18.00 B
+              _5.frq: 2014-11-25T23:20:44-0500 - 2.00 B
+              _5.nrm: 2014-11-25T23:20:44-0500 - 4.00 B
+              _5.tii: 2014-11-25T23:20:44-0500 - 35.00 B
+              _5.tis: 2014-11-25T23:20:44-0500 - 49.00 B
+              failure-message: 2014-11-22T16:12:17-0500 - 16.00 kB
+              segments.gen: 2014-11-25T23:20:44-0500 - 20.00 B
+              segments_7: 2014-11-25T23:20:44-0500 - 470.00 B
+              write.lock: 2014-11-25T23:20:44-0500 - 0.00 B
+            - Total: 2014-11-25T23:20:44-0500 - 16.73 kB
+            7:
+              _1.fdt: 2014-11-22T16:12:17-0500 - 10.00 B
+              _1.fdx: 2014-11-22T16:12:17-0500 - 12.00 B
+              _1.fnm: 2014-11-22T16:12:17-0500 - 18.00 B
+              _1.frq: 2014-11-22T16:12:17-0500 - 2.00 B
+              _1.nrm: 2014-11-22T16:12:17-0500 - 4.00 B
+              _1.tii: 2014-11-22T16:12:17-0500 - 35.00 B
+              _1.tis: 2014-11-22T16:12:17-0500 - 49.00 B
+              _5.fdt: 2014-11-25T23:20:44-0500 - 10.00 B
+              _5.fdx: 2014-11-25T23:20:44-0500 - 12.00 B
+              _5.fnm: 2014-11-25T23:20:44-0500 - 18.00 B
+              _5.frq: 2014-11-25T23:20:44-0500 - 2.00 B
+              _5.nrm: 2014-11-25T23:20:44-0500 - 4.00 B
+              _5.tii: 2014-11-25T23:20:44-0500 - 35.00 B
+              _5.tis: 2014-11-25T23:20:44-0500 - 49.00 B
+              failure-message: 2014-11-22T16:12:17-0500 - 16.00 kB
+              segments.gen: 2014-11-25T23:20:44-0500 - 20.00 B
+              segments_7: 2014-11-25T23:20:44-0500 - 470.00 B
+              write.lock: 2014-11-25T23:20:44-0500 - 0.00 B
+            - Total: 2014-11-25T23:20:44-0500 - 16.73 kB
+            9:
+              _4.fdt: 2014-11-25T23:20:44-0500 - 10.00 B
+              _4.fdx: 2014-11-25T23:20:44-0500 - 12.00 B
+              _4.fnm: 2014-11-25T23:20:44-0500 - 18.00 B
+              _4.frq: 2014-11-25T23:20:44-0500 - 2.00 B
+              _4.nrm: 2014-11-25T23:20:44-0500 - 4.00 B
+              _4.tii: 2014-11-25T23:20:44-0500 - 35.00 B
+              _4.tis: 2014-11-25T23:20:44-0500 - 49.00 B
+              failure-message: 2014-11-22T16:12:17-0500 - 16.00 kB
+              segments.gen: 2014-11-25T23:20:44-0500 - 20.00 B
+              segments_6: 2014-11-25T23:20:44-0500 - 258.00 B
+              write.lock: 2014-11-25T23:20:44-0500 - 0.00 B
+            - Total: 2014-11-25T23:20:44-0500 - 16.40 kB
+          - Total: 2014-11-22T16:12:17-0500 - 136.00 kB
+        - Total: 2014-11-22T16:12:17-0500 - 136.00 kB
+        label:
+          lucene:
+            _18.fdt: 2014-11-25T23:13:20-0500 - 45.00 B
+            _18.fdx: 2014-11-25T23:13:20-0500 - 12.00 B
+            _18.fnm: 2014-11-25T23:13:20-0500 - 44.00 B
+            _18.frq: 2014-11-25T23:13:20-0500 - 7.00 B
+            _18.nrm: 2014-11-25T23:13:20-0500 - 4.00 B
+            _18.tii: 2014-11-25T23:13:20-0500 - 35.00 B
+            _18.tis: 2014-11-25T23:13:20-0500 - 73.00 B
+            _1a.fdt: 2014-11-25T23:19:30-0500 - 28.00 B
+            _1a.fdx: 2014-11-25T23:19:30-0500 - 12.00 B
+            _1a.fnm: 2014-11-25T23:19:30-0500 - 44.00 B
+            _1a.frq: 2014-11-25T23:19:30-0500 - 4.00 B
+            _1a.nrm: 2014-11-25T23:19:30-0500 - 4.00 B
+            _1a.tii: 2014-11-25T23:19:30-0500 - 35.00 B
+            _1a.tis: 2014-11-25T23:19:30-0500 - 53.00 B
+            _1c.fdt: 2014-11-25T23:20:44-0500 - 16.00 B
+            _1c.fdx: 2014-11-25T23:20:44-0500 - 12.00 B
+            _1c.fnm: 2014-11-25T23:20:44-0500 - 44.00 B
+            _1c.frq: 2014-11-25T23:20:44-0500 - 2.00 B
+            _1c.nrm: 2014-11-25T23:20:44-0500 - 4.00 B
+            _1c.tii: 2014-11-25T23:20:44-0500 - 35.00 B
+            _1c.tis: 2014-11-25T23:20:44-0500 - 39.00 B
+            _9.fdt: 2014-11-25T21:52:50-0500 - 57.00 B
+            _9.fdx: 2014-11-25T21:52:50-0500 - 12.00 B
+            _9.fnm: 2014-11-25T21:52:50-0500 - 44.00 B
+            _9.frq: 2014-11-25T21:52:50-0500 - 9.00 B
+            _9.nrm: 2014-11-25T21:52:50-0500 - 4.00 B
+            _9.tii: 2014-11-25T21:52:50-0500 - 35.00 B
+            _9.tis: 2014-11-25T21:52:50-0500 - 87.00 B
+            _y.fdt: 2014-11-25T23:12:18-0500 - 15.00 B
+            _y.fdx: 2014-11-25T23:12:18-0500 - 12.00 B
+            _y.fnm: 2014-11-25T23:12:18-0500 - 44.00 B
+            _y.frq: 2014-11-25T23:12:18-0500 - 2.00 B
+            _y.nrm: 2014-11-25T23:12:18-0500 - 4.00 B
+            _y.tii: 2014-11-25T23:12:18-0500 - 35.00 B
+            _y.tis: 2014-11-25T23:12:18-0500 - 37.00 B
+            segments.gen: 2014-11-25T23:20:44-0500 - 20.00 B
+            segments_f: 2014-11-25T23:20:44-0500 - 1.07 kB
+            write.lock: 2014-11-25T23:20:44-0500 - 0.00 B
+          - Total: 2014-11-25T23:20:44-0500 - 2.02 kB
+        - Total: 2014-11-22T16:12:17-0500 - 2.02 kB
+      - Total: 2014-11-22T16:12:17-0500 - 138.01 kB
+      store_lock: 2014-11-22T16:12:17-0500 - 0.00 B
+      tm_tx_log.1: 2014-11-25T23:20:44-0500 - 0.00 B
+2014-11-26 04:20:44.647+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:StoreFiles END ---
+2014-11-26 04:20:44.668+0000 INFO  [org.neo4j]: Database is now ready
+2014-11-26 04:22:39.204+0000 INFO  [org.neo4j]: GC Monitor: Application threads blocked for 473ms.
+2014-11-26 04:23:50.125+0000 INFO  [org.neo4j]: GC Monitor: Application threads blocked for 439ms.
+2014-11-26 04:24:45.648+0000 INFO  [org.neo4j]: Shutdown started
+2014-11-26 04:24:45.650+0000 INFO  [org.neo4j]: Database is now unavailable
+2014-11-26 04:25:05.662+0000 INFO  [org.neo4j]: Closed log neo4j/db/index/lucene.log
+2014-11-26 04:25:05.662+0000 INFO  [org.neo4j]: TM shutting down
+2014-11-26 04:25:05.662+0000 INFO  [org.neo4j]: Close invoked with 1 running transaction(s). 
+2014-11-26 04:25:05.662+0000 INFO  [org.neo4j]: Dirty log: neo4j/db/nioneo_logical.log.2 now closed. Recovery will be started automatically next time it is opened.
+2014-11-26 04:25:05.680+0000 INFO  [org.neo4j]: neo4j/db/neostore.relationshiptypestore.db.names hit=0 miss=14 switches=0 ooe=0
+2014-11-26 04:25:05.682+0000 INFO  [org.neo4j]: neo4j/db/neostore.relationshiptypestore.db hit=0 miss=7 switches=0 ooe=0
+2014-11-26 04:25:05.682+0000 INFO  [org.neo4j]: neo4j/db/neostore.labeltokenstore.db.names hit=0 miss=16 switches=0 ooe=0
+2014-11-26 04:25:05.682+0000 INFO  [org.neo4j]: neo4j/db/neostore.labeltokenstore.db hit=0 miss=8 switches=0 ooe=0
+2014-11-26 04:25:05.683+0000 INFO  [org.neo4j]: neo4j/db/neostore.propertystore.db.strings hit=0 miss=0 switches=0 ooe=0
+2014-11-26 04:25:05.685+0000 INFO  [org.neo4j]: neo4j/db/neostore.propertystore.db.index.keys hit=10 miss=0 switches=0 ooe=0
+2014-11-26 04:25:05.685+0000 INFO  [org.neo4j]: neo4j/db/neostore.propertystore.db.index hit=5 miss=0 switches=0 ooe=0
+2014-11-26 04:25:05.686+0000 INFO  [org.neo4j]: neo4j/db/neostore.propertystore.db.arrays hit=0 miss=0 switches=0 ooe=0
+2014-11-26 04:25:05.686+0000 INFO  [org.neo4j]: neo4j/db/neostore.propertystore.db hit=24 miss=0 switches=0 ooe=0
+2014-11-26 04:25:05.687+0000 INFO  [org.neo4j]: neo4j/db/neostore.relationshipstore.db hit=13 miss=43 switches=0 ooe=0
+2014-11-26 04:25:05.687+0000 INFO  [org.neo4j]: neo4j/db/neostore.nodestore.db.labels hit=0 miss=0 switches=0 ooe=0
+2014-11-26 04:25:05.688+0000 INFO  [org.neo4j]: neo4j/db/neostore.nodestore.db hit=3 miss=52 switches=0 ooe=0
+2014-11-26 04:25:05.689+0000 INFO  [org.neo4j]: neo4j/db/neostore.schemastore.db hit=0 miss=66 switches=0 ooe=0
+2014-11-26 04:25:05.690+0000 INFO  [org.neo4j]: neo4j/db/neostore.relationshipgroupstore.db hit=0 miss=0 switches=0 ooe=0
+2014-11-26 04:25:05.690+0000 INFO  [org.neo4j]: neo4j/db/neostore hit=0 miss=26 switches=0 ooe=0
+2014-11-26 04:25:05.691+0000 INFO  [org.neo4j]: NeoStore closed
+2014-11-26 04:25:05.691+0000 INFO  [org.neo4j]: --- STOPPING diagnostics START ---
+2014-11-26 04:25:05.691+0000 INFO  [org.neo4j]: --- STOPPING diagnostics END ---
