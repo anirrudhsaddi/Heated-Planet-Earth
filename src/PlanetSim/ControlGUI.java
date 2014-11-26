@@ -259,10 +259,10 @@ public class ControlGUI extends JFrame implements ActionListener {
 				final double nLat = Double.parseDouble(queryWidget.GetUserInputs("North Latitude"));
 
 				// Now retrieve the time constraints
-				final int startHour = Integer.parseInt(queryWidget.GetUserInputs("Start Hour"));
-				final int startMinute = Integer.parseInt(queryWidget.GetUserInputs("Start Minute"));
-				final int endHour = Integer.parseInt(queryWidget.GetUserInputs("End Hour"));
-				final int endMinute = Integer.parseInt(queryWidget.GetUserInputs("End Minute"));
+				final int startHour = Integer.parseInt(queryWidget.GetComboBox("Start Hour"));
+				final int startMinute = Integer.parseInt(queryWidget.GetComboBox("Start Minute"));
+				final int endHour = Integer.parseInt(queryWidget.GetComboBox("End Hour")); 
+				final int endMinute = Integer.parseInt(queryWidget.GetComboBox("End Minute"));
 
 				final boolean minTemp = queryWidget.GetCheckBox("Minimum Temp");
 				final boolean maxTemp = queryWidget.GetCheckBox("Maximum Temp");
@@ -294,17 +294,20 @@ public class ControlGUI extends JFrame implements ActionListener {
 				end.add(Calendar.MINUTE, endMinute);
 				
 				long startDateTime = start.getTimeInMillis();
+			
 				long endDateTime = end.getTimeInMillis();
+				
+				System.out.println("starttime: " + startDateTime + "/endDateTime: " + endDateTime);
 
 				// TODO get the dates and times from query widget and convert
 				// them
 				// into calendars, send in millis
 
 				configure(msg, startDateTime, endDateTime);
-			} catch (NumberFormatException nfe) {
-				ShowMessage("Please correct input. All fields need numbers");
-			} catch (IllegalArgumentException ex) {
-				ShowMessage("Please correct input. All fields need numbers");
+			//} catch (NumberFormatException nfe) {
+				//ShowMessage("Please correct input. All fields need numbers");
+			//} catch (IllegalArgumentException ex) {
+			//	ShowMessage("Please correct input. All fields need numbers");
 			} catch (Exception ex) {
 				ShowMessage("Query run failed: " + ex);
 			}

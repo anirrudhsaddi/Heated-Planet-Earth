@@ -31,6 +31,7 @@ import javax.swing.event.ListSelectionListener;
 //import org.jdatepicker.*;
 
 
+
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
@@ -72,6 +73,7 @@ public class QueryWidget extends JPanel {
 
 	private HashMap<String, JTextField>	inputs				= new HashMap<String, JTextField>();
 	private HashMap<String, JCheckBox>	checkBoxes			= new HashMap<String, JCheckBox>();
+	private HashMap<String, JComboBox<Integer>> comboBoxes  = new HashMap<String, JComboBox<Integer>>();
 	
 	private UtilDateModel startModel, endModel; 
 	private JDatePanelImpl startDatepanel , endDatePanel ;
@@ -212,12 +214,16 @@ public class QueryWidget extends JPanel {
 		inputPanel.add(startDatePicker);
 
 		startHour.setBounds(285, 10, 50, 25);
+		comboBoxes.put("Start Hour", startHour);
 		startMinute.setBounds(335, 10, 50, 25);
+		comboBoxes.put("Start Minute", startMinute);
 		inputPanel.add(startHour);
 		inputPanel.add(startMinute);
 
 		endHour = new JComboBox<Integer>(hours);
 		endMinute = new JComboBox<Integer>(minutes);
+		comboBoxes.put("End Hour", endHour);
+		comboBoxes.put("End Minute", endMinute);
 		endModel = new UtilDateModel();
 		endDatePanel = new JDatePanelImpl(endModel);
 		 endDatePicker = new JDatePickerImpl(endDatePanel);
@@ -254,7 +260,7 @@ public class QueryWidget extends JPanel {
 		textFieldNorthLongitude.setEnabled(true);
 		textFieldNorthLongitude.setColumns(10);
 		inputPanel.add(textFieldNorthLongitude);
-		inputs.put("North Longitude", textFieldNorthLongitude);
+		inputs.put("North Latitude", textFieldNorthLongitude);
 
 		JLabel lblSouthLongitude = new JLabel("South Longitude");
 		lblSouthLongitude.setBounds(10, 95, 130, 15);
@@ -265,7 +271,7 @@ public class QueryWidget extends JPanel {
 		textFieldSouthLongitude.setBounds(145, 90, 114, 19);
 		textFieldSouthLongitude.setEnabled(true);
 		inputPanel.add(textFieldSouthLongitude);
-		inputs.put("South Longitude", textFieldSouthLongitude);
+		inputs.put("South Latitude", textFieldSouthLongitude);
 
 		JLabel lblWestLatitude = new JLabel("West Latitude");
 		lblWestLatitude.setBounds(10, 115, 114, 15);
@@ -276,7 +282,7 @@ public class QueryWidget extends JPanel {
 		textFieldWestLatitude.setEnabled(true);
 		textFieldWestLatitude.setColumns(10);
 		inputPanel.add(textFieldWestLatitude);
-		inputs.put("West Latitude", textFieldWestLatitude);
+		inputs.put("West Longitude", textFieldWestLatitude);
 
 		JLabel lblEastLatitude = new JLabel("East Latitude");
 		lblEastLatitude.setBounds(12, 140, 130, 15);
@@ -287,7 +293,7 @@ public class QueryWidget extends JPanel {
 		textFieldEastLatitude.setEnabled(true);
 		textFieldEastLatitude.setColumns(10);
 		inputPanel.add(textFieldEastLatitude);
-		inputs.put("East Latitude", textFieldEastLatitude);
+		inputs.put("East Longitude", textFieldEastLatitude);
 		/*
 		 * JLabel lblSimulationName = new JLabel("Simulation Name");
 		 * lblSimulationName.setBounds(12, 160, 130, 15);
@@ -370,7 +376,14 @@ public class QueryWidget extends JPanel {
 		return checkBoxes.get(name).isSelected();
 	}
 
+	public String GetComboBox(String name) {
+		return comboBoxes.get(name).toString();
+	}
+	
 	public Calendar getSelectedStartDate() {
+		
+		Calendar c = (Calendar) this.startDatePicker.getModel().getValue();
+		System.out.println("Start date in calendar format " + c);
 		return (Calendar) this.startDatePicker.getModel().getValue();
 	}
 	
@@ -386,4 +399,5 @@ public class QueryWidget extends JPanel {
 	        }
 	    });
 	}
+	
 }
