@@ -111,8 +111,8 @@ public class GridDisplay extends JPanel {
 			g.drawOval(sunx, suny, 10, 10);
 			
 			// Draw planet orbit around earth
-			g.drawOval(0,0, (int)(300 * 2 * Constants.a / 2 * GridCell.b), 300);
-			g.drawOval(0,150, 10, 300);
+			//g.drawOval(0,0, (int)(300 * 2 * Constants.a / 2 * GridCell.b), 300);
+			//g.drawOval(0,150, 10, 300);
 
 		}
 	}
