@@ -275,18 +275,15 @@ public final class Earth {
 		BigDecimal valueToStore;
 		PersistMessage msg = new PersistMessage(simulationName, currentDate.getTimeInMillis());
 
-		// TODO this requires (longitude, latitude) coords, not (x, y)
 		int latitude, longitude;
 		for (int x = 0; x < width; x++) {
 
 			longitude = this.getLongitude(x);
-			System.out.println("longitude: " + longitude);
 			for (int y = 0; y < height; y++) {
 
 				// determine persisting based on geoAccuracy
 				if ((x + y) % nth_grids == 0) {
 					latitude = this.getLatitude(y);
-					System.out.println("latitude: " + latitude);
 					valueToStore = new BigDecimal(grid.getTemperature(x, y));
 					msg.setTemperature(longitude, latitude,
 							valueToStore.setScale(this.precision, BigDecimal.ROUND_HALF_UP).doubleValue());

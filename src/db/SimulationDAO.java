@@ -120,8 +120,11 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!set.isBeforeFirst() || set == null)
 			return false;
 		set.next();
-		System.out.println("Set is: " + set);
-		return name.equals(set.getString("simulation"));
+		try {
+			return name.equals(set.getString("simulation"));
+		} catch (NullPointerException e) {
+			return false;
+		}
 
 	}
 
@@ -136,6 +139,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!set.isBeforeFirst() || set == null)
 			return false;
 		set.next();
+		System.out.println("createOrMatchSimulationNode: " + set);
 		return name.equals(set.getString("simulation"));
 
 	}
@@ -220,6 +224,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!set.isBeforeFirst() || set == null)
 			return false;
 		set.next();
+		System.out.println("createOrMatchOrbitalEccentricityRelationship: " + set);
 		boolean success = true;
 		success &= name.equals(set.getString("simulation"));
 		success &= orbitalEccentricity == set.getFloat("orbitalEccentricity");
@@ -245,6 +250,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!set.isBeforeFirst() || set == null)
 			return false;
 		set.next();
+		System.out.println("createOrMatchGridSpacingRelationship: " + set);
 		boolean success = true;
 		success &= name.equals(set.getString("simulation"));
 		success &= gridSpacing == set.getInt("gridSpacing");
@@ -270,6 +276,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!set.isBeforeFirst() || set == null)
 			return false;
 		set.next();
+		System.out.println("createOrMatchTimeStepRelationship: " + set);
 		boolean success = true;
 		success &= name.equals(set.getString("simulation"));
 		success &= timeStep == set.getInt("timeStep");
@@ -296,6 +303,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!set.isBeforeFirst() || set == null)
 			return false;
 		set.next();
+		System.out.println("createOrMatchPresentationIntervalRelationship: " + set);
 		boolean success = true;
 		success &= name.equals(set.getString("simulation"));
 		success &= presentationInterval == set.getFloat("presentationInterval");
@@ -321,6 +329,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!set.isBeforeFirst() || set == null)
 			return false;
 		set.next();
+		System.out.println("createOrMatchSimulationLengthRelationship: " + set);
 		boolean success = true;
 		success &= name.equals(set.getString("simulation"));
 		success &= simulationLength == set.getInt("simulationLength");
@@ -332,55 +341,38 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	public IQueryResult setSimulationName(String name, int gridSpacing, int timeStep, int simulationLength,
 			float presentationInterval, float axisTilt, float orbitalEccentricity) throws Exception {
 
-		// First do findSimulationByName
-		Future<IQueryResult> f = findSimulationByData(gridSpacing, timeStep, simulationLength, presentationInterval,
-				axisTilt, orbitalEccentricity);
-
-		// Wait for the result back from the DB
-		IQueryResult result = f.get();
-
-		// If the result is empty, then the simulation does not exist and we
-		// should create it (or it errored)
-		if (result.isEmpty() || result == null) {
-
-			if (result.isErrored())
-				throw result.getError();
-
-			if (!result.getSimulationName().contains(name) && !createOrMatchSimulationNode(name))
+			if (!createOrMatchSimulationNode(name))
+				throw new SQLException("Failed to create Node(Simulation {" + name + "})");
+			
+			if (!doesSimulationExist(name))
 				throw new SQLException("Failed to create Node(Simulation {" + name + "})");
 
-			if (!result.getGridSpacing().contains(gridSpacing)
-					&& !createOrMatchGridSpacingRelationship(name, gridSpacing))
+			if (!createOrMatchGridSpacingRelationship(name, gridSpacing))
 				throw new SQLException("Failed to create Relationship Node(Simulation {" + name
 						+ "})-[:HAS_GRID]->Node(GridSpacing {" + gridSpacing + "})");
 
-			if (!result.getTimeStep().contains(timeStep) && !createOrMatchTimeStepRelationship(name, timeStep))
+			if (!createOrMatchTimeStepRelationship(name, timeStep))
 				throw new SQLException("Failed to create Relationship Node(Simulation {" + name
 						+ "})-[:HAS_TIME]->Node(TimeStep {" + timeStep + "})");
 
-			if (!result.getSimulationLength().contains(simulationLength)
-					&& !createOrMatchSimulationLengthRelationship(name, simulationLength))
+			if (!createOrMatchSimulationLengthRelationship(name, simulationLength))
 				throw new SQLException("Failed to create Relationship Node(Simulation {" + name
 						+ "})-[:HAS_LENGTH]->Node(SimulationLength {" + simulationLength + "})");
 
-			if (!result.getPresentationInterval().contains(presentationInterval)
-					&& !createOrMatchPresentationIntervalRelationship(name, presentationInterval))
+			if (!createOrMatchPresentationIntervalRelationship(name, presentationInterval))
 				throw new SQLException("Failed to create Relationship Node(Simulation {" + name
 						+ "})-[:HAS_PRESENTATION]->Node(PresentationInterval {" + presentationInterval + "})");
 
-			if (!result.getAxisTilt().contains(axisTilt) && !createOrMatchAxisTiltRelationship(name, axisTilt))
+			if (!createOrMatchAxisTiltRelationship(name, axisTilt))
 				throw new SQLException("Failed to create Relationship Node(Simulation {" + name
 						+ "})-[:HAS_AXIS]->Node(AxisTilt {" + axisTilt + "})");
 
-			if (!result.getOrbitalEccentricity().contains(orbitalEccentricity)
-					&& !createOrMatchOrbitalEccentricityRelationship(name, orbitalEccentricity))
+			if (!createOrMatchOrbitalEccentricityRelationship(name, orbitalEccentricity))
 				throw new SQLException("Failed to create Relationship Node(Simulation {" + name
 						+ "})-[:HAS_ECCENTRICITY]->Node(OrbitalEccentricity {" + gridSpacing + "})");
 
 			return new Neo4jResult(name, gridSpacing, timeStep, simulationLength, presentationInterval, axisTilt,
 					orbitalEccentricity);
-		} else
-			return result;
 	}
 
 	// Tested

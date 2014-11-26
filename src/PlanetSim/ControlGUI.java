@@ -183,6 +183,8 @@ public class ControlGUI extends JFrame implements ActionListener {
 				init();
 
 				if (!simDAO.doesSimulationExist(simulationName)) {
+					
+					simDAO.setSimulationName(simulationName, gs, timeStep, simulationLength, presentationInterval, axisTilt, eccentricity);
 
 					Calendar end = (Calendar) Constants.START_DATE.clone();
 					end.add(Calendar.MONTH, simulationLength);
@@ -197,6 +199,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 					// do gui stuff to indicate start has occurred.
 					controlWidget.disableButtonsBasedOnAction(cmd);
 					queryWidget.setFields(false);
+					queryWidget.updateQList();
 				} else {
 					ShowMessage("Simulation Name already exists in the database");
 				}
@@ -207,6 +210,8 @@ public class ControlGUI extends JFrame implements ActionListener {
 				ShowMessage("Please correct input. All fields need numbers");
 			} catch (SQLException ex) {
 				ShowMessage("Query against Simulation name failed: " + ex);
+			} catch (Exception ex) {
+				ShowMessage("Failed to save Simulation Data: " + ex);
 			}
 		} else if ("Pause".equals(cmd)) {
 
