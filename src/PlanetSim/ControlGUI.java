@@ -205,7 +205,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 			
 			init();
 
-			query();
+			queryWidget.query(gs, timeStep, simulationLength, presentationInterval, axisTilt, eccentricity);
 			controlWidget.disableButtonsBasedOnAction(cmd);
 
 		} else if ("Run".equals(cmd)) {
