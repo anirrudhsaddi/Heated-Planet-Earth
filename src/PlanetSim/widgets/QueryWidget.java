@@ -26,41 +26,40 @@ import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 import PlanetSim.QueryEngine;
-
 import common.Constants;
 
 public class QueryWidget extends JPanel {
 
-	private static final long					serialVersionUID	= 1L;
+	private static final long			serialVersionUID	= 1L;
 
-	private final Integer[]						hours				= new Integer[24];
-	private final Integer[]						minutes				= new Integer[60];
+	private final Integer[]				hours				= new Integer[24];
+	private final Integer[]				minutes				= new Integer[60];
 
-	private JComboBox<Integer>					endHour, startHour, endMinute, startMinute;
+	private JComboBox					endHour, startHour, endMinute, startMinute;
 
-	private JTextField							textFieldNorthLongitude;
-	private JTextField							textFieldSouthLongitude;
-	private JTextField							textFieldWestLatitude;
-	private JTextField							textFieldEastLatitude;
+	private JTextField					textFieldWestLongitude;
+	private JTextField					textFieldEastLongitude;
+	private JTextField					textFieldNorthLatitude;
+	private JTextField					textFieldSouthLatitude;
 
 	@SuppressWarnings("rawtypes")
-	private JList								slBox;
+	private JList						slBox;
 
-	private JCheckBox							chckbxMinimumTemperature, chckbxMaximumTemperature,
+	private JCheckBox					chckbxMinimumTemperature, chckbxMaximumTemperature,
 			chckbxMeanTemperatureOverTime, chckbxMeanTemperatureOverRegion, chckbxActualValues;
 
-	private SettingsWidget						settings;
-	private QueryEngine							engine;
+	private SettingsWidget				settings;
+	private QueryEngine					engine;
 
-	private HashMap<String, JTextField>			inputs				= new HashMap<String, JTextField>();
-	private HashMap<String, JCheckBox>			checkBoxes			= new HashMap<String, JCheckBox>();
-	private HashMap<String, JComboBox<Integer>>	comboBoxes			= new HashMap<String, JComboBox<Integer>>();
+	private HashMap<String, JTextField>	inputs				= new HashMap<String, JTextField>();
+	private HashMap<String, JCheckBox>	checkBoxes			= new HashMap<String, JCheckBox>();
+	private HashMap<String, JComboBox>	comboBoxes			= new HashMap<String, JComboBox>();
 
-	private UtilDateModel						startModel, endModel;
-	private JDatePanelImpl						startDatepanel, endDatePanel;
-	private JDatePickerImpl						startDatePicker, endDatePicker;
-	private Date								startDate, endDate;
-	private JLabel								lblSimNames;
+	private UtilDateModel				startModel, endModel;
+	private JDatePanelImpl				startDatepanel, endDatePanel;
+	private JDatePickerImpl				startDatePicker, endDatePicker;
+	private Date						startDate, endDate;
+	private JLabel						lblSimNames;
 
 	public QueryWidget(QueryEngine engine, SettingsWidget settings) {
 
@@ -72,9 +71,6 @@ public class QueryWidget extends JPanel {
 
 		for (int i = 0; i < 60; i++)
 			minutes[i] = i;
-
-		Calendar endRange = (Calendar) Constants.START_DATE.clone();
-		endRange.add(Calendar.MONTH, Constants.MAX_SIM_LEN);
 
 		this.setBorder(BorderFactory.createTitledBorder("Query"));
 		this.setAlignmentY(Component.RIGHT_ALIGNMENT);
@@ -130,41 +126,46 @@ public class QueryWidget extends JPanel {
 
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				String simulationName = (String) slBox.getSelectedValue();
-				try {
 
-					Hashtable<String, String> result = engine.getSimulationPhysicalParameters(simulationName);
+				if (!slBox.isSelectionEmpty()) {
+					
+					String simulationName = (String) slBox.getSelectedValue();
+					try {
 
-					if (result.isEmpty()) {
-						JOptionPane.showMessageDialog(getRootPane(), "No data available");
-						return;
+						Hashtable<String, String> result = engine.getSimulationPhysicalParameters(simulationName);
+
+						if (result.isEmpty()) {
+							JOptionPane.showMessageDialog(getRootPane(), "No data available");
+							return;
+						}
+
+						for (String key : result.keySet())
+							settings.setInputText(key, result.get(key));
+
+					} catch (Exception e) {
+						ShowMessage("Unable to query for Simulation Physical Data. Error(" + e + ")");
 					}
 
-					for (String key : result.keySet())
-						settings.setInputText(key, result.get(key));
-
-				} catch (Exception e) {
-					ShowMessage("Unable to query for Simulation Physical Data. Error(" + e + ")");
+					setFields(true);
 				}
-
-				setFields(true);
 			}
 		});
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private JPanel inputFields() {
 
 		JPanel inputPanel = new JPanel();
-		inputPanel.setBounds(256, 18, 327, 403);
+		inputPanel.setBounds(256, 18, 367, 403);
 		inputPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		inputPanel.setLayout(null);
 
 		JLabel lblStartHours = new JLabel("Hrs");
-		lblStartHours.setBounds(199, 83, 22, 10);
+		lblStartHours.setBounds(223, 83, 22, 10);
 		inputPanel.add(lblStartHours);
 
 		JLabel lblStartMins = new JLabel("Mins");
-		lblStartMins.setBounds(279, 83, 30, 10);
+		lblStartMins.setBounds(316, 83, 30, 10);
 		inputPanel.add(lblStartMins);
 
 		JLabel lblStartDate = new JLabel("Start Time");
@@ -176,16 +177,15 @@ public class QueryWidget extends JPanel {
 		startMinute = new JComboBox(minutes);
 		startMinute.setSelectedIndex(0);
 
-		startModel = new UtilDateModel();
-		startModel.setDate(1970, 01, 04);
+		startModel = new UtilDateModel((Date) Constants.START_DATE.getTime());
 		startDatepanel = new JDatePanelImpl(startModel);
 		startDatePicker = new JDatePickerImpl(startDatepanel);
 		startDatePicker.setBounds(145, 10, 135, 25);
 		inputPanel.add(startDatePicker);
 
-		startHour.setBounds(145, 76, 50, 25);
+		startHour.setBounds(144, 76, 71, 25);
 		comboBoxes.put("Start Hour", startHour);
-		startMinute.setBounds(225, 76, 50, 25);
+		startMinute.setBounds(246, 76, 68, 25);
 		comboBoxes.put("Start Minute", startMinute);
 		inputPanel.add(startHour);
 		inputPanel.add(startMinute);
@@ -197,14 +197,15 @@ public class QueryWidget extends JPanel {
 
 		comboBoxes.put("End Hour", endHour);
 		comboBoxes.put("End Minute", endMinute);
-		endModel = new UtilDateModel();
+		
+		endModel = new UtilDateModel(Constants.START_DATE.getTime());
 		endDatePanel = new JDatePanelImpl(endModel);
 		endDatePicker = new JDatePickerImpl(endDatePanel);
 		endDatePicker.setBounds(145, 40, 135, 25);
 		inputPanel.add(endDatePicker);
 
-		endHour.setBounds(145, 113, 50, 25);
-		endMinute.setBounds(225, 113, 50, 25);
+		endHour.setBounds(144, 113, 71, 25);
+		endMinute.setBounds(246, 113, 68, 25);
 		inputPanel.add(endHour);
 		inputPanel.add(endMinute);
 
@@ -212,49 +213,49 @@ public class QueryWidget extends JPanel {
 		lblEndDate.setBounds(19, 43, 114, 15);
 		inputPanel.add(lblEndDate);
 
-		JLabel lblNorthLongitude = new JLabel("North Longitude");
-		lblNorthLongitude.setBounds(19, 153, 114, 15);
-		inputPanel.add(lblNorthLongitude);
+		JLabel lblWestLongitude = new JLabel("West Longitude");
+		lblWestLongitude.setBounds(19, 153, 114, 15);
+		inputPanel.add(lblWestLongitude);
 
-		textFieldNorthLongitude = new JTextField();
-		textFieldNorthLongitude.setBounds(145, 150, 114, 19);
-		textFieldNorthLongitude.setEnabled(true);
-		textFieldNorthLongitude.setColumns(10);
-		inputPanel.add(textFieldNorthLongitude);
-		inputs.put("North Latitude", textFieldNorthLongitude);
+		textFieldWestLongitude = new JTextField();
+		textFieldWestLongitude.setBounds(145, 150, 114, 19);
+		textFieldWestLongitude.setEnabled(true);
+		textFieldWestLongitude.setColumns(10);
+		inputPanel.add(textFieldWestLongitude);
+		inputs.put("West Longitude", textFieldWestLongitude);
 
-		JLabel lblSouthLongitude = new JLabel("South Longitude");
-		lblSouthLongitude.setBounds(19, 177, 114, 15);
-		inputPanel.add(lblSouthLongitude);
+		JLabel lblEastLongitude = new JLabel("East Longitude");
+		lblEastLongitude.setBounds(19, 177, 114, 15);
+		inputPanel.add(lblEastLongitude);
 
-		textFieldSouthLongitude = new JTextField();
-		textFieldSouthLongitude.setColumns(10);
-		textFieldSouthLongitude.setBounds(145, 173, 114, 19);
-		textFieldSouthLongitude.setEnabled(true);
-		inputPanel.add(textFieldSouthLongitude);
-		inputs.put("South Latitude", textFieldSouthLongitude);
+		textFieldEastLongitude = new JTextField();
+		textFieldEastLongitude.setColumns(10);
+		textFieldEastLongitude.setBounds(145, 173, 114, 19);
+		textFieldEastLongitude.setEnabled(true);
+		inputPanel.add(textFieldEastLongitude);
+		inputs.put("East Longitude", textFieldEastLongitude);
 
-		JLabel lblWestLatitude = new JLabel("West Latitude");
-		lblWestLatitude.setBounds(19, 200, 114, 15);
-		inputPanel.add(lblWestLatitude);
+		JLabel lblNorthLatitude = new JLabel("North Latitude");
+		lblNorthLatitude.setBounds(19, 200, 114, 15);
+		inputPanel.add(lblNorthLatitude);
 
-		textFieldWestLatitude = new JTextField();
-		textFieldWestLatitude.setBounds(145, 196, 114, 19);
-		textFieldWestLatitude.setEnabled(true);
-		textFieldWestLatitude.setColumns(10);
-		inputPanel.add(textFieldWestLatitude);
-		inputs.put("West Longitude", textFieldWestLatitude);
+		textFieldNorthLatitude = new JTextField();
+		textFieldNorthLatitude.setBounds(145, 196, 114, 19);
+		textFieldNorthLatitude.setEnabled(true);
+		textFieldNorthLatitude.setColumns(10);
+		inputPanel.add(textFieldNorthLatitude);
+		inputs.put("North Latitude", textFieldNorthLatitude);
 
-		JLabel lblEastLatitude = new JLabel("East Latitude");
-		lblEastLatitude.setBounds(19, 223, 114, 15);
-		inputPanel.add(lblEastLatitude);
+		JLabel lblSouthLatitude = new JLabel("South Latitude");
+		lblSouthLatitude.setBounds(19, 223, 114, 15);
+		inputPanel.add(lblSouthLatitude);
 
-		textFieldEastLatitude = new JTextField();
-		textFieldEastLatitude.setBounds(145, 219, 114, 19);
-		textFieldEastLatitude.setEnabled(true);
-		textFieldEastLatitude.setColumns(10);
-		inputPanel.add(textFieldEastLatitude);
-		inputs.put("East Longitude", textFieldEastLatitude);
+		textFieldSouthLatitude = new JTextField();
+		textFieldSouthLatitude.setBounds(145, 219, 114, 19);
+		textFieldSouthLatitude.setEnabled(true);
+		textFieldSouthLatitude.setColumns(10);
+		inputPanel.add(textFieldSouthLatitude);
+		inputs.put("South Latitude", textFieldSouthLatitude);
 
 		chckbxMinimumTemperature = new JCheckBox("Minimum Temperature");
 		chckbxMinimumTemperature.setBounds(10, 262, 249, 20);
@@ -290,11 +291,11 @@ public class QueryWidget extends JPanel {
 		inputPanel.add(lblEndTime);
 
 		JLabel lblEndHours = new JLabel("Hrs");
-		lblEndHours.setBounds(199, 120, 22, 10);
+		lblEndHours.setBounds(223, 120, 22, 10);
 		inputPanel.add(lblEndHours);
 
 		JLabel lblEndMins = new JLabel("Mins");
-		lblEndMins.setBounds(279, 120, 30, 10);
+		lblEndMins.setBounds(316, 120, 30, 10);
 		inputPanel.add(lblEndMins);
 
 		inputPanel.setPreferredSize(new Dimension(400, 300));
@@ -305,32 +306,18 @@ public class QueryWidget extends JPanel {
 
 		if (!enabled) {
 
-			textFieldEastLatitude.setEnabled(false);
-			textFieldWestLatitude.setEnabled(false);
-			textFieldSouthLongitude.setEnabled(false);
-			textFieldNorthLongitude.setEnabled(false);
+			textFieldSouthLatitude.setEnabled(false);
+			textFieldNorthLatitude.setEnabled(false);
+			textFieldEastLongitude.setEnabled(false);
+			textFieldWestLongitude.setEnabled(false);
 
 		} else if (!enabled) {
 
-			textFieldEastLatitude.setEnabled(true);
-			textFieldWestLatitude.setEnabled(true);
-			textFieldSouthLongitude.setEnabled(true);
-			textFieldNorthLongitude.setEnabled(true);
+			textFieldSouthLatitude.setEnabled(true);
+			textFieldNorthLatitude.setEnabled(true);
+			textFieldEastLongitude.setEnabled(true);
+			textFieldWestLongitude.setEnabled(true);
 		}
-
-	}
-
-	public void getRequiredValues() {
-
-		Boolean min, max, time, region, actualValues;
-
-		min = chckbxMinimumTemperature.isSelected();
-		max = chckbxMaximumTemperature.isSelected();
-		time = chckbxMeanTemperatureOverTime.isSelected();
-		region = chckbxMeanTemperatureOverRegion.isSelected();
-		actualValues = chckbxActualValues.isSelected();
-		// TODO: Method to access database asking for these values to be
-		// computed.
 
 	}
 

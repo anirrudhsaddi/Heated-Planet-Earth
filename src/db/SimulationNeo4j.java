@@ -102,7 +102,7 @@ public final class SimulationNeo4j implements IDBConnection {
 		
 		long currNTime = System.nanoTime();
 		ResultSet result = stmt.executeQuery();
-		System.out.printf("Prepared query took %dms %n", (System.nanoTime() - currNTime) / 1000000);
+		System.out.printf("Prepared query took %dms and %dns %n", (System.nanoTime() - currNTime) / 1000000, (System.nanoTime() - currNTime) % 1000000);
 		
 		return result;
 	}
@@ -115,7 +115,7 @@ public final class SimulationNeo4j implements IDBConnection {
 		
 		long currNTime = System.nanoTime();
 		ResultSet result = stmt.executeQuery(query);
-		System.out.printf("query '%s' took %dms %n", query, (System.nanoTime() - currNTime) / 1000000);
+		System.out.printf("query '%s' took %dms and %dns %n", query, (System.nanoTime() - currNTime) / 1000000, (System.nanoTime() - currNTime) % 1000000);
 		
 		return result;
 	}

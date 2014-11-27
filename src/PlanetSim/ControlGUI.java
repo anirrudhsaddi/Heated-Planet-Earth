@@ -11,7 +11,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -34,6 +37,7 @@ import common.Buffer;
 import common.Constants;
 import common.Monitor;
 import common.ThreadManager;
+import db.IQueryResult;
 import db.SimulationDAO;
 import db.SimulationNeo4j;
 
@@ -66,6 +70,9 @@ public class ControlGUI extends JFrame implements ActionListener {
 	private float				eccentricity;
 
 	private SimulationDAO		simDAO;
+	
+	SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+	
 
 	public ControlGUI(int precision, int geoAccuracy, int temporalAccuracy) {
 
@@ -82,10 +89,21 @@ public class ControlGUI extends JFrame implements ActionListener {
 		this.geoAccuracy = geoAccuracy;
 		this.temporalAccuracy = temporalAccuracy;
 
-		// START_DATE is epoch UTC (01/01/1970). Add 3 days to make it
-		// 01/04/1970
-		Constants.START_DATE.setTimeInMillis(0);
-		Constants.START_DATE.add(Calendar.DAY_OF_YEAR, 3);
+		// START_DATE is epoch UTC (01/01/1970)
+		
+		Constants.START_DATE.set(Calendar.HOUR_OF_DAY, 0);
+		Constants.START_DATE.set(Calendar.MINUTE, 0);
+		Constants.START_DATE.set(Calendar.SECOND, 0);
+		Constants.START_DATE.set(Calendar.MILLISECOND, 0);
+		Constants.START_DATE.set(Calendar.MONTH, 0);
+		Constants.START_DATE.set(Calendar.DAY_OF_MONTH, 4);
+		
+		try {
+			System.out.println(format1.parse(format1.format(Constants.START_DATE.getTime())));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		try {
 			simDAO = new SimulationDAO(new SimulationNeo4j());
@@ -149,6 +167,9 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 		queryPanel.add(queryWidget, BorderLayout.CENTER);
 		queryPanel.setPreferredSize(new Dimension(600, 450));
+		
+		queryWidget.setFields(true);
+		
 		return queryPanel;
 	}
 
@@ -160,7 +181,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 		controlWidget = new ControlWidget(this);
 		settingsWidget = new SettingsWidget();
-		settingsWidget.setPreferredSize(new Dimension(100, 350));
+		settingsWidget.setPreferredSize(new Dimension(100, 425));
 		sncPanel.add(settingsWidget, BorderLayout.WEST);
 		sncPanel.add(controlWidget, BorderLayout.WEST);
 
@@ -182,7 +203,11 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 				if (!simDAO.doesSimulationExist(simulationName)) {
 					
-					simDAO.setSimulationName(simulationName, gs, timeStep, simulationLength, presentationInterval, axisTilt, eccentricity);
+					// TODO move to engine
+					IQueryResult result = simDAO.setSimulationName(simulationName, gs, timeStep, simulationLength, presentationInterval, axisTilt, eccentricity);
+					System.out.println(result.getSimulationName());
+					if (!simulationName.equals(result.getSimulationName().get(0)))
+						throw new SQLException("Creating the new Simulation failed");
 
 					Calendar end = (Calendar) Constants.START_DATE.clone();
 					end.add(Calendar.MONTH, simulationLength);
@@ -196,8 +221,8 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 					// do gui stuff to indicate start has occurred.
 					controlWidget.disableButtonsBasedOnAction(cmd);
-					queryWidget.setFields(false);
 					queryWidget.updateQList();
+					
 				} else {
 					ShowMessage("Simulation Name already exists in the database");
 				}
@@ -226,7 +251,6 @@ public class ControlGUI extends JFrame implements ActionListener {
 			Publisher.getInstance().send(new StopMessage());
 
 			controlWidget.disableButtonsBasedOnAction(cmd);
-			queryWidget.setFields(true);
 			
 		} else if ("Reset".equals(cmd)) {
 			
@@ -259,10 +283,10 @@ public class ControlGUI extends JFrame implements ActionListener {
 				if (simulationName == null || "".equals(simulationName))
 					throw new IllegalArgumentException("Invalid Simulation Name");
 
-				final double wLat = Double.parseDouble(queryWidget.GetUserInputs("West Longitude"));
-				final double eLat = Double.parseDouble(queryWidget.GetUserInputs("East Longitude"));
-				final double sLat = Double.parseDouble(queryWidget.GetUserInputs("South Latitude"));
-				final double nLat = Double.parseDouble(queryWidget.GetUserInputs("North Latitude"));
+				final int wLat = Integer.parseInt(queryWidget.GetUserInputs("West Longitude"));
+				final int eLat = Integer.parseInt(queryWidget.GetUserInputs("East Longitude"));
+				final int sLat = Integer.parseInt(queryWidget.GetUserInputs("South Latitude"));
+				final int nLat = Integer.parseInt(queryWidget.GetUserInputs("North Latitude"));
 
 				// Now retrieve the time constraints
 				final int startHour = Integer.parseInt(queryWidget.GetComboBox("Start Hour"));
@@ -276,10 +300,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 				final boolean meanRegion = queryWidget.GetCheckBox("Mean Region Temp");
 				final boolean actualValue = queryWidget.GetCheckBox("Actual Values");
 				
-				final int gs = Integer.parseInt(settingsWidget.getInputText("Grid Spacing"));
-				
 				ConfigureMessage msg = new ConfigureMessage();
-				msg.setGridSpacing(gs);
 
 				msg.setLatitude(nLat, sLat, eLat, wLat);
 				msg.setStartTime(startHour, startMinute);
@@ -303,6 +324,15 @@ public class ControlGUI extends JFrame implements ActionListener {
 				long endDateTime = end.getTimeInMillis();
 
 				configure(msg, startDateTime, endDateTime);
+				
+				try {
+					System.out.println(format1.parse(format1.format(start.getTime())));
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				queryEngine.findTemperaturesAt(simulationName, startDateTime, endDateTime, wLat, eLat, nLat, sLat);
 				
 			} catch (NumberFormatException ex) {
 				ShowMessage("Invalid input: " + ex.getMessage());

@@ -34,7 +34,7 @@ public class ControlWidget extends JPanel {
 		buttons.get("Resume").setEnabled(false);
 		buttons.get("Stop").setEnabled(false);
 		buttons.get("Query").setEnabled(true);
-		buttons.get("Run").setEnabled(false);
+		buttons.get("Run").setEnabled(true);
 		buttons.get("Reset").setEnabled(true);
 
 	}
@@ -70,10 +70,10 @@ public class ControlWidget extends JPanel {
 			buttons.get("Resume").setEnabled(false);
 			buttons.get("Stop").setEnabled(false);
 			buttons.get("Query").setEnabled(true);
-			buttons.get("Run").setEnabled(false);
+			buttons.get("Run").setEnabled(true);
 			buttons.get("Reset").setEnabled(true);
 		} else if (actionName == "Query") {
-			buttons.get("Start").setEnabled(false);
+			buttons.get("Start").setEnabled(true);
 			buttons.get("Pause").setEnabled(false);
 			buttons.get("Resume").setEnabled(false);
 			buttons.get("Stop").setEnabled(false);

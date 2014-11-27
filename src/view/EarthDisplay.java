@@ -2,15 +2,20 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Calendar;
 
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 
+import messaging.Publisher;
+import messaging.events.StopMessage;
 import view.util.ThermalVisualizer;
 import view.widgets.EarthImage;
 import view.widgets.GridDisplay;
 import view.widgets.SimulationStatus;
+
 import common.Constants;
 import common.IGrid;
 
@@ -41,7 +46,7 @@ public class EarthDisplay extends JFrame {
 		this.animate = animate;
 		EarthDisplay.setDefaultLookAndFeelDecorated(true);
 
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 		this.setResizable(true);
 
@@ -72,6 +77,15 @@ public class EarthDisplay extends JFrame {
 		display.add(gridDisplay, new Integer(Constants.GRID));
 
 		this.setPreferredSize(new Dimension(w, h + 200));
+		
+		this.addWindowListener(new WindowAdapter() {
+
+			public void windowClosing(WindowEvent e) {
+				
+				Publisher.getInstance().send(new StopMessage());
+				dispose();
+			}
+		});
 
 	}
 

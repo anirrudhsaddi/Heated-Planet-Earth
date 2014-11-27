@@ -48,8 +48,8 @@ public final class Earth {
 
 	// persistance variables
 	private int									precision;
-	private int									totalDataToSave;
-	private int									totalGridsToSave;
+	private float								totalDataToSave;
+	private float								totalGridsToSave;
 	private int									nth_data;
 	private int									nth_grids;
 
@@ -100,19 +100,21 @@ public final class Earth {
 
 		// Using width, height, determine totalGridsToSave
 		int totalGrids = width * height;
-		totalGridsToSave = totalGrids * (start.geoAccuracy() / 100);
+		float percent = ((float) start.geoAccuracy() / 100.0f);
+		totalGridsToSave = totalGrids * percent;
 
 		// Now calculate the number of 'buckets' (or every 'nth' piece)
-		nth_grids = totalGrids / totalGridsToSave;
+		nth_grids = (int) (totalGrids / totalGridsToSave);
 
 		// Convert simulationLength into minutes and divide by the timeStep.
 		// This will give us the total number of generations we will do.
 		// From there, get the number to save by applying the percentage
-		int totalGens = (start.simulationLength() * 30 * 1440) / this.timeStep; // simlength*30*1440
-		totalDataToSave = totalGens * (start.temporalAccuracy() / 100);
+		int totalGens = (start.simulationLength() * 30 * 1440) / this.timeStep; // simlength * 30 * 1440
+		percent = ((float) start.temporalAccuracy() / 100.0f);
+		totalDataToSave = totalGens * percent;
 
 		// Now calculate the number of 'buckets' (or every 'nth' piece)
-		nth_data = totalGens / totalDataToSave;
+		nth_data = (int) (totalGens / totalDataToSave);
 	}
 
 	public void start() {
@@ -405,9 +407,9 @@ public final class Earth {
 		this.table.put(c, gridCells);
 	}
 
-	// In the situation when end date can not be found in DB, we have to run a
-	// new simmulation
+	// In the situation when end date can not be found in DB, we have to run a new simmulation
 	public void simulateFromTable(ResultMessage msg) {
+		
 		// Simulation should start with the parameters for this particular query
 		// these parameters are not available in result message.
 		// this.configure(null); //Already Configured
@@ -424,6 +426,7 @@ public final class Earth {
 	}
 
 	public void setDisplayMsg(DisplayMessage msg) {
+		
 		msg.setTable(table);
 		msg.setMaxTemp(this.getMax());
 		msg.setMinTemp(this.getMin());

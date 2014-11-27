@@ -3,20 +3,12 @@ package PlanetSim;
 import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-import javax.swing.JList;
-
-import org.apache.james.mime4j.field.datetime.DateTime;
-
-import PlanetSim.widgets.QueryWidget;
-import db.IDBConnection;
 import db.IQueryResult;
 import db.SimulationDAO;
 
 public class QueryEngine {
 
-	private IDBConnection		conn;
 	// TODO Don't forget - we have to send a start message before calling
 	// findTemperatesAt!
 

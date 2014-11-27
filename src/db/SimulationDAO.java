@@ -96,6 +96,18 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		this.conn.query(Neo4jConstants.CREATE_SIMULATION_LENGTH_CONSTRAINT);
 
 		Publisher.getInstance().subscribe(PersistMessage.class, this);
+		
+		ResultSet result = conn.query("MATCH (s:Simulation) RETURN s.name");
+		while(result.next())
+			System.out.println(result);
+		
+		result = conn.query("MATCH (t:Temperature) RETURN t.value");
+		while(result.next())
+			System.out.println(result);
+		
+		result = conn.query("MATCH (s:Simulation)-[r:HAS_TEMP]->(t:Temperature) RETURN s.name, r.longitude, r.latitude, r.datetime, t.value");
+		while(result.next())
+			System.out.println(result);
 	}
 
 	// Tested
@@ -139,7 +151,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!set.isBeforeFirst() || set == null)
 			return false;
 		set.next();
-		System.out.println("createOrMatchSimulationNode: " + set);
 		return name.equals(set.getString("simulation"));
 
 	}
@@ -224,7 +235,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!set.isBeforeFirst() || set == null)
 			return false;
 		set.next();
-		System.out.println("createOrMatchOrbitalEccentricityRelationship: " + set);
+
 		boolean success = true;
 		success &= name.equals(set.getString("simulation"));
 		success &= orbitalEccentricity == set.getFloat("orbitalEccentricity");
@@ -250,7 +261,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!set.isBeforeFirst() || set == null)
 			return false;
 		set.next();
-		System.out.println("createOrMatchGridSpacingRelationship: " + set);
+		
 		boolean success = true;
 		success &= name.equals(set.getString("simulation"));
 		success &= gridSpacing == set.getInt("gridSpacing");
@@ -276,7 +287,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!set.isBeforeFirst() || set == null)
 			return false;
 		set.next();
-		System.out.println("createOrMatchTimeStepRelationship: " + set);
+		
 		boolean success = true;
 		success &= name.equals(set.getString("simulation"));
 		success &= timeStep == set.getInt("timeStep");
@@ -303,7 +314,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!set.isBeforeFirst() || set == null)
 			return false;
 		set.next();
-		System.out.println("createOrMatchPresentationIntervalRelationship: " + set);
+		
 		boolean success = true;
 		success &= name.equals(set.getString("simulation"));
 		success &= presentationInterval == set.getFloat("presentationInterval");
@@ -329,7 +340,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!set.isBeforeFirst() || set == null)
 			return false;
 		set.next();
-		System.out.println("createOrMatchSimulationLengthRelationship: " + set);
+		
 		boolean success = true;
 		success &= name.equals(set.getString("simulation"));
 		success &= simulationLength == set.getInt("simulationLength");
@@ -417,19 +428,22 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		 * end date. This you can achieve by calling a findTemperatureAt with
 		 * the endDate
 		 */
-
-		ResultSet result;
+		
+		ResultSet set = conn.query("MATCH (s: Simulation)-[r:HAS_TEMP]->(t:Temperature) WHERE s.name = \"" + name + "\" RETURN r.datetime");
+		while(set.next())
+			System.out.println(set);
 
 		// First, find the closest datetime-valued relationship
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.GET_DATE_TIME_KEY);
 		query.setString(1, name);
 		query.setLong(2, startDateTime);
 
-		result = conn.query(query);
+		ResultSet result = conn.query(query);
 		if (!result.isBeforeFirst() || result == null)
 			throw new SQLException("No datetime found. Query was empty.");
 
 		result.next();
+		System.out.println(result);
 
 		if (!"dateTime".equals(result.getMetaData().getColumnName(1)))
 			throw new SQLException("Failed to find any datetimes on or before query datetime");
@@ -444,8 +458,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 
 		ResultMessage msg;
 
-		// Populate ResultMessage with the range of grids if the startDateTime
-		// was found
+		// Populate ResultMessage with the range of grids if the startDateTime was found
 		// Otherwise; send only one grid to be simulated on
 		if (foundDateTime == startDateTime) {
 
@@ -461,8 +474,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 			msg = new ResultMessage(southLatitude, northLatitude, westLongitude, eastLongitude, false);
 
 			while (result.next()) {
-				msg.setTemperature(result.getInt("longitude"), result.getInt("latitude"),
-						result.getDouble("temperature"), result.getLong("dateTime"));
+				msg.setTemperature(result.getInt("longitude"), result.getInt("latitude"), result.getDouble("temperature"), result.getLong("dateTime"));
 			}
 
 		} else {
@@ -546,33 +558,57 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 
 				double temperature = msg.getTemperature(longitude, latitude);
 
-				System.out.println("Saving temp " + temperature + " at longitude " + longitude + ", latitude: "
-						+ latitude);
+				System.out.println(dateTime + ": Saving temp " + temperature + " at longitude " + longitude + ", latitude: " + latitude);
 
 				query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_KEY);
 				query.setDouble(1, temperature);
 
 				result = conn.query(query);
 				if (!result.isBeforeFirst() || result == null)
-					throw new SQLException("Unable to create or match temperature. Temperature Node " + temperature
-							+ " does not exist.");
+					throw new SQLException("Unable to create or match temperature. Temperature Node " + temperature + " does not exist.");
 				result.next();
 				System.out.println("Result from CREATE_TEMP_KEY: " + result);
 
 				try {
-					result.getDouble("temperature");
+					if (temperature != result.getDouble("temperature"))
+						throw new SQLException("Failed to creat or find a node for temperature " + temperature);
 				} catch (NullPointerException e) {
-					throw new SQLException("Unable to retrieve temperature. Temperature Node " + temperature
-							+ " does not exist.");
+					throw new SQLException("Unable to retrieve temperature. Temperature Node " + temperature + " does not exist.");
 				}
+				
+				System.out.println(">>>> Let's verify that the Node information exists.");
+				
+				try {
+					
+					result = conn.query("MATCH (t: Temperature) WHERE t.value = " + temperature + " RETURN t.value AS temperature");
+					while (result.next())
+						System.out.println(result);
+					System.out.println("Done with MATCHing Temperature");
+					
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+				
+				try {
+					
+					result = conn.query("MATCH (s: Simulation) WHERE s.name = \"" + name + "\" RETURN s.name AS simulation");
+					while (result.next())
+						System.out.println(result);
+					System.out.println("Done with MATCHing Simulation");
+					
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+				
+				System.out.println(">>>> Finished verifing that the Node information exists.");
 
 				query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_REL_KEY);
 
 				query.setString(1, name);
-				query.setInt(2, longitude);
-				query.setInt(3, latitude);
-				query.setLong(4, dateTime);
-				query.setDouble(5, temperature);
+				query.setDouble(2, temperature);
+				query.setInt(3, longitude);
+				query.setInt(4, latitude);
+				query.setLong(5, dateTime);
 
 				result = conn.query(query);
 				if (!result.isBeforeFirst() || result == null)
@@ -585,7 +621,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 					if (result.getDouble("temperature") != temperature)
 						throw new SQLException("Persisted temperature does not match provided temperature");
 				} catch (NullPointerException e) {
-					throw new SQLException("Unable to persist temperature");
+					throw new SQLException("Unable to persist create Simulation -> Temperature relationship");
 				}
 			}
 		} catch (SQLException e) {

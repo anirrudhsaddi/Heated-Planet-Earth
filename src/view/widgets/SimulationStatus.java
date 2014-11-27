@@ -1,22 +1,13 @@
 package view.widgets;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.LinearGradientPaint;
-import java.awt.RenderingHints;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.Insets;
+import java.awt.Label;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.ImageIcon;
@@ -26,12 +17,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import view.util.ColorMap;
 import common.Constants;
-
-import java.awt.Panel;
-import java.awt.Label;
-import java.awt.Insets;
 
 public class SimulationStatus extends JSplitPane {
 
@@ -71,17 +57,17 @@ public class SimulationStatus extends JSplitPane {
 
 	}
 
-	public void init() {
-
-		this.sunPosStats.setText("0");
-		this.gsStatus.setText("0");
-		this.timeStepStatus.setText("0");
-		this.simulationLength.setText("0");
-		this.axisTilt.setText("0");
-		this.eccentricity.setText("0");
-
-		this.currTimeStatus.setText(DATE_FORMAT.format(currDateTime.getTime()));
-	}
+//	public void init() {
+//
+//		this.sunPosStats.setText("0");
+//		this.gsStatus.setText("0");
+//		this.timeStepStatus.setText("0");
+//		this.simulationLength.setText("0");
+//		this.axisTilt.setText("0");
+//		this.eccentricity.setText("0");
+//
+//		this.currTimeStatus.setText(DATE_FORMAT.format(currDateTime.getTime()));
+//	}
 
 	public void update(float sunPosition, Calendar dateTime, int gs, int timeStep, int simulationLength,
 			float axisTilt, float eccentricity) {
@@ -135,7 +121,7 @@ public class SimulationStatus extends JSplitPane {
 		gbc_lblThree.gridy = 1;
 		legendPanel.add(lblThree, gbc_lblThree);
 		
-		lblFour = new Label("" + Constants.MAX_TEMP);
+		lblFour = new Label(Constants.MAX_TEMP + "+");
 		GridBagConstraints gbc_lblFour = new GridBagConstraints();
 		gbc_lblFour.insets = new Insets(0, 0, 5, 0);
 		gbc_lblFour.gridx = 9;
@@ -145,8 +131,6 @@ public class SimulationStatus extends JSplitPane {
 		ImageIcon gradientImg = new ImageIcon(GRADIENT_ICON);
 		JLabel scalePanel = new JLabel();
 		scalePanel.setIcon(gradientImg);
-		
-//		scalePanel.setSize(200, 50);
 		
 		GridBagConstraints gbc_scalePanel = new GridBagConstraints();
 		gbc_scalePanel.insets = new Insets(0, 0, 5, 5);
@@ -160,13 +144,13 @@ public class SimulationStatus extends JSplitPane {
 
 	private void addStatusPanel() {
 
-		sunPosStats = new JTextField("0");
-		currTimeStatus = new JTextField("0");
-		gsStatus = new JTextField("0");
-		timeStepStatus = new JTextField("0");
-		simulationLength = new JTextField("0");
-		axisTilt = new JTextField("0");
-		eccentricity = new JTextField("0");
+		sunPosStats = new JTextField();
+		currTimeStatus = new JTextField();
+		gsStatus = new JTextField();
+		timeStepStatus = new JTextField();
+		simulationLength = new JTextField();
+		axisTilt = new JTextField();
+		eccentricity = new JTextField();
 
 		lblSunPos = new JLabel("Rotational Position:");
 		lblCurrTime = new JLabel("Time:");
@@ -240,53 +224,4 @@ public class SimulationStatus extends JSplitPane {
 		this.add(statusPanel, JSplitPane.LEFT);
 
 	}
-
-//	private class ThermalScale extends JLabel {
-//
-//		/**
-//		 * 
-//		 */
-//		private static final long	serialVersionUID	= 5835845197614603392L;
-//
-//		public void paint(Graphics g) {
-//
-//			final ArrayList<Color> gradient = new ArrayList<Color>();
-//
-//			Color c;
-//			for (double temp = 0; temp <= 1; temp += 0.05) {
-//				c = colorMap.getColor(temp, 1);
-//				if (!gradient.contains(c))
-//					gradient.add(c);
-//			}
-//
-//			int size = gradient.size();
-//			float curr = 0;
-//
-//			Color[] colors = new Color[size];
-//			float[] fractions = new float[size];
-//			for (int i = 0; i < size; i++) {
-//				colors[i] = gradient.get(i);
-//				fractions[i] = curr;
-//				curr += 0.05;
-//			}
-//			
-//			int width = getWidth();
-//		    int height = getHeight();
-//
-//		    // Create the gradient paint
-//		    LinearGradientPaint GRADIENT = new LinearGradientPaint(0, 0, width, height, fractions, colors);
-//
-//		    // we need to cast to Graphics2D for this operation
-//		    Graphics2D g2d = ( Graphics2D )g;
-//		    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//
-//		    // set the paint to use for this operation
-//		    g2d.setPaint(GRADIENT);
-//
-//		    // fill the background using the paint
-//		    g2d.fillRect( 0, 0, width, height );
-//
-//		    super.paint( g );
-//		}
-//	}
 }

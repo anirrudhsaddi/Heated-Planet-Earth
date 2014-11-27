@@ -17,6 +17,7 @@ public class DisplayMessage implements Message {
 	private final IGrid grid;
 		
 	public DisplayMessage(IGrid grid) {
+		
 		if (grid == null)
 			throw new IllegalArgumentException("Invalid IGrid provided");
 		this.grid = grid;

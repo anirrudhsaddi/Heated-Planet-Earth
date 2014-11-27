@@ -79,6 +79,6 @@ public interface Constants {
 	public static final double		animationDimenLim		= 150;
 	public static final double		factor					= animationDimenLim / 2 * a;
 
-	public static final Calendar	START_DATE				= Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+	public static final Calendar	START_DATE				= Calendar.getInstance();
 
 }

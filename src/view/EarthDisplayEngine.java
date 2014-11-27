@@ -60,8 +60,6 @@ public class EarthDisplayEngine extends ComponentBase {
 
 			start((ConfigureMessage) msg);
 			
-		} else if (msg instanceof DisplayMessage) {
-			// TODO
 		} else if (msg instanceof ConsumeMessage) {
 
 			if (grid == null) {

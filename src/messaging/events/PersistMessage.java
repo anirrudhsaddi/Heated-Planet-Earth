@@ -20,14 +20,14 @@ public class PersistMessage implements Message {
 	public PersistMessage(String simulationName, long dateTime) {
 		
 		this.simulationName = simulationName;
-		this.dateTime = dateTime;
+		this.dateTime = new Long(dateTime);
 		
 		coords = new LinkedList<Integer[]>();
 		grid = new TreeMap<Integer, Double>();
 	}
 	
 	public long getDateTime() {
-		return this.dateTime;
+		return new Long(this.dateTime);
 	}
 
 	public String getSimulationName() {
@@ -40,13 +40,16 @@ public class PersistMessage implements Message {
 	
 	public void setTemperature(int longitude, int latitude, double temp) {
 		
-		grid.put(latitude * width + longitude, temp);
+		int l = new Integer(longitude);
+		int t = new Integer(latitude);
 		
-		coords.add(new Integer[] {longitude, latitude});
+		grid.put(t * width + l, new Double(temp));
+		
+		coords.add(new Integer[] {l, t});
 	}
 	
 	public double getTemperature(int longitude, int latitude) {
 		
-		return grid.get(latitude * width + longitude);
+		return new Double(grid.get(latitude * width + longitude));
 	}
 }
