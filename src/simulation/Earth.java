@@ -14,6 +14,7 @@ import messaging.Publisher;
 import messaging.events.DeliverMessage;
 import messaging.events.DisplayMessage;
 import messaging.events.PersistMessage;
+import messaging.events.ProduceMessage;
 import messaging.events.ResultMessage;
 import messaging.events.ConfigureMessage;
 import simulation.util.GridCell;
@@ -351,78 +352,97 @@ public final class Earth {
 	}
 
 	// TABLE DS related code
-	public void populateTable(ResultMessage msg) {
-		// Calendar time = new GregorianCalendar(0, 0, 0, 0, 0, 0);
-		Calendar c = ((Calendar) Constants.START_DATE.clone());
-		c.setTimeInMillis(0);
+//	public void populateTable(ResultMessage msg) {
+//		
+//		Calendar c = ((Calendar) Constants.START_DATE.clone());
+//
+//		List<GridCell> gridCells = new LinkedList<GridCell>();
+//		Iterator<Integer[]> gen = msg.genCoordinates();
+//		while(gen.hasNext()) {
+//			
+//			Integer[] coords = gen.next();
+//			int longitude = coords[0];
+//			int latitude = coords[1];
+//			
+//			double temperature = msg.getTemperature(longitude, latitude);
+//			GridCell gc = new GridCell(temperature, 0, 0, latitude, longitude, this.gs, this.axisTilt, this.eccentricity);
+//			gridCells.add(gc);
+//		}
+//
+//		this.table.put(c, gridCells);
+//	}
 
-		List<GridCell> gridCells = new LinkedList<GridCell>();
-
-		for (int i = msg.getNorthRegionBounds(); i <= msg.getSouthRegionBounds(); i++) {
-			for (int j = msg.getEastRegionBounds(); j <= msg.getWestRegionBounds(); j++) {
-				// check if this exists
-				Integer[] checkInts = new Integer[] { i, j };
-				if (msg.containsCoords(checkInts)) {
-					GridCell thisCell = new GridCell(msg.getTemperature(i, j), 0, 0, i, j, 0, 0, 0);
-					gridCells.add(thisCell);
-				}
-			}
-		}
-
-		this.table.put(c, gridCells);
-	}
-
-	public void interpolateTable(ResultMessage msg) {
-
-		// TODO: result message should give output in a range of time
-		Calendar c = ((Calendar) Constants.START_DATE.clone());
-		c.setTimeInMillis(0);
-
-		List<GridCell> gridCells = new LinkedList<GridCell>();
-		GridCell thisCell = null;
-
-		for (int i = msg.getNorthRegionBounds(); i <= msg.getSouthRegionBounds(); i++) {
-			for (int j = msg.getEastRegionBounds(); j <= msg.getWestRegionBounds(); j++) {
-
-				Integer[] checkInts = new Integer[] { i, j };
-				if (msg.containsCoords(checkInts)) {
-
-					thisCell = new GridCell(msg.getTemperature(i, j), i, j, i, j, 0, 0, 0);
-					gridCells.add(thisCell);
-
-				} else if (thisCell != null) {
-
-					double tempNearestCell = thisCell.getTemp();
-					int k = thisCell.getX(), l = thisCell.getY();
-					int dy = l - j, dx = k - i;
-					double mytemp = tempNearestCell * (dy / dx);
-
-					// SplineInterpolator splineInterp = new
-					// SplineInterpolator();
-					thisCell = new GridCell(mytemp, i, j, i, j, 0, 0, 0);
-					gridCells.add(thisCell);
-				}
-			}
-		}
-		this.table.put(c, gridCells);
-	}
+//	public GridCell interpolateTable(List<GridCell> grid) {
+//
+//		// TODO: result message should give output in a range of time
+//		Calendar c = ((Calendar) Constants.START_DATE.clone());
+//
+//		List<GridCell> gridCells = new LinkedList<GridCell>();
+//		GridCell thisCell = null;
+//		
+//		int longitude, latitude;
+//		for (int x = 0; x < this.width; x++) {
+//			
+//			longitude = this.getLongitude(x);
+//			for (int y = 0; y < this.height; y++) {
+//				
+//				latitude = this.getLatitude(y);
+//				
+//				
+//				
+//				
+//				
+//				
+//				if (msg.containsCoords(longitude, latitude)) {
+//
+//					thisCell = new GridCell(msg.getTemperature(i, j), i, j, i, j, 0, 0, 0);
+//					gridCells.add(thisCell);
+//
+//				} else if (thisCell != null) {
+//
+//					double tempNearestCell = thisCell.getTemp();
+//					int k = thisCell.getX(), l = thisCell.getY();
+//					int dy = l - j, dx = k - i;
+//					double mytemp = tempNearestCell * (dy / dx);
+//
+//					// SplineInterpolator splineInterp = new
+//					// SplineInterpolator();
+//					thisCell = new GridCell(mytemp, i, j, i, j, 0, 0, 0);
+//					gridCells.add(thisCell);
+//				}
+//			}
+//		}
+//
+//		for (int i = msg.getNorthRegionBounds(); i <= msg.getSouthRegionBounds(); i++) {
+//			for (int j = msg.getEastRegionBounds(); j <= msg.getWestRegionBounds(); j++) {
+//
+//				if (msg.containsCoords(i, j)) {
+//
+//					thisCell = new GridCell(msg.getTemperature(i, j), i, j, i, j, 0, 0, 0);
+//					gridCells.add(thisCell);
+//
+//				} else if (thisCell != null) {
+//
+//					double tempNearestCell = thisCell.getTemp();
+//					int k = thisCell.getX(), l = thisCell.getY();
+//					int dy = l - j, dx = k - i;
+//					double mytemp = tempNearestCell * (dy / dx);
+//
+//					// SplineInterpolator splineInterp = new
+//					// SplineInterpolator();
+//					thisCell = new GridCell(mytemp, i, j, i, j, 0, 0, 0);
+//					gridCells.add(thisCell);
+//				}
+//			}
+//		}
+//		this.table.put(c, gridCells);
+//	}
 
 	// In the situation when end date can not be found in DB, we have to run a new simmulation
 	public void simulateFromTable(ResultMessage msg) {
 		
-		// Simulation should start with the parameters for this particular query
-		// these parameters are not available in result message.
-		// this.configure(null); //Already Configured
-		// Set the prime grid member, but unable to populate the other cells
-		// with temp values from DB
-		prime = new GridCell(msg.getTemperature(0, 0), 0, 0, this.getLatitude(0), this.getLongitude(0), this.gs,
-				this.axisTilt, this.eccentricity);
-		this.start();
-		// generate data gets called from Produce Msg
-		/*
-		 * try { this.generate(); } catch (InterruptedException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); }
-		 */
+		
+		Publisher.getInstance().send(new ProduceMessage());
 	}
 
 	public void setDisplayMsg(DisplayMessage msg) {

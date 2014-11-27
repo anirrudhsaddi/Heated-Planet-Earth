@@ -26,6 +26,7 @@ public class EarthEngine extends ComponentBase {
 	public void performAction(Message msg) {
 
 		if (msg instanceof ConfigureMessage) {
+			
 			model.configure(((ConfigureMessage) msg));
 			model.start();
 
@@ -62,7 +63,7 @@ public class EarthEngine extends ComponentBase {
 
 		// We also need to provide a report on the query - including
 		// min/max/mean, etc.
-		DisplayMessage displayMsg = new DisplayMessage(null);
+		DisplayMessage displayMsg = new DisplayMessage();
 
 		if (msg.needsCalculation() == false) {
 			
@@ -70,24 +71,22 @@ public class EarthEngine extends ComponentBase {
 			// perfect hit for what the user wants
 			// Scenario 2 - calculate - interpolate, the data that the user
 			// wants is inbetween
-			model.populateTable(msg);
-			model.interpolateTable(msg);
+//			model.populateTable(msg);
+//			model.interpolateTable(msg);
 			
 		} else if (msg.needsCalculation() == true) {
 			
 			// Scenario 3 - calculate - start a new simulation, the data the
 			// user wants is beyond the one stored in DB
-			model.simulateFromTable(msg);
-			Publisher.getInstance().send(new ProduceMessage());
+//			model.simulateFromTable(msg);
+
 		}
 		
-		model.setDisplayMsg(displayMsg);
-		
+//		model.setDisplayMsg(displayMsg);
+//		
 		TableDisplay display = new TableDisplay();
-		display.updateTableData(displayMsg);
-		
-		throw new IllegalStateException(
-				"Support for ResultMessage has yet to be added. SimulationStatus needs to be updated. Earth needs to be updated");
+//		display.updateTableData(displayMsg);
+
 	}
 
 	private void generateData() {

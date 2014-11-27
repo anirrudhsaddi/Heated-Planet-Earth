@@ -97,17 +97,17 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 
 		Publisher.getInstance().subscribe(PersistMessage.class, this);
 		
-		ResultSet result = conn.query("MATCH (s:Simulation) RETURN s.name");
-		while(result.next())
-			System.out.println(result);
-		
-		result = conn.query("MATCH (t:Temperature) RETURN t.value");
-		while(result.next())
-			System.out.println(result);
-		
-		result = conn.query("MATCH (s:Simulation)-[r:HAS_TEMP]->(t:Temperature) RETURN s.name, r.longitude, r.latitude, r.datetime, t.value");
-		while(result.next())
-			System.out.println(result);
+//		ResultSet result = conn.query("MATCH (s:Simulation) RETURN s.name");
+//		while(result.next())
+//			System.out.println(result);
+//		
+//		result = conn.query("MATCH (t:Temperature) RETURN t.value");
+//		while(result.next())
+//			System.out.println(result);
+//		
+//		result = conn.query("MATCH (s:Simulation)-[r:HAS_TEMP]->(t:Temperature) RETURN s.name, r.longitude, r.latitude, r.datetime, t.value");
+//		while(result.next())
+//			System.out.println(result);
 	}
 
 	// Tested
@@ -429,9 +429,9 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		 * the endDate
 		 */
 		
-		ResultSet set = conn.query("MATCH (s: Simulation)-[r:HAS_TEMP]->(t:Temperature) WHERE s.name = \"" + name + "\" RETURN r.datetime");
-		while(set.next())
-			System.out.println(set);
+//		ResultSet set = conn.query("MATCH (s: Simulation)-[r:HAS_TEMP]->(t:Temperature) WHERE s.name = \"" + name + "\" RETURN r.datetime");
+//		while(set.next())
+//			System.out.println(set);
 
 		// First, find the closest datetime-valued relationship
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.GET_DATE_TIME_KEY);
@@ -474,6 +474,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 			msg = new ResultMessage(southLatitude, northLatitude, westLongitude, eastLongitude, false);
 
 			while (result.next()) {
+				System.out.println(result);
 				msg.setTemperature(result.getInt("longitude"), result.getInt("latitude"), result.getDouble("temperature"), result.getLong("dateTime"));
 			}
 
@@ -575,32 +576,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 				} catch (NullPointerException e) {
 					throw new SQLException("Unable to retrieve temperature. Temperature Node " + temperature + " does not exist.");
 				}
-				
-				System.out.println(">>>> Let's verify that the Node information exists.");
-				
-				try {
-					
-					result = conn.query("MATCH (t: Temperature) WHERE t.value = " + temperature + " RETURN t.value AS temperature");
-					while (result.next())
-						System.out.println(result);
-					System.out.println("Done with MATCHing Temperature");
-					
-				} catch (Exception e) {
-					System.out.println(e);
-				}
-				
-				try {
-					
-					result = conn.query("MATCH (s: Simulation) WHERE s.name = \"" + name + "\" RETURN s.name AS simulation");
-					while (result.next())
-						System.out.println(result);
-					System.out.println("Done with MATCHing Simulation");
-					
-				} catch (Exception e) {
-					System.out.println(e);
-				}
-				
-				System.out.println(">>>> Finished verifing that the Node information exists.");
 
 				query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_REL_KEY);
 

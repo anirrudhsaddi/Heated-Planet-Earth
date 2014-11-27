@@ -75,8 +75,13 @@ public class ResultMessage implements Message {
 		return grid.get(latitude * width + longitude);
 	}
 
-	public boolean containsCoords(Integer[] checkInts) {
-		return coords.contains(checkInts);
+	public boolean containsCoords(int longitude, int latitude) {
+		for (Integer[] i : this.coords) {
+			if (i[0] == longitude && i[1] == latitude)
+				return true;
+		}
+		
+		return false;
 	}
 	
 	public void setTemperature(int longitude, int latitude, double temp, long dateTime) {
