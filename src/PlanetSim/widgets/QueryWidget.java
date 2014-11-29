@@ -161,11 +161,11 @@ public class QueryWidget extends JPanel {
 		inputPanel.setLayout(null);
 
 		JLabel lblStartHours = new JLabel("Hrs");
-		lblStartHours.setBounds(223, 83, 22, 10);
+		lblStartHours.setBounds(219, 83, 30, 10);
 		inputPanel.add(lblStartHours);
 
 		JLabel lblStartMins = new JLabel("Mins");
-		lblStartMins.setBounds(316, 83, 30, 10);
+		lblStartMins.setBounds(318, 83, 35, 10);
 		inputPanel.add(lblStartMins);
 
 		JLabel lblStartDate = new JLabel("Start Time");
@@ -191,7 +191,7 @@ public class QueryWidget extends JPanel {
 		inputPanel.add(startMinute);
 
 		endHour = new JComboBox(hours);
-		startMinute.setSelectedIndex(0);
+		endHour.setSelectedIndex(0);
 		endMinute = new JComboBox(minutes);
 		endMinute.setSelectedIndex(0);
 
@@ -291,11 +291,11 @@ public class QueryWidget extends JPanel {
 		inputPanel.add(lblEndTime);
 
 		JLabel lblEndHours = new JLabel("Hrs");
-		lblEndHours.setBounds(223, 120, 22, 10);
+		lblEndHours.setBounds(219, 120, 30, 10);
 		inputPanel.add(lblEndHours);
 
 		JLabel lblEndMins = new JLabel("Mins");
-		lblEndMins.setBounds(316, 120, 30, 10);
+		lblEndMins.setBounds(318, 120, 35, 10);
 		inputPanel.add(lblEndMins);
 
 		inputPanel.setPreferredSize(new Dimension(400, 300));
