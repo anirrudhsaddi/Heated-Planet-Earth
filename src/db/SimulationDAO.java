@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -18,7 +19,6 @@ import messaging.events.PersistMessage;
 import messaging.events.ResultMessage;
 import messaging.events.ResumeMessage;
 import messaging.events.StopMessage;
-
 import common.ComponentBase;
 import common.ThreadManager;
 
@@ -546,108 +546,129 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 
 	@Override
 	protected void performAction(Message inMsg) {
-
-		PersistMessage msg = (PersistMessage) inMsg;
-		ResultSet result = null;
-		PreparedStatement query = null;
-
-		long dateTime = msg.getDateTime();
-		String name = msg.getSimulationName();
-
-		try {
-
-			Iterator<Integer[]> gen = msg.genCoordinates();
-			while (gen.hasNext()) {
-				
-				close(result, null);
-				
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e1) {
-					System.out.println("Block interupted.");
-				}
-
-				Integer[] coords = gen.next();
-				int longitude = coords[0];
-				int latitude = coords[1];
-
-				double temperature = msg.getTemperature(longitude, latitude);
-
-				query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_KEY);
-				query.setDouble(1, temperature);
-
-				result = conn.query(query);
-				if (!result.isBeforeFirst() || result == null) {
-					throw new SQLException("Unable to create or match temperature. Temperature Node " + temperature + " does not exist.");
-				}	
-					
-				result.next();
-				// System.out.println("Result from CREATE_TEMP_KEY: " + result);
-
-				try {
-					if (temperature != result.getDouble("temperature"))
-						throw new SQLException("Failed to creat or find a node for temperature " + temperature);
-				} catch (NullPointerException e) {
-					throw new SQLException("Unable to retrieve temperature. Temperature Node " + temperature + " does not exist.");
-				} 
-
-				query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_REL_KEY);
-				query.setString(1, name);
-				query.setDouble(2, temperature);
-				query.setInt(3, longitude);
-				query.setInt(4, latitude);
-				query.setLong(5, dateTime);
-
-				result = conn.query(query);
-				if (!result.isBeforeFirst() || result == null) {
-					close(result, query);
-					throw new SQLException("Failed to execute query. Temperature Relationship does not exist");
-				}
-
-				result.next();
-				// System.out.println("Result from CREATE_TEMP_REL_KEY: " + result);
-
-				try {
-					if (result.getDouble("temperature") != temperature)
-						throw new SQLException("Persisted temperature does not match provided temperature");
-				} catch (NullPointerException e) {
-					throw new SQLException("Unable to persist create Simulation -> Temperature relationship");
-				} 
-				
-//				ResultSet validate = conn.query("MATCH (n:Simulation)-[r:HAS_TEMP]->(t:Temperature) WHERE n.name = \"" + name + "\" AND r.datetime = " + dateTime + " AND t.value = " + temperature + " RETURN n.name, r.longitude, r.latitude, r.datetime, t.value");
-//				while (validate.next())
-//					System.out.println(validate);
-				
-				Calendar c = Calendar.getInstance();
-				c.setTimeInMillis(dateTime);
-				System.out.println(c.getTime() + ": Saving temp " + temperature + " at longitude " + longitude + ", latitude: " + latitude);
-			}
-		} catch (SQLException e) {
-			System.err.println("Failed to process PersistMessage: " + e);
-		} 
-//		finally {
-//			close(result, query);
-//		}
-		System.out.println("DONE");
 		
+		/*
+		 *  TODO 
+		 * It would be nice to thread these persists, but we encounter too many lock errors.
+		 * So unfortunately, we have to run this in the current thread
+		 */
+		// ThreadManager.getManager().execute(new Persist((PersistMessage) inMsg));
+		
+		new Persist((PersistMessage) inMsg).run();
 	}
 	
-	private void close(ResultSet result, PreparedStatement query) {
+	private class Persist implements Runnable {
 		
-		try {
+		private final PersistMessage msg;
+		
+		public Persist(PersistMessage msg) {
 			
-			if (result != null && !result.isClosed()) {
-				result.close();
-				//while(!result.isClosed()) { /* wait */ }
-			}
+			if (msg == null)
+				throw new IllegalArgumentException("Invalid PersistMessage provided");
+			
+			this.msg = msg;
+		}
+
+		@Override
+		public void run() {
+
+			long dateTime = msg.getDateTime();
+			String name = msg.getSimulationName();
+
+			try {
+				
+				int longitude, latitude;
+				double temperature;
+				
+				int count = 0;
+				
+				for (Integer[] coords : msg.genCoordinates()) {
+					
+					System.out.println(++count);
+					
+					longitude = coords[0];
+					latitude = coords[1];
+					
+					temperature = msg.getTemperature(longitude, latitude);
+					
+					this.createTemp(temperature);
+
+					this.tempRelQuery(name, temperature, longitude, latitude, dateTime);
+					
+					ResultSet validate = conn.query("MATCH (n:Simulation)-[r:HAS_TEMP]->(t:Temperature) WHERE n.name = \"" + name + "\" AND r.datetime = " + dateTime + " AND t.value = " + temperature + " RETURN n.name, r.longitude, r.latitude, r.datetime, t.value");
+					while (validate.next())
+						System.out.println(validate);
+					
+					Calendar c = Calendar.getInstance();
+					c.setTimeInMillis(dateTime);
+					System.out.println(c.getTime() + ": Saving temp " + temperature + " at longitude " + longitude + ", latitude: " + latitude);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.err.println("Failed to process PersistMessage: " + e);
+			} 
+		}
 		
-			if (query != null && !query.isClosed()) {
-				query.close();
-				//while(!query.isClosed()) { /* wait */ }
+		private void createTemp(double temperature) throws SQLException {
+			
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e1) {
+				System.out.println("Block interupted.");
 			}
+			
+			PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_KEY);
+			query.setDouble(1, temperature);
+
+			ResultSet result = conn.query(query);
+			if (!result.isBeforeFirst() || result == null) {
+				//close(result, query);
+				throw new SQLException("Unable to create or match temperature. Temperature Node " + temperature + " does not exist.");
+			}	
+				
+			result.next();
+			// System.out.println("Result from CREATE_TEMP_KEY: " + result);
+
+			try {
+				if (temperature != result.getDouble("temperature"))
+					throw new SQLException("Failed to creat or find a node for temperature " + temperature);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new SQLException("Unable to retrieve temperature. Temperature Node " + temperature + " does not exist.");
+			} 
+		}
 		
-		} catch (SQLException e) {
-			// do nothing
+		private void tempRelQuery(String name, double temperature, int longitude, int latitude, long dateTime) throws SQLException {
+			
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e1) {
+				System.out.println("Block interupted.");
+			}
+			
+			PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_REL_KEY);
+			query.setString(1, name);
+			query.setDouble(2, temperature);
+			query.setInt(3, longitude);
+			query.setInt(4, latitude);
+			query.setLong(5, dateTime);
+
+			ResultSet result = conn.query(query);
+			if (!result.isBeforeFirst() || result == null) {
+				//close(result, query);
+				throw new SQLException("Failed to execute query. Temperature Relationship does not exist");
+			}
+
+			result.next();
+			// System.out.println("Result from CREATE_TEMP_REL_KEY: " + result);
+
+			try {
+				if (result.getDouble("temperature") != temperature)
+					throw new SQLException("Persisted temperature does not match provided temperature");
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new SQLException("Unable to persist create Simulation -> Temperature relationship");
+			} 
 		}
 	}
 
@@ -656,6 +677,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		private final PreparedStatement	query;
 
 		public Query(PreparedStatement query) {
+			
 			if (query == null)
 				throw new IllegalArgumentException("Invalid PreparedStatement provided");
 

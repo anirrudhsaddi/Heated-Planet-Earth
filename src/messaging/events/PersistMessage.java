@@ -1,6 +1,5 @@
 package messaging.events;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +41,12 @@ public class PersistMessage implements Message {
 		return this.simulationName;
 	}
 	
-	public Iterator<Integer[]> genCoordinates() {
-		return coords.iterator();
+//	public Iterator<Integer[]> genCoordinates() {
+//		return coords.iterator();
+//	}
+	
+	public List<Integer[]> genCoordinates() {
+		return new LinkedList<Integer[]>(coords);
 	}
 	
 	public void setTemperature(int longitude, int latitude, double temp) {

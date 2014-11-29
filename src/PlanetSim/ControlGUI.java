@@ -206,7 +206,6 @@ public class ControlGUI extends JFrame implements ActionListener {
 					
 					// TODO move to engine
 					IQueryResult result = simDAO.setSimulationName(simulationName, gs, timeStep, simulationLength, presentationInterval, axisTilt, eccentricity);
-					System.out.println(result.getSimulationName());
 					if (!simulationName.equals(result.getSimulationName().get(0)))
 						throw new SQLException("Creating the new Simulation failed");
 
@@ -403,14 +402,6 @@ public class ControlGUI extends JFrame implements ActionListener {
 		msg.setAnimated(animate);
 		msg.setStartTime(startDateTimeCal);
 		
-		try {
-			System.out.println("startDateTimeCal: " + format1.parse(format1.format(startDateTimeCal.getTime())));
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-
 		Publisher.getInstance().send(msg);
 	}
 

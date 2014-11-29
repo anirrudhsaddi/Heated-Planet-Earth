@@ -76,7 +76,6 @@ public final class Earth {
 		this.startDate = start.getStartDate();
 
 		currentDate = (Calendar) startDate.clone();
-		System.out.println("CurrentDate: " + currentDate.getTime());
 
 		// The following could be done better - if we have time, we should do so
 		int gs = start.gs();
