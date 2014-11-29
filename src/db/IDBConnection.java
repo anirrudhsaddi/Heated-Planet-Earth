@@ -10,7 +10,7 @@ public interface IDBConnection {
 
 	public PreparedStatement createPreparedStatement(String queryName, String query) throws SQLException;
 	
-	public PreparedStatement getPreparedStatement(String queryName);
+	public PreparedStatement getPreparedStatement(String queryName) throws SQLException;
 	
 	public ResultSet query(PreparedStatement stmt) throws SQLException;
 	

@@ -13,7 +13,7 @@ import messaging.events.StopMessage;
 
 public abstract class ComponentBase implements MessageListener, Runnable {
 
-	private final ConcurrentLinkedQueue<Message> msgQueue = new ConcurrentLinkedQueue<Message>();
+	protected final ConcurrentLinkedQueue<Message> msgQueue = new ConcurrentLinkedQueue<Message>();
 	
 	protected AtomicBoolean stopped, paused;
 	

@@ -10,17 +10,17 @@ import messaging.Message;
 
 public class ResultMessage implements Message {
 
-	private int									width	= 10;
-	private boolean								needsCalculation;
+	private int							width	= 10;
+	private boolean						needsCalculation;
 
-	private final List<Integer[]>				coords;
-	private final Map<Integer, Double>			grid;
+	private final List<Integer[]>		coords;
+	private final Map<Integer, Double>	grid;
 	private Map<Long, ResultMessage>	tables;
 
-	private final int							southLatitude;
-	private final int							northLatitude;
-	private final int							westLongitude;
-	private final int							eastLongitude;
+	private final int					southLatitude;
+	private final int					northLatitude;
+	private final int					westLongitude;
+	private final int					eastLongitude;
 
 	public ResultMessage(int southLatitude, int northLatitude, int westLongitude, int eastLongitude,
 			boolean needsCalculation) {
@@ -33,6 +33,18 @@ public class ResultMessage implements Message {
 
 		grid = new TreeMap<Integer, Double>();
 		coords = new LinkedList<Integer[]>();
+	}
+	
+	public ResultMessage(ResultMessage msg) {
+		
+		this.southLatitude = new Integer(msg.southLatitude);
+		this.northLatitude = new Integer(msg.northLatitude);
+		this.westLongitude = new Integer(msg.westLongitude);
+		this.eastLongitude = new Integer(msg.eastLongitude);
+		this.needsCalculation = new Boolean(msg.needsCalculation);
+
+		grid = new TreeMap<Integer, Double>(msg.grid);
+		coords = new LinkedList<Integer[]>(msg.coords);
 	}
 
 	public int getSouthRegionBounds() {
@@ -71,7 +83,7 @@ public class ResultMessage implements Message {
 	}
 
 	public boolean containsCoords(int longitude, int latitude) {
-		
+
 		for (Integer[] i : this.coords) {
 			if (i[0] == longitude && i[1] == latitude)
 				return true;

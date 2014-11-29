@@ -14,7 +14,7 @@ public class PersistMessage implements Message {
 	private final long dateTime;
 	private final int width = 10;
 	
-	private List<Integer[]> coords;
+	private final List<Integer[]> coords;
 	private final Map<Integer, Double> grid;
 	
 	public PersistMessage(String simulationName, long dateTime) {
@@ -24,6 +24,14 @@ public class PersistMessage implements Message {
 		
 		coords = new LinkedList<Integer[]>();
 		grid = new TreeMap<Integer, Double>();
+	}
+	
+	public PersistMessage(PersistMessage msg) {
+		
+		this.simulationName = new String(msg.simulationName);
+		this.dateTime = new Long(msg.dateTime);
+		this.coords = new LinkedList<Integer[]>(msg.coords);
+		this.grid = new TreeMap<Integer, Double>(msg.grid);
 	}
 	
 	public long getDateTime() {

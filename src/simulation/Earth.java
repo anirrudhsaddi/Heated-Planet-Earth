@@ -4,17 +4,12 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Queue;
-import java.util.TreeMap;
 
 import messaging.Publisher;
 import messaging.events.ConfigureMessage;
 import messaging.events.DeliverMessage;
-import messaging.events.DisplayMessage;
 import messaging.events.PersistMessage;
-import messaging.events.ProduceMessage;
 import messaging.events.ResultMessage;
 import simulation.util.GridCell;
 
@@ -81,6 +76,7 @@ public final class Earth {
 		this.startDate = start.getStartDate();
 
 		currentDate = (Calendar) startDate.clone();
+		System.out.println("CurrentDate: " + currentDate.getTime());
 
 		// The following could be done better - if we have time, we should do so
 		int gs = start.gs();
@@ -226,14 +222,7 @@ public final class Earth {
 		Queue<GridCell> bfs = new LinkedList<GridCell>();
 		Queue<GridCell> calcd = new LinkedList<GridCell>();
 
-		currentNumberOfSimulations++;
-
 		long totlaMinutesInSimulation = timeStep * currentNumberOfSimulations;
-		currentDate.add(Calendar.MINUTE, timeStep);
-		if (totlaMinutesInSimulation % Constants.MINUTES_IN_A_MONTH == 0) {
-			currentMonthInSimulation++;
-		}
-
 		long rotationalAngle = 360 - ((totlaMinutesInSimulation % Constants.MAX_SPEED) * 360 / Constants.MAX_SPEED);
 		sunPositionCell = (int) (((width * rotationalAngle) / 360 + (width / 2)) % width);
 
@@ -296,6 +285,11 @@ public final class Earth {
 		// determine persisting based on temporalAccuracy
 		if (currentNumberOfSimulations % nth_data == 0)
 			persistGrid(grid);
+		
+		currentDate.add(Calendar.MINUTE, timeStep);
+		currentMonthInSimulation = currentDate.get(Calendar.MONTH);
+		
+		currentNumberOfSimulations++;
 	}
 
 	private void persistGrid(IGrid grid) {
@@ -314,8 +308,7 @@ public final class Earth {
 				if ((x + y) % nth_grids == 0) {
 					latitude = this.getLatitude(y);
 					valueToStore = new BigDecimal(grid.getTemperature(x, y));
-					msg.setTemperature(longitude, latitude,
-							valueToStore.setScale(this.precision, BigDecimal.ROUND_HALF_UP).doubleValue());
+					msg.setTemperature(longitude, latitude, valueToStore.setScale(this.precision, BigDecimal.ROUND_HALF_UP).doubleValue());
 				}
 			}
 		}

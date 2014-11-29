@@ -3,13 +3,11 @@ package db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -20,6 +18,7 @@ import messaging.events.PersistMessage;
 import messaging.events.ResultMessage;
 import messaging.events.ResumeMessage;
 import messaging.events.StopMessage;
+
 import common.ComponentBase;
 import common.ThreadManager;
 
@@ -27,7 +26,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 
 	private final IDBConnection						conn;
 
-	private final ConcurrentLinkedQueue<Message>	msgQueue	= new ConcurrentLinkedQueue<Message>();
+	//private final ConcurrentLinkedQueue<Message>	msgQueue	= new ConcurrentLinkedQueue<Message>();
 
 	/**
 	 * Given a <code>IDBConnection</code>, create the Simulation
@@ -104,14 +103,14 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 //		ResultSet result = conn.query("MATCH (s:Simulation) RETURN s.name");
 //		while(result.next())
 //			System.out.println(result);
-//		
-//		result = conn.query("MATCH (t:Temperature) RETURN t.value");
+		
+//		ResultSet result = conn.query("MATCH (t:Temperature) RETURN t.value");
 //		while(result.next())
 //			System.out.println(result);
-//		
-//		result = conn.query("MATCH (s:Simulation)-[r:HAS_TEMP]->(t:Temperature) RETURN s.name, r.longitude, r.latitude, r.datetime, t.value");
-//		while(result.next())
-//			System.out.println(result);
+		
+		ResultSet result = conn.query("MATCH (s:Simulation)-[r:HAS_TEMP]->(t:Temperature) RETURN s.name, r.longitude, r.latitude, r.datetime, t.value");
+		while(result.next())
+			System.out.println(result);
 	}
 
 	// Tested
@@ -432,10 +431,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		 * end date. This you can achieve by calling a findTemperatureAt with
 		 * the endDate
 		 */
-		
-//		ResultSet set = conn.query("MATCH (s: Simulation)-[r:HAS_TEMP]->(t:Temperature) WHERE s.name = \"" + name + "\" RETURN r.datetime");
-//		while(set.next())
-//			System.out.println(set);
 
 		// First, find the closest datetime-valued relationship
 		PreparedStatement query = conn.getPreparedStatement(Neo4jConstants.GET_DATE_TIME_KEY);
@@ -446,8 +441,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		if (!result.isBeforeFirst() || result == null)
 			throw new SQLException("No datetime found. Query was empty.");
 
-		result.next();
-		System.out.println(result);
+		while(result.next())
+			System.out.println(result);
 
 		if (!"dateTime".equals(result.getMetaData().getColumnName(1)))
 			throw new SQLException("Failed to find any datetimes on or before query datetime");
@@ -481,7 +476,6 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 			Map<Long, ResultMessage> tables = new Hashtable<Long, ResultMessage>();
 			while (result.next()) {
 				
-				System.out.println(result);
 				long dateTime = result.getLong("dateTime");
 				if (tables.containsKey(dateTime)) {
 					add = tables.get(dateTime);;
@@ -553,11 +547,9 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 	@Override
 	protected void performAction(Message inMsg) {
 
-		System.out.println("performAction");
-
 		PersistMessage msg = (PersistMessage) inMsg;
-		ResultSet result;
-		PreparedStatement query;
+		ResultSet result = null;
+		PreparedStatement query = null;
 
 		long dateTime = msg.getDateTime();
 		String name = msg.getSimulationName();
@@ -566,6 +558,14 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 
 			Iterator<Integer[]> gen = msg.genCoordinates();
 			while (gen.hasNext()) {
+				
+				close(result, null);
+				
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e1) {
+					System.out.println("Block interupted.");
+				}
 
 				Integer[] coords = gen.next();
 				int longitude = coords[0];
@@ -573,26 +573,25 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 
 				double temperature = msg.getTemperature(longitude, latitude);
 
-				System.out.println(dateTime + ": Saving temp " + temperature + " at longitude " + longitude + ", latitude: " + latitude);
-
 				query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_KEY);
 				query.setDouble(1, temperature);
 
 				result = conn.query(query);
-				if (!result.isBeforeFirst() || result == null)
+				if (!result.isBeforeFirst() || result == null) {
 					throw new SQLException("Unable to create or match temperature. Temperature Node " + temperature + " does not exist.");
+				}	
+					
 				result.next();
-				System.out.println("Result from CREATE_TEMP_KEY: " + result);
+				// System.out.println("Result from CREATE_TEMP_KEY: " + result);
 
 				try {
 					if (temperature != result.getDouble("temperature"))
 						throw new SQLException("Failed to creat or find a node for temperature " + temperature);
 				} catch (NullPointerException e) {
 					throw new SQLException("Unable to retrieve temperature. Temperature Node " + temperature + " does not exist.");
-				}
+				} 
 
 				query = conn.getPreparedStatement(Neo4jConstants.CREATE_TEMP_REL_KEY);
-
 				query.setString(1, name);
 				query.setDouble(2, temperature);
 				query.setInt(3, longitude);
@@ -600,26 +599,56 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 				query.setLong(5, dateTime);
 
 				result = conn.query(query);
-				if (!result.isBeforeFirst() || result == null)
+				if (!result.isBeforeFirst() || result == null) {
+					close(result, query);
 					throw new SQLException("Failed to execute query. Temperature Relationship does not exist");
+				}
 
 				result.next();
-				System.out.println("Result from CREATE_TEMP_REL_KEY: " + result);
+				// System.out.println("Result from CREATE_TEMP_REL_KEY: " + result);
 
 				try {
 					if (result.getDouble("temperature") != temperature)
 						throw new SQLException("Persisted temperature does not match provided temperature");
 				} catch (NullPointerException e) {
 					throw new SQLException("Unable to persist create Simulation -> Temperature relationship");
-				}
+				} 
+				
+//				ResultSet validate = conn.query("MATCH (n:Simulation)-[r:HAS_TEMP]->(t:Temperature) WHERE n.name = \"" + name + "\" AND r.datetime = " + dateTime + " AND t.value = " + temperature + " RETURN n.name, r.longitude, r.latitude, r.datetime, t.value");
+//				while (validate.next())
+//					System.out.println(validate);
+				
+				Calendar c = Calendar.getInstance();
+				c.setTimeInMillis(dateTime);
+				System.out.println(c.getTime() + ": Saving temp " + temperature + " at longitude " + longitude + ", latitude: " + latitude);
 			}
 		} catch (SQLException e) {
 			System.err.println("Failed to process PersistMessage: " + e);
-		}
+		} 
+//		finally {
+//			close(result, query);
+//		}
+		System.out.println("DONE");
+		
 	}
 	
-	private void close() {
+	private void close(ResultSet result, PreparedStatement query) {
 		
+		try {
+			
+			if (result != null && !result.isClosed()) {
+				result.close();
+				//while(!result.isClosed()) { /* wait */ }
+			}
+		
+			if (query != null && !query.isClosed()) {
+				query.close();
+				//while(!query.isClosed()) { /* wait */ }
+			}
+		
+		} catch (SQLException e) {
+			// do nothing
+		}
 	}
 
 	private class Query implements Callable<IQueryResult> {

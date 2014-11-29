@@ -312,26 +312,19 @@ public class ControlGUI extends JFrame implements ActionListener {
 				msg.setShowMeanRegion(meanRegion);
 				msg.setShowActualValue(actualValue);
 				
-				final Calendar start = queryWidget.getSelectedStartDate();
-				final Calendar end = queryWidget.getSelectedEndDate();
+				final Calendar selectedStart = queryWidget.getSelectedStartDate();
+				final Calendar selectedEnd = queryWidget.getSelectedEndDate();
 
-				start.add(Calendar.HOUR, startHour);
-				start.add(Calendar.MINUTE, startMinute);
+				 selectedStart.add(Calendar.HOUR, startHour);
+				 selectedStart.add(Calendar.MINUTE, startMinute);
 				
-				end.add(Calendar.HOUR, endHour);
-				end.add(Calendar.MINUTE, endMinute);
+				 selectedEnd.add(Calendar.HOUR, endHour);
+				 selectedEnd.add(Calendar.MINUTE, endMinute);
 				
-				long startDateTime = start.getTimeInMillis();
-				long endDateTime = end.getTimeInMillis();
+				long startDateTime =  selectedStart.getTimeInMillis();
+				long endDateTime = selectedEnd.getTimeInMillis();
 
 				configure(msg, startDateTime, endDateTime);
-				
-				try {
-					System.out.println(format1.parse(format1.format(start.getTime())));
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				
 				queryEngine.findTemperaturesAt(simulationName, startDateTime, endDateTime, wLat, eLat, nLat, sLat);
 				
@@ -364,9 +357,15 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 		// We'll let the user provide Time Steps in base 2 intervals
 		// starting from 1
-		if (timeStep < Constants.MIN_TIME_STEP || timeStep > Constants.MAX_TIME_STEP
-				|| (simulationLength != 1 && simulationLength % 2 != 0))
+		if (timeStep < Constants.MIN_TIME_STEP || timeStep > Constants.MAX_TIME_STEP)
 			throw new IllegalArgumentException("Invalid time step");
+		
+		if (timeStep > 1 && timeStep % 2 != 0)
+			throw new IllegalArgumentException("Invalid time step. Time step must be a factor of 2");
+		
+		int monthsFromMinutes = timeStep >= Constants.MINUTES_IN_A_MONTH ? timeStep / Constants.MINUTES_IN_A_MONTH : 0;
+		if (monthsFromMinutes > simulationLength)
+			throw new IllegalArgumentException("Invalid time step. Tiem step cannot be greater than simulation length in months");
 
 		if (presentationInterval < Constants.MIN_PRESENTATION || presentationInterval > Constants.MAX_PRESENTATION)
 			throw new IllegalArgumentException("Invalid presentation interval");
@@ -388,7 +387,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 		Boolean animate = settingsWidget.getDisplayAnimationStatus();
 
-		Calendar startDateTimeCal = (Calendar) Constants.START_DATE.clone();
+		Calendar startDateTimeCal = Calendar.getInstance();
 		startDateTimeCal.setTimeInMillis(startDateTime);
 
 		msg.setSimulationName(simulationName);
@@ -403,6 +402,14 @@ public class ControlGUI extends JFrame implements ActionListener {
 		msg.setTemporalAccuracy(this.temporalAccuracy);
 		msg.setAnimated(animate);
 		msg.setStartTime(startDateTimeCal);
+		
+		try {
+			System.out.println("startDateTimeCal: " + format1.parse(format1.format(startDateTimeCal.getTime())));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 
 		Publisher.getInstance().send(msg);
 	}

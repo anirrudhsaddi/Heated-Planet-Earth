@@ -82,11 +82,13 @@ public final class SimulationNeo4j implements IDBConnection {
 		return stmt;
 	}
 	
-	public PreparedStatement getPreparedStatement(String queryName) {
+	public PreparedStatement getPreparedStatement(String queryName) throws SQLException {
 		
 		if (!SAVED_QUERIES.containsKey(queryName)) throw new IllegalArgumentException("Invalid Query name key");
 		
-		return SAVED_QUERIES.get(queryName);
+		PreparedStatement query = SAVED_QUERIES.get(queryName);
+		query.closeOnCompletion();
+		return query;
 	}
 	
 	public void close() {
