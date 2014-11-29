@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -20,6 +21,7 @@ import messaging.Publisher;
 import messaging.events.DisplayMessage;
 import messaging.events.ConfigureMessage;
 import simulation.util.GridCell;
+import common.Constants;
 import common.IGrid;
 
 public class TableDisplay extends JFrame {
@@ -49,9 +51,9 @@ public class TableDisplay extends JFrame {
 		setupWindow();
 		pack();
 	}
-	
+
 	public void configure(ConfigureMessage msg) {
-		
+
 		this.gs = msg.gs();
 		this.showMinTemp = msg.showMinTemp();
 		this.showMaxTemp = msg.showMaxTemp();
@@ -73,7 +75,6 @@ public class TableDisplay extends JFrame {
 		lowerRightWindow(); // Set window location to lower right (so we don't
 							// hide dialogs)
 		setAlwaysOnTop(true);
-		table = new JTable(data, columnNames);
 		getContentPane().add(new JScrollPane(table));
 	}
 
@@ -88,7 +89,7 @@ public class TableDisplay extends JFrame {
 
 	@SuppressWarnings("rawtypes")
 	public void updateTableData(DisplayMessage msg) {
-		
+
 		getContentPane().removeAll();
 
 		// Min Temp | Max Temp | Mean Region Temp | Mean Time Temp | Cell 1/1 |
@@ -112,22 +113,22 @@ public class TableDisplay extends JFrame {
 			columnNameArray.add("Min Temp");
 			columnCount++;
 		}
-		
+
 		if (showMaxTemp) {
 			columnNameArray.add("Max Temp");
 			columnCount++;
 		}
-		
+
 		if (showMeanRegion) {
 			columnNameArray.add("Mean Region Temp");
 			columnCount++;
 		}
-		
+
 		if (showMeanTime) {
 			columnNameArray.add("Mean Time Temp");
 			columnCount++;
 		}
-		
+
 		if (showActualValue) {
 			IGrid grid = msg.getGrid();
 			for (int x = 0; x < grid.getGridWidth(); x++) {
@@ -217,6 +218,99 @@ public class TableDisplay extends JFrame {
 			this.setVisible(false);
 		}
 
+	}
+
+	// Minimum temperature in the region, when and where it occurred;
+	// that is, the smallest temperature in the entire table and the time and
+	// location where it occurred
+	private GridCell getMin() {
+
+//		GridCell result = new GridCell(Constants.MAX_TEMP, 0, 0, 0, 0, 0, 0, 0);
+//		for (Map.Entry<Calendar, List<GridCell>> entry : this.table.entrySet()) {
+//			Calendar time = entry.getKey();
+//			List<GridCell> gridCells = entry.getValue();
+//			for (GridCell mycell : gridCells) {
+//				if (mycell.getTemp() < result.getTemp()) {
+//					result = mycell;
+//					result.timeOfResult = time;
+//				}
+//			}
+//		}
+//		return result;
+		
+		return null;
+	}
+
+	// Maximum temperature in the region, when and where it occurred;
+	// that is, the largest temperature in the table and the time and location
+	// where it occurred
+	private GridCell getMax() {
+
+//		GridCell result = new GridCell(Constants.MIN_TEMP, 0, 0, 0, 0, 0, 0, 0);
+//		for (Map.Entry<Calendar, List<GridCell>> entry : this.table.entrySet()) {
+//
+//			Calendar time = entry.getKey();
+//			List<GridCell> gridCells = entry.getValue();
+//			for (GridCell mycell : gridCells) {
+//				if (mycell.getTemp() > result.getTemp()) {
+//					result = mycell;
+//					result.timeOfResult = time;
+//				}
+//			}
+//		}
+//
+//		return result;
+		
+		return null;
+	}
+
+	// Mean temperature over the region for the requested times;
+	// that is, for each row in the table, what was its mean temperature across
+	// all of the columns. (The denominator is the number of columns.)
+	private List<Double> getMeanTempOverRegion() {
+
+//		List<Double> meanTemps = new LinkedList<Double>();
+//		for (Map.Entry<Calendar, List<GridCell>> entry : this.table.entrySet()) {
+//
+//			// Integer time = entry.getKey();
+//			List<GridCell> gridCells = entry.getValue();
+//			double temperatures = 0;
+//			for (GridCell mycell : gridCells) {
+//				temperatures += mycell.getTemp();
+//			}
+//			temperatures /= gridCells.size();
+//			meanTemps.add(temperatures);
+//		}
+//
+//		return meanTemps;
+		
+		return null;
+	}
+
+	// Mean temperature over the times for the requested region;
+	// that is, for each column in the table, what was its mean temperature down
+	// all rows. (The denominator is the number of rows.
+	private List<Double> getMeanTempOverTime() {
+
+//		List<Double> meanTemps = new LinkedList<Double>();
+//		for (Map.Entry<Calendar, List<GridCell>> entry : this.table.entrySet()) {
+//
+//			// Integer time = entry.getKey();
+//			List<GridCell> gridCells = entry.getValue();
+//			int i = 0;
+//			for (GridCell mycell : gridCells) {
+//				meanTemps.set(i++, meanTemps.get(i) + mycell.getTemp());
+//			}
+//		}
+//
+//		int i = 0;
+//		for (Map.Entry<Calendar, List<GridCell>> entry : this.table.entrySet()) {
+//			meanTemps.set(i++, meanTemps.get(i) / this.table.size());
+//		}
+//
+//		return meanTemps;
+		
+		return null;
 	}
 
 	private int getLatitude(int y, int height) {

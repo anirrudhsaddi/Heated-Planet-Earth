@@ -3,7 +3,11 @@ package db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
@@ -473,9 +477,20 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 
 			msg = new ResultMessage(southLatitude, northLatitude, westLongitude, eastLongitude, false);
 
+			ResultMessage add;
+			Map<Long, ResultMessage> tables = new Hashtable<Long, ResultMessage>();
 			while (result.next()) {
+				
 				System.out.println(result);
-				msg.setTemperature(result.getInt("longitude"), result.getInt("latitude"), result.getDouble("temperature"), result.getLong("dateTime"));
+				long dateTime = result.getLong("dateTime");
+				if (tables.containsKey(dateTime)) {
+					add = tables.get(dateTime);;
+				} else {
+					add = new ResultMessage(southLatitude, northLatitude, westLongitude, eastLongitude, false);
+				}
+				
+				add.setTemperature(result.getInt("longitude"), result.getInt("latitude"), result.getDouble("temperature"));
+				tables.put(dateTime, add);
 			}
 
 		} else {
@@ -498,8 +513,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 			msg = new ResultMessage(southLatitude, northLatitude, westLongitude, eastLongitude, true);
 
 			while (result.next()) {
-				msg.setTemperature(result.getInt("longitude"), result.getInt("latitude"),
-						result.getDouble("temperature"));
+				msg.setTemperature(result.getInt("longitude"), result.getInt("latitude"), result.getDouble("temperature"));
 			}
 		}
 
@@ -602,6 +616,10 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 		} catch (SQLException e) {
 			System.err.println("Failed to process PersistMessage: " + e);
 		}
+	}
+	
+	private void close() {
+		
 	}
 
 	private class Query implements Callable<IQueryResult> {

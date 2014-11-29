@@ -1,15 +1,11 @@
 package messaging.events;
 
-import java.util.Calendar;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import common.Constants;
-import simulation.util.GridCell;
 import messaging.Message;
 
 public class ResultMessage implements Message {
@@ -19,15 +15,15 @@ public class ResultMessage implements Message {
 
 	private final List<Integer[]>				coords;
 	private final Map<Integer, Double>			grid;
-	private Map<Calendar, List<GridCell>>		table;
+	private Map<Long, ResultMessage>	tables;
 
-	
 	private final int							southLatitude;
 	private final int							northLatitude;
 	private final int							westLongitude;
 	private final int							eastLongitude;
 
-	public ResultMessage(int southLatitude, int northLatitude, int westLongitude, int eastLongitude, boolean needsCalculation) {
+	public ResultMessage(int southLatitude, int northLatitude, int westLongitude, int eastLongitude,
+			boolean needsCalculation) {
 
 		this.southLatitude = southLatitude;
 		this.northLatitude = northLatitude;
@@ -37,7 +33,6 @@ public class ResultMessage implements Message {
 
 		grid = new TreeMap<Integer, Double>();
 		coords = new LinkedList<Integer[]>();
-		table = new Hashtable<Calendar, List<GridCell>>();
 	}
 
 	public int getSouthRegionBounds() {
@@ -76,34 +71,20 @@ public class ResultMessage implements Message {
 	}
 
 	public boolean containsCoords(int longitude, int latitude) {
+		
 		for (Integer[] i : this.coords) {
 			if (i[0] == longitude && i[1] == latitude)
 				return true;
 		}
-		
+
 		return false;
 	}
-	
-	public void setTemperature(int longitude, int latitude, double temp, long dateTime) {
-		
-		// Man this method is horribly inefficent...everytime we call this, a puppy dies :(. 
-		// time permitting, let's make this better
-		Calendar c = ((Calendar) Constants.START_DATE.clone());
-		c.setTimeInMillis(dateTime);
-		
-		List<GridCell> list;
-		if (this.table.containsKey(c)) {
-			list = this.table.get(c);
-			list.add(new GridCell(temp, 0, 0, latitude, longitude, 0, 0, 0));
-		} else {
-			list = new LinkedList<GridCell>();
-			list.add(new GridCell(temp, 0, 0, latitude, longitude, 0, 0, 0));
-		}
-		
-		this.table.put(c, list);
+
+	public void setTables(Map<Long, ResultMessage> tables) {
+		this.tables = tables;
 	}
-	
-	public Map<Calendar, List<GridCell>> getGridCells() {
-		return this.table;
+
+	public Map<Long, ResultMessage> getTables() {
+		return this.tables;
 	}
 }

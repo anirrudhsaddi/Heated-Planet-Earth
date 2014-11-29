@@ -34,7 +34,7 @@ public final class GridCell implements EarthCell<GridCell> {
 	private double			newTemp;
 	private double			tSun;
 	private float			axisTilt;
-	private static float			eccentricity;
+	private static float	eccentricity;
 
 	private GridCell		top		= null, bottom = null, left = null, right = null;
 
@@ -42,7 +42,7 @@ public final class GridCell implements EarthCell<GridCell> {
 	public static double	b		= 0;
 
 	// Time of the Equinox
-	private static int		tauAN = setTimeOfEquinox();
+	private static int		tauAN	= setTimeOfEquinox();
 	// This field is used to store the current time in ResultMessage
 	public Calendar			timeOfResult;
 
@@ -60,7 +60,7 @@ public final class GridCell implements EarthCell<GridCell> {
 		this.setTemp(temp);
 	}
 
-	public GridCell(GridCell top, GridCell bottom, GridCell left, GridCell right, float temp, int x, int y,
+	public GridCell(GridCell top, GridCell bottom, GridCell left, GridCell right, double temp, int x, int y,
 			int latitude, int longitude, int gs, float axisTilt, float eccentricity) {
 
 		this(temp, x, y, latitude, longitude, gs, axisTilt, eccentricity);
@@ -145,8 +145,9 @@ public final class GridCell implements EarthCell<GridCell> {
 		this.longitude = longitude;
 		this.gs = gs;
 		this.axisTilt = axisTilt;
-		
-		// This gets set multiple times and wastes cycles. Optimze if we have time
+
+		// This gets set multiple times and wastes cycles. Optimze if we have
+		// time
 		GridCell.eccentricity = eccentricity;
 
 		// calc lengths, area, etc.
@@ -385,17 +386,17 @@ public final class GridCell implements EarthCell<GridCell> {
 
 	private static int setTimeOfEquinox() {
 
-		//int t = 0;
+		// int t = 0;
 
 		for (int t = 0; tauAN == 0 && t < Constants.T; t++) {
 
 			if (Math.abs(Math.toRadians(Constants.omega) - trueAnamoly(t)) <= 0.1) {
-//				tauAN = t;
-//				break;
+				// tauAN = t;
+				// break;
 				return t;
 			}
 		}
-		
+
 		return 0;
 	}
 

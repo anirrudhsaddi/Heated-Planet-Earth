@@ -1,5 +1,10 @@
 package simulation;
 
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+
+import simulation.util.GridCell;
 import view.TableDisplay;
 import messaging.Message;
 import messaging.Publisher;
@@ -28,7 +33,7 @@ public class EarthEngine extends ComponentBase {
 		if (msg instanceof ConfigureMessage) {
 			
 			model.configure(((ConfigureMessage) msg));
-			model.start();
+			model.init();
 
 		} else if (msg instanceof ProduceMessage) {
 			generateData();
@@ -64,30 +69,48 @@ public class EarthEngine extends ComponentBase {
 		// We also need to provide a report on the query - including
 		// min/max/mean, etc.
 		DisplayMessage displayMsg = new DisplayMessage();
+		
+		Map<Long, GridCell> results = new Hashtable<Long, GridCell>();
 
 		if (msg.needsCalculation() == false) {
 			
 			// Scenario 1 - no need of calculation, the data from DB is the
 			// perfect hit for what the user wants
 			// Scenario 2 - calculate - interpolate, the data that the user
-			// wants is inbetween
-//			model.populateTable(msg);
-//			model.interpolateTable(msg);
+			// wants is in between
+			
+			for (long key : msg.getTables().keySet()) {
+				model.setSeedMessage(msg.getTables().get(key));
+				results.put(key, model.init(true));
+			}
 			
 		} else if (msg.needsCalculation() == true) {
 			
 			// Scenario 3 - calculate - start a new simulation, the data the
 			// user wants is beyond the one stored in DB
-//			model.simulateFromTable(msg);
+
+			model.setSeedMessage(msg);
+			model.init(true);
+			Publisher.getInstance().send(new ProduceMessage());
 
 		}
 		
 //		model.setDisplayMsg(displayMsg);
 //		
-		TableDisplay display = new TableDisplay();
+//		TableDisplay display = new TableDisplay();
 //		display.updateTableData(displayMsg);
 
 	}
+
+	
+//	private void setDisplayMsg(DisplayMessage msg) {
+//		
+//		msg.setTable(table);
+//		msg.setMaxTemp(this.getMax());
+//		msg.setMinTemp(this.getMin());
+//		msg.setMeanTempOverRegion(this.getMeanTempOverRegion());
+//		msg.setMeanTempOverTime(this.getMeanTempOverTime());
+//	}
 
 	private void generateData() {
 		try {

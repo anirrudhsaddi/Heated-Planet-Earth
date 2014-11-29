@@ -126,6 +126,7 @@ public class ControlGUI extends JFrame implements ActionListener {
 
 				if (confirmed == JOptionPane.YES_OPTION) {
 					Publisher.getInstance().send(new StopMessage());
+					threadManager.shutdown();
 					dispose();
 					System.exit(1);
 				}

@@ -60,20 +60,23 @@ public final class SimulationNeo4j implements IDBConnection {
 	}
 	
 	private static long folderSize(File directory) {
+		
 	    long length = 0;
 	    for (File file : directory.listFiles()) {
+	    	
 	        if (file.isFile())
 	            length += file.length();
 	        else
 	            length += folderSize(file);
 	    }
+	    
 	    return length;
 	}
 	
 	public PreparedStatement createPreparedStatement(String queryName, String query) throws SQLException {
 		
 		if (SAVED_QUERIES.containsKey(queryName)) getPreparedStatement(queryName);
-		
+
 		PreparedStatement stmt = db.prepareStatement(query);
 		SAVED_QUERIES.put(queryName, stmt);
 		return stmt;
@@ -120,7 +123,7 @@ public final class SimulationNeo4j implements IDBConnection {
 		return result;
 	}
 	
-	private static void registerShutdownHook(final GraphDatabaseService db) {
+	private static void registerShutdownHook(final GraphDatabaseService gbs) {
 		
 	    // Registers a shutdown hook for the Neo4j instance so that it
 	    // shuts down nicely when the VM exits (even if you "Ctrl-C" the
@@ -129,9 +132,16 @@ public final class SimulationNeo4j implements IDBConnection {
 	        @Override
 	        public void run() {
 	        	
+	        	try {
+					if (db != null && !db.isClosed())
+						db.close();
+				} catch (SQLException e) {
+					// do nothing
+				}
+	        	
 	        	long closing_size = folderSize(new java.io.File(DB_PATH));
 	        	System.out.printf("Size at DB close: %d bytes. Delta: %d bytes%n", closing_size, (closing_size - current_db_size));
-	        	db.shutdown();
+	        	gbs.shutdown();
 	        }
 	    } );
 	}
