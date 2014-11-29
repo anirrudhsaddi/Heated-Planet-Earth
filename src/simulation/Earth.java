@@ -58,14 +58,6 @@ public final class Earth {
 
 	private double[][]							base;
 
-	// The user query can be thought of as producing a table in which there are
-	// rows
-	// corresponding to the times at which computations are made and columns
-	// corresponding to the grid cells.
-	// table DS has integer as time(rows), List<GridCell> is list of grid
-	// cells(columns)
-	private final Map<Calendar, List<GridCell>>	table		= new TreeMap<Calendar, List<GridCell>>();
-
 	public Earth(IMonitorCallback monitor) {
 
 		if (monitor == null)
