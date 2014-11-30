@@ -5,8 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -473,7 +471,7 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 			msg = new ResultMessage(southLatitude, northLatitude, westLongitude, eastLongitude, false);
 
 			ResultMessage add;
-			Map<Long, ResultMessage> tables = new Hashtable<Long, ResultMessage>();
+			Hashtable<Long, ResultMessage> tables = new Hashtable<Long, ResultMessage>();
 			while (result.next()) {
 				
 				long dateTime = result.getLong("dateTime");
@@ -486,6 +484,8 @@ public class SimulationDAO extends ComponentBase implements ISimulationDAO {
 				add.setTemperature(result.getInt("longitude"), result.getInt("latitude"), result.getDouble("temperature"));
 				tables.put(dateTime, add);
 			}
+			
+			msg.setTables(tables);
 
 		} else {
 

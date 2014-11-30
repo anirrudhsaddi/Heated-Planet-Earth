@@ -1,5 +1,6 @@
 package messaging.events;
 
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -92,8 +93,8 @@ public class ResultMessage implements Message {
 		return false;
 	}
 
-	public void setTables(Map<Long, ResultMessage> tables) {
-		this.tables = tables;
+	public void setTables(Hashtable<Long, ResultMessage> tables) {
+		this.tables = new Hashtable<Long, ResultMessage> (tables);
 	}
 
 	public Map<Long, ResultMessage> getTables() {
