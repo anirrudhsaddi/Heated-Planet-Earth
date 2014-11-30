@@ -22,6 +22,8 @@ There are two options for configuration.
 	export JAVA_HOME=<path to resource>/resource/java/jdk1.7.0_72
 	export PATH=$JAVA_HOME/bin:$PATH
 	
+NOTE: the jdk 1.7 rpm is located alongside the jdk 1.7 source
+	
 2. Install the JDK 1.7 as an alternative Java under Ubuntu's "alternatives"
 
 	Choosing the default Java to use:
